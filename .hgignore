@@ -1,0 +1,27 @@
+# use glob syntax.
+syntax: glob
+
+.vagrant
+*.pyc
+build
+dist
+.project
+.pydevproject
+.settings
+.svn
+*.egg-info
+*.egg
+nbproject
+.DS_Store
+distribute*.tar.gz
+localsettings.py
+.coverage
+nosetests.xml
+.idea
+*.ipr
+*.iws
+*.iml
+logs/
+images/
+screenshotadmin/screenshotadmin.sqlite
+celerybeat-schedule
