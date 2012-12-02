@@ -10,7 +10,6 @@ import os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from celeryapp import celery
-from celery import chain
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 from main.models import WebSite
 
@@ -91,7 +90,19 @@ def fetch_webscreenshot(url, dry_run=False):
     return os.path.join("images", filename + fileext)
 
 
+@celery.task(name='celerytasks.webscreenshots')
+def webscreenshots():
+    for ws in WebSite.objects.all():
+        chain = (
+            fetch_webscreenshot.s(ws.url) |
+            crop_and_scale_file.s()       |
+            upload_files.s()              |
+            remove_files.s()
+        )
+        chain()
+
+
 if __name__ == '__main__':
     for ws in WebSite.objects.all():
         print fetch_webscreenshot(ws.url, dry_run=True)
-        res = chain(fetch_webscreenshot.s(ws.url), crop_and_scale_file.s(), upload_files.s(), remove_files.s())()
+    webscreenshots.delay()
