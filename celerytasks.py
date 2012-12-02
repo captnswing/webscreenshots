@@ -10,6 +10,7 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
 from celeryapp import celery
+from celery import chain
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 from main.models import WebSite
@@ -35,8 +36,8 @@ def upload_file(filename):
     bucket = conn.get_bucket(BUCKET_NAME)
     k = Key(bucket)
     logger.info('Uploading %s to Amazon S3 bucket %s' % (filename, BUCKET_NAME))
-    k.key = os.path.join(datetime.date.today().strftime("%Y/%m"), os.path.basename(filename))
-    k.set_contents_from_filename("images/" + filename)
+    k.key = filename.replace('images/', '').replace('-full.png', '.png').replace('__', '/')
+    k.set_contents_from_filename(filename)
     return filename
 
 #    elif size == "M":
@@ -46,6 +47,7 @@ def upload_file(filename):
 #        webkit2png_cmd = webkit2png_cmdbase + """ -C --clipwidth=640 --clipheight=640 -s 0.5 -o '{1}' {2}"""
 #        fileext = "-clipped.png"
 
+
 @celery.task(name='celerytasks.fetch_webscreenshot')
 def fetch_webscreenshot(url, dry_run=False):
     user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
@@ -54,21 +56,23 @@ def fetch_webscreenshot(url, dry_run=False):
     webkit2png_cmd += """ 2>&1 >/dev/null"""
     fileext = "-full.png"
     parsed = urlsplit(url)
-    canonicalurl = "/".join((parsed.netloc.lstrip('www.'), parsed.path.lstrip('/'))).rstrip('/')
-    filename = "__".join((canonicalurl.replace('/', '__'), datetime.date.today().strftime("%Y__%m"), timestamp))
+    canonicalurl = parsed.netloc.lstrip('www.')
+    urlpath = parsed.path.strip('/')
+    if urlpath:
+        canonicalurl += "-" + urlpath.replace('/', '-')
+    canonicalurl += "-" + timestamp
+    filename = datetime.date.today().strftime("%Y__%m__%d") + "__" + canonicalurl
     webkit2png_cmd = webkit2png_cmd.format(user_agent, filename, url)
     if dry_run:
         logger.info(webkit2png_cmd)
-        return webkit2png_cmd
+        return os.path.join("images", filename + fileext)
     ret = subprocess.call(webkit2png_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    return filename + fileext
+    return os.path.join("images", filename + fileext)
 
 
 if __name__ == '__main__':
     for ws in WebSite.objects.all():
-        print ws.url
-    print fetch_webscreenshot("http://www.svt.se", dry_run=True)
-#    res = chain(fetch_webscreenshot.s("http://www.aftonbladet.se", "F"), upload_file.s(), remove_file.s())()
-#    res.get()
+        print fetch_webscreenshot(ws.url, dry_run=True)
+        res = chain(fetch_webscreenshot.s(ws.url), upload_file.s(), remove_file.s())()
