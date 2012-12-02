@@ -50,6 +50,7 @@ Fyra alternativ
     pip install supervisor
     pip install docutils
     pip install boto
+    pip install pil
 
 ## Install redis
 
