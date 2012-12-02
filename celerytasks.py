@@ -1,56 +1,74 @@
 from __future__ import absolute_import
-from celery import chain
-from celery.utils.log import get_task_logger
-from celeryapp import celery
-import os
 import time
 import datetime
+import subprocess
+from urlparse import urlsplit
+
+from celery.utils.log import get_task_logger
+import os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-import subprocess
+
+from celeryapp import celery
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
+from main.models import WebSite
 
 
 logger = get_task_logger(__name__)
 BUCKET_NAME = "svti-webscreenshots"
 
 
-@celery.task(name='celerytasks.remove_files')
-def remove_files(filenames):
-    for fn in filenames:
-        logger.info("removing %s" % fn)
-#        os.remove(fn)
+@celery.task(name='celerytasks.remove_file')
+def remove_file(filename):
+    logger.info("removing %s" % filename)
+    os.remove(filename)
 
 
-@celery.task(name='celerytasks.upload_files')
-def upload_files(filenames):
+@celery.task(name='celerytasks.upload_file')
+def upload_file(filename):
+    logger.info(filename.split('__')[-1])
     # TODO: change these to bucket specific credentials
     AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
     AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
     conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
     bucket = conn.get_bucket(BUCKET_NAME)
     k = Key(bucket)
-    for fn in filenames:
-        logger.info('Uploading %s to Amazon S3 bucket %s' % (fn, BUCKET_NAME))
-        k.key = os.path.join(datetime.date.today().strftime("%Y/%m"), os.path.basename(fn))
-        k.set_contents_from_filename(fn)
-    return filenames
+    logger.info('Uploading %s to Amazon S3 bucket %s' % (filename, BUCKET_NAME))
+    k.key = os.path.join(datetime.date.today().strftime("%Y/%m"), os.path.basename(filename))
+    k.set_contents_from_filename("images/" + filename)
+    return filename
 
+#    elif size == "M":
+#        webkit2png_cmd = webkit2png_cmdbase + """ -C --clipwidth=1280 --clipheight=1280 -s 1.0 -o '{1}' {2}"""
+#        fileext = "-clipped.png"
+#    elif size == "T":
+#        webkit2png_cmd = webkit2png_cmdbase + """ -C --clipwidth=640 --clipheight=640 -s 0.5 -o '{1}' {2}"""
+#        fileext = "-clipped.png"
 
 @celery.task(name='celerytasks.fetch_webscreenshot')
-def fetch_webscreenshot(url):
-    USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
-    now = datetime.datetime.now()
-    timestamp = str(int(time.mktime(now.timetuple())))
-    PNG_CMD_TEMPLATE = """./webkit2png --user-agent='{0}' -o '{1}' -FC {2} 2>&1 >/dev/null"""
-    webkit2png_cmd = PNG_CMD_TEMPLATE.format(USER_AGENT, os.path.join("images", timestamp), url)
+def fetch_webscreenshot(url, dry_run=False):
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
+    timestamp = str(int(time.mktime(datetime.datetime.now().timetuple())))
+    webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
+    webkit2png_cmd += """ 2>&1 >/dev/null"""
+    fileext = "-full.png"
+    parsed = urlsplit(url)
+    canonicalurl = "/".join((parsed.netloc.lstrip('www.'), parsed.path.lstrip('/'))).rstrip('/')
+    filename = "__".join((canonicalurl.replace('/', '__'), datetime.date.today().strftime("%Y__%m"), timestamp))
+    webkit2png_cmd = webkit2png_cmd.format(user_agent, filename, url)
+    if dry_run:
+        logger.info(webkit2png_cmd)
+        return webkit2png_cmd
     ret = subprocess.call(webkit2png_cmd, shell=True)
     if ret != 0:
-        raise IOError("Command failed with return code", ret)
-#    dirname = os.path.join(url.strip('http://'), datetime.date.today().strftime("%Y/%m"))
-    filenames = [ 'images/{0}-{1}.png'.format(timestamp, filetype) for filetype in ('clipped', 'full') ]
-    return filenames
+        raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
+    return filename + fileext
 
 
 if __name__ == '__main__':
-    res = chain(fetch_webscreenshot.s("http://svt.se"), upload_files.s(), remove_files.s())()
-    res.get()
+    for ws in WebSite.objects.all():
+        print ws.url
+    print fetch_webscreenshot("http://www.svt.se", dry_run=True)
+#    res = chain(fetch_webscreenshot.s("http://www.aftonbladet.se", "F"), upload_file.s(), remove_file.s())()
+#    res.get()
