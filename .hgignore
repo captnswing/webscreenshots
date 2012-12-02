@@ -23,5 +23,5 @@ nosetests.xml
 *.iml
 logs/
 images/
-screenshotadmin/screenshotadmin.sqlite
+screenshotadmin.sqlite
 celerybeat-schedule
