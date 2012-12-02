@@ -41,6 +41,14 @@ Fyra alternativ
 - celerybeat to save screenshots of all configured pages every 5min
 - submits celery task to transfer resulting png files to s3 via boto
 
+## S3 Bucket
+
+    - world readable
+    - 90 days expiration for files
+    - cloudfront enabled
+    - http://shrub.appspot.com/svti-webscreenshots/2012/12/02/
+    - http://docs.amazonwebservices.com/AmazonS3/latest/API/RESTBucketGET.html
+
 ## Install celery
 
     pip install celery-with-redis flower

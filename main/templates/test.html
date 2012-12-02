@@ -3,4 +3,13 @@
 {% block content %}
 <h2>Test</h2>
 
+<table>
+<tbody>
+    {% for r in rs %}
+    <tr>
+        {{ r }}
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
 {% endblock %}

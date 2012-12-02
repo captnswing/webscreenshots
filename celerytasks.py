@@ -97,7 +97,6 @@ def cleanup():
         crop_and_scale_file(pngfile)
     jpegs = glob.glob("images/*.jpg")
     if jpegs:
-        print jpegs
         chain = (
             upload_files.s(jpegs) |
             remove_files.s()
