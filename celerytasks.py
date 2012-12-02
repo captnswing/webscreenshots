@@ -90,6 +90,21 @@ def fetch_webscreenshot(url, dry_run=False):
     return os.path.join("images", filename + fileext)
 
 
+@celery.task(name='celerytasks.cleanup')
+def cleanup():
+    import glob
+    for pngfile in glob.glob("images/*.png"):
+        crop_and_scale_file(pngfile)
+    jpegs = glob.glob("images/*.jpg")
+    if jpegs:
+        print jpegs
+        chain = (
+            upload_files.s(jpegs) |
+            remove_files.s()
+        )
+        chain()
+
+
 @celery.task(name='celerytasks.webscreenshots')
 def webscreenshots():
     for ws in WebSite.objects.all():
@@ -103,6 +118,7 @@ def webscreenshots():
 
 
 if __name__ == '__main__':
-    for ws in WebSite.objects.all():
-        print fetch_webscreenshot(ws.url, dry_run=True)
-    webscreenshots.delay()
+    cleanup()
+#    for ws in WebSite.objects.all():
+#        print fetch_webscreenshot(ws.url, dry_run=True)
+#    webscreenshots.delay()

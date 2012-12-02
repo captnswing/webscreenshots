@@ -43,14 +43,10 @@ Fyra alternativ
 
 ## Install celery
 
-    pip install django
-    pip install Celery
-    pip install celery-with-redis
-    pip install flower
+    pip install celery-with-redis flower
+    pip install django docutils
     pip install supervisor
-    pip install docutils
-    pip install boto
-    pip install pil
+    pip install boto pil
 
 ## Install redis
 
@@ -96,9 +92,15 @@ _____
 
 ## run celery workers and flower with supervisor
 
-    # start supervisord
+    # start supervisord, starts celery & flower automatically
     supervisor
+
+    # check logs
     supervisorctl tail celeryd
+
+    # stop celery & flower
     supervisorctl stop celeryd
     supervisorctl stop flower
+
+    # stop supervisord
     kill -HUP `cat /tmp/supervisord.pid`
