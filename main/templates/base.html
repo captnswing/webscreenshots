@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   	<style type="text/css">
+    /*<![CDATA[*/
+        {% block customcss %}
+        {% endblock %}
+    /*]]>*/
+    </style>
+
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <script src="{{ STATIC_URL }}/bootstrap/js/bootstrap.min.js"></script>
+
+    {% block extraheaders %}
+   	{% endblock %}
+</head>
+
+<body>
+
+<div class="container">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+</body>
+</html>

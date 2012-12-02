@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extraheadings %}
+<title>{% trans 'Server error (500)' %}</title>
+{% endblock %}
+
+{% block heading %}
+<h2>500 error - {% trans 'Server error (500)' %}</h2>
+{% endblock %}
+
+{% block content %}
+<div class="span-24 last">
+<p>{% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}</p>
+</div>
+{% endblock %}

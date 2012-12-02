@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extraheaders %}
+<title>{% trans 'Page not found' %}: {{ request_path }}</title>
+{% endblock %}
+
+{% block heading %}
+<h2>{% trans 'Page not found' %}: {{ request_path }}</h2>
+{% endblock %}
+
+{% block content %}
+<div class="span-24 last">
+<h3>404 fel</h3>
+<p>{% trans "We're sorry, but the requested page could not be found." %}: <strong>{{ request_path }}</strong></p>
+</div>
+{% endblock %}
