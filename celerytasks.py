@@ -69,7 +69,6 @@ def crop_and_scale_file(filename):
 @celery.task(name='celerytasks.fetch_webscreenshot')
 def fetch_webscreenshot(url, dry_run=False):
     user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
-    timestamp = str(int(time.mktime(datetime.datetime.now().timetuple())))
     webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
     webkit2png_cmd += """ 2>&1 >/dev/null"""
     fileext = "-full.png"
@@ -77,9 +76,9 @@ def fetch_webscreenshot(url, dry_run=False):
     canonicalurl = parsed.netloc.lstrip('www.')
     urlpath = parsed.path.strip('/')
     if urlpath:
-        canonicalurl += "-" + urlpath.replace('/', '-')
-    canonicalurl += "-" + timestamp
-    filename = datetime.date.today().strftime("%Y__%m__%d") + "__" + canonicalurl
+        canonicalurl += "|" + urlpath.replace('/', '|')
+    now = datetime.datetime.now()
+    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + now.strftime("%H.%M")
     webkit2png_cmd = webkit2png_cmd.format(user_agent, filename, url)
     if dry_run:
         logger.info(webkit2png_cmd)
@@ -117,7 +116,7 @@ def webscreenshots():
 
 
 if __name__ == '__main__':
-    cleanup()
-#    for ws in WebSite.objects.all():
-#        print fetch_webscreenshot(ws.url, dry_run=True)
-#    webscreenshots.delay()
+#    cleanup()
+    for ws in WebSite.objects.all():
+        print fetch_webscreenshot(ws.url, dry_run=True)
+    webscreenshots.delay()
