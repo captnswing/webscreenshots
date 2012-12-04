@@ -12,6 +12,7 @@ domain = "http://d2np6cnk6s6ggj.cloudfront.net/"
 AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
 AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
 
+
 def get_sites_for_day(selected_day):
     conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
     bucket = conn.get_bucket('svti-webscreenshots')

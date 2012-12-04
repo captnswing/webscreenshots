@@ -1,15 +1,38 @@
 {% extends "base.html" %}
 
+{% block extraheaders %}
+<script>
+$(function() {
+    $.datepicker.setDefaults($.datepicker.regional['sv']);
+    $("#datepicker").datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        showAnim: "slideDown",
+        dateFormat: "d MM",
+        showWeek: true,
+        firstDay: 1
+//        showOn: "button",
+//        buttonImage: "images/calendar.gif",
+//        buttonImageOnly: true
+    });
+});
+</script>
+{% endblock %}
+
 {% block content %}
 <h2>Sites</h2>
+<p><input type="text" id="datepicker" /></p>
 
-<table>
-<tbody>
+<p>
+<form>
+<fieldset>
+<select size="10" multiple="multiple">
     {% for s in sites %}
-    <tr>
-        <td>{{ s }}</td>
-    </tr>
+    <option>{{ s }}</option>
     {% endfor %}
-</tbody>
-</table>
+</select>
+<button type="submit" class="btn">Submit</button>
+</fieldset>
+</form>
+</p>
 {% endblock %}
