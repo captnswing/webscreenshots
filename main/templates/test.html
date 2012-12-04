@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Test</h2>
+<h2>Sites</h2>
 
 <table>
 <tbody>
-    {% for r in rs %}
+    {% for s in sites %}
     <tr>
-        {{ r }}
+        <td>{{ s }}</td>
     </tr>
     {% endfor %}
 </tbody>
