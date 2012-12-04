@@ -17,11 +17,12 @@ celery.conf.update(
     CELERYBEAT_SCHEDULE = {
         'runs-every-5-minutes': {
             'task': 'celerytasks.webscreenshots',
-            'schedule': crontab(minute='*/5', hour='7-23'),
+            'schedule': crontab(minute='*/5', hour='7-22'),
         },
+        # https://github.com/celery/celery/issues/1114
         'runs-every-hour': {
             'task': 'celerytasks.webscreenshots',
-            'schedule': crontab(minute=0, hour='0-6'),
+            'schedule': crontab(minute=0, hour='23,0,1,2,3,4,5,6'),
         }
     }
 )

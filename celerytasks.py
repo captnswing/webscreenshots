@@ -71,7 +71,6 @@ def fetch_webscreenshot(url, dry_run=False):
     user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
     webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
     webkit2png_cmd += """ 2>&1 >/dev/null"""
-    fileext = "-full.png"
     parsed = urlsplit(url)
     canonicalurl = parsed.netloc.lstrip('www.')
     urlpath = parsed.path.strip('/')
@@ -82,11 +81,11 @@ def fetch_webscreenshot(url, dry_run=False):
     webkit2png_cmd = webkit2png_cmd.format(user_agent, filename, url)
     if dry_run:
         logger.info(webkit2png_cmd)
-        return os.path.join("images", filename + fileext)
+        return os.path.join("images", filename + "-full.png")
     ret = subprocess.call(webkit2png_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    return os.path.join("images", filename + fileext)
+    return os.path.join("images", filename + "-full.png")
 
 
 @celery.task(name='celerytasks.cleanup')
@@ -116,7 +115,7 @@ def webscreenshots():
 
 
 if __name__ == '__main__':
-#    cleanup()
-    for ws in WebSite.objects.all():
-        print fetch_webscreenshot(ws.url, dry_run=True)
-    webscreenshots.delay()
+    cleanup()
+#    for ws in WebSite.objects.all():
+#        print fetch_webscreenshot(ws.url, dry_run=True)
+#    webscreenshots.delay()
