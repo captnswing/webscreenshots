@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
+{% block customcss %}
+div.ui-datepicker{
+    font-size: 90%;
+}
+{% endblock %}
+
 {% block extraheaders %}
 <script>
 $(function() {
     $.datepicker.setDefaults($.datepicker.regional['sv']);
     $("#datepicker").datepicker({
+        minDate: -30,
+        maxDate: "0D",
         showOtherMonths: true,
         selectOtherMonths: true,
         showAnim: "slideDown",
@@ -21,18 +29,21 @@ $(function() {
 
 {% block content %}
 <h2>Sites</h2>
-<p><input type="text" id="datepicker" /></p>
-
-<p>
 <form>
 <fieldset>
+<div>
+    <input class="input-medium" type="text" id="datepicker" />
+</div>
+<div>
 <select size="10" multiple="multiple">
     {% for s in sites %}
     <option>{{ s }}</option>
     {% endfor %}
 </select>
-<button type="submit" class="btn">Submit</button>
+</div>
+<div class="form-horizontal">
+    <button type="submit" class="btn">Submit</button>
+</div>
 </fieldset>
 </form>
-</p>
 {% endblock %}
