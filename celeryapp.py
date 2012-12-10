@@ -22,12 +22,12 @@ celery.conf.update(
         # https://github.com/celery/celery/issues/1114
         'runs-every-hour': {
             'task': 'celerytasks.webscreenshots',
-            'schedule': crontab(minute=0, hour='23,0,1,2,3,4,5,6'),
+            'schedule': crontab(minute='0', hour='23,0,1,2,3,4,5,6'),
         }
     }
 )
 
-CELERY_TIMEZONE = 'UTC'
+CELERY_TIMEZONE = 'Europe/Stockholm'
 
 if __name__ == '__main__':
     celery.start()

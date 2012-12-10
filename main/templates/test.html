@@ -46,4 +46,7 @@ $(function() {
 </div>
 </fieldset>
 </form>
+{% for url in urls %}
+    <a href="{{ url|cut:'-thumb.jpg' }}-top.jpg"><img width="250px" src="{{ url }}" /></a>
+{% endfor %}
 {% endblock %}

@@ -3,12 +3,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
     url(r'^$', 'main.views.home', name='home'),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
+    url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/(?P<site>.*)/$', 'main.views.siteday', name="siteday"),
+    # admin
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
