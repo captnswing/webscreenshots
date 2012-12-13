@@ -1,10 +1,8 @@
 from __future__ import absolute_import
-import time
 import datetime
 import subprocess
 from urlparse import urlsplit
 from PIL import Image
-import types
 from celery.utils.log import get_task_logger
 import os
 from boto.s3.connection import S3Connection
@@ -20,8 +18,8 @@ BUCKET_NAME = "svti-webscreenshots"
 
 @celery.task(name='celerytasks.remove_files')
 def remove_files(filenames):
-    if not isinstance(filenames, types.ListType):
-        filenames = list(filenames)
+    if isinstance(filenames, basestring):
+        filenames = [ filenames ]
     for fn in filenames:
         logger.info("removing %s" % fn)
         os.remove(fn)
@@ -29,8 +27,8 @@ def remove_files(filenames):
 
 @celery.task(name='celerytasks.upload_files')
 def upload_files(filenames):
-    if not isinstance(filenames, types.ListType):
-        filenames = list(filenames)
+    if isinstance(filenames, basestring):
+        filenames = [ filenames ]
     for fn in filenames:
         logger.info(fn.split('__')[-1])
         # TODO: change these to bucket specific credentials
@@ -94,9 +92,9 @@ def cleanup():
     for pngfile in glob.glob("images/*.png"):
         crop_and_scale_file(pngfile)
     jpegs = glob.glob("images/*.jpg")
-    if jpegs:
+    for fn in jpegs:
         chain = (
-            upload_files.s(jpegs) |
+            upload_files.s(fn) |
             remove_files.s()
         )
         chain()
