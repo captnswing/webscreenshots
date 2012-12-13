@@ -21,6 +21,12 @@ Google sök efter olika alternativ som finns
 
 [webkit2png](http://www.paulhammond.org/webkit2png) verkar klart vettigast.
 
+## Utforskning 12 Dec 2012
+
+- There's phantom.js
+- There's thumbalizr
+- http://www.moreofit.com/similar-to/www.thumbalizr.com/Top_10_Sites_Like_Thumbalizr/
+
 ## SVT Proxy
 
 Det visar sig svårt att göra proxy anpassning till webkit2png
