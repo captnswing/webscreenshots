@@ -1,5 +1,1 @@
 cookbook 'chef-base',   git: 'git://github.com/captnswing/chef-base.git'
-cookbook 'python',      git: 'git://github.com/opscode-cookbooks/python.git'
-cookbook 'ntp',         git: 'git://github.com/opscode-cookbooks/ntp.git'
-cookbook 'yum',         git: 'git://github.com/opscode-cookbooks/yum.git'
-cookbook 'apt',         git: 'git://github.com/opscode-cookbooks/apt.git'
