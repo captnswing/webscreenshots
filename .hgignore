@@ -25,4 +25,3 @@ logs/
 images/
 screenshotadmin.sqlite
 celerybeat-schedule
-Berksfile.lock
