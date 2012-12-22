@@ -1,6 +1,6 @@
-maintainer       "YOUR_COMPANY_NAME"
-maintainer_email "YOUR_EMAIL"
+maintainer       "Frank Hoffsümmer"
+maintainer_email "frank.hoffsummer@gmail.com"
 license          "All rights reserved"
-description      "Installs/Configures svti-webscreenshots"
+description      "Installs/Configures webscreenshots system"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.1.0"
+version          "0.2.0"
