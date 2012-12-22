@@ -64,11 +64,7 @@ def crop_and_scale_file(filename):
     return thumbfilename, croppedfilename, newfilename
 
 
-@celery.task(name='celerytasks.fetch_webscreenshot')
-def fetch_webscreenshot(url, dry_run=False):
-    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
-    webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
-    webkit2png_cmd += """ 2>&1 >/dev/null"""
+def create_filename(url):
     parsed = urlsplit(url)
     canonicalurl = parsed.netloc.lstrip('www.')
     urlpath = parsed.path.strip('/')
@@ -76,6 +72,50 @@ def fetch_webscreenshot(url, dry_run=False):
         canonicalurl += "|" + urlpath.replace('/', '|')
     now = datetime.datetime.now()
     filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + now.strftime("%H.%M")
+    return filename
+
+
+@celery.task(name='celerytasks.fetch_webscreenshot_phantomjs')
+def fetch_webscreenshot_phantomjs(url, dry_run=False):
+    js_tmpl = """
+    var pageurl = '%s';
+    var pagepng = '%s';
+    var page = require('webpage').create();
+    page.viewportSize = { width: 1280, height: 720 };
+    page.open(pageurl, function (status) {
+        if (status !== 'success') {
+            console.log('Unable to access the network!');
+        } else {
+            page.evaluate(function () {
+                var body = document.body;
+                body.style.backgroundColor = '#fff';
+            });
+            page.render(pagepng);
+        }
+        phantom.exit();
+    });
+    """
+    filename = create_filename(url)
+    phantomjs_cmd = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs %s.js" % filename
+    if dry_run:
+        logger.info(js_tmpl % (url, filename + ".png"))
+        logger.info(phantomjs_cmd)
+        return os.path.join("images", filename + ".png")
+    jsfile = open("/tmp/%s" % filename + ".js", 'w')
+    jsfile.write(js_tmpl % (url, filename + ".png"))
+    jsfile.close()
+    ret = subprocess.call(phantomjs_cmd, shell=True)
+    if ret != 0:
+        raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
+    return os.path.join("images", filename + ".png")
+
+
+@celery.task(name='celerytasks.fetch_webscreenshot_webkit2png')
+def fetch_webscreenshot_webkit2png(url, dry_run=False):
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
+    webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
+    webkit2png_cmd += """ 2>&1 >/dev/null"""
+    filename = create_filename(url)
     webkit2png_cmd = webkit2png_cmd.format(user_agent, filename, url)
     if dry_run:
         logger.info(webkit2png_cmd)
@@ -104,9 +144,9 @@ def cleanup():
 def webscreenshots():
     for ws in WebSite.objects.all():
         chain = (
-            fetch_webscreenshot.s(ws.url) |
-            crop_and_scale_file.s()       |
-            upload_files.s()              |
+            fetch_webscreenshot_webkit2png.s(ws.url) |
+            crop_and_scale_file.s() |
+            upload_files.s() |
             remove_files.s()
         )
         chain()
@@ -114,6 +154,6 @@ def webscreenshots():
 
 if __name__ == '__main__':
     cleanup()
-#    for ws in WebSite.objects.all():
-#        print fetch_webscreenshot(ws.url, dry_run=True)
+    for ws in WebSite.objects.all():
+        print fetch_webscreenshot_phantomjs(ws.url, dry_run=True)
 #    webscreenshots.delay()
