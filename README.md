@@ -125,3 +125,12 @@ _____
 
     # stop supervisord
     kill -HUP `cat /tmp/supervisord.pid`
+
+## Heroku
+
+following https://devcenter.heroku.com/articles/python
+
+curl -O http://assets.heroku.com/heroku-toolbelt/heroku-toolbelt.pkg
+sudo installer -pkg heroku-toolbelt.pkg -target '/'
+heroku login
+
