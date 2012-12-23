@@ -26,15 +26,19 @@ def remove_files(filenames):
 
 
 @celery.task(name='celerytasks.upload_files')
-def upload_files(filenames):
+def upload_files(filenames, boto_cfg=True):
     if isinstance(filenames, basestring):
         filenames = [ filenames ]
     for fn in filenames:
         logger.info(fn.split('__')[-1])
-        # TODO: change these to bucket specific credentials
-        AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
-        AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
-        conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+        if boto_cfg:
+            # keys defined in /etc/boto.cfg
+            conn = S3Connection()
+        else:
+            # keys defined in environment
+            AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
+            AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
+            conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
         bucket = conn.get_bucket(BUCKET_NAME)
         k = Key(bucket)
         logger.info('Uploading %s to Amazon S3 bucket %s' % (fn, BUCKET_NAME))
@@ -49,13 +53,15 @@ def crop_and_scale_file(filename):
     # crop Image from the top
     box = (0, 0, 1280, 1280)
     croppedIm = origIm.crop(box)
-    croppedfilename = filename.replace('-full.png', '-top.jpg')
+    # croppedfilename = filename.replace('-full.png', '-top.jpg')
+    croppedfilename = filename.replace('.png', '-top.jpg')
     croppedIm.save(croppedfilename)
     # resize cropped image
     newwidth = croppedIm.size[0] / 2
     newheight = croppedIm.size[1] / 2
     thumbIm = croppedIm.resize((newwidth, newheight), Image.ANTIALIAS)
-    thumbfilename = filename.replace('-full.png', '-thumb.jpg')
+    # thumbfilename = filename.replace('-full.png', '-thumb.jpg')
+    thumbfilename = filename.replace('.png', '-thumb.jpg')
     thumbIm.save(thumbfilename)
     # save origin as jpg, and remove png
     newfilename = filename.replace('.png', '.jpg')
@@ -96,13 +102,13 @@ def fetch_webscreenshot_phantomjs(url, dry_run=False):
     });
     """
     filename = create_filename(url)
-    phantomjs_cmd = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs %s.js" % filename
+    phantomjs_cmd = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs /tmp/%s.js" % filename.replace('|', '\|')
     if dry_run:
         logger.info(js_tmpl % (url, filename + ".png"))
         logger.info(phantomjs_cmd)
         return os.path.join("images", filename + ".png")
     jsfile = open("/tmp/%s" % filename + ".js", 'w')
-    jsfile.write(js_tmpl % (url, filename + ".png"))
+    jsfile.write(js_tmpl % (url, "images/" + filename + ".png"))
     jsfile.close()
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
@@ -144,7 +150,8 @@ def cleanup():
 def webscreenshots():
     for ws in WebSite.objects.all():
         chain = (
-            fetch_webscreenshot_webkit2png.s(ws.url) |
+            # fetch_webscreenshot_webkit2png.s(ws.url) |
+            fetch_webscreenshot_phantomjs.s(ws.url) |
             crop_and_scale_file.s() |
             upload_files.s() |
             remove_files.s()
