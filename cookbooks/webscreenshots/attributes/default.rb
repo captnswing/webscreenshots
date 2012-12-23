@@ -8,11 +8,13 @@ default["webscreenshots"]["macfonts"] = ["Geneva.ttf",
                                          "HelveticaNeue.ttf",
                                          "HelveticaNeueBold.ttf"]
 
-default["webscreenshots"]["supervisord"]["logpath"] = "/var/log/supervisord"
-
 default["webscreenshots"]["s3bucketname"] = "svti-webscreenshots"
 # IAM user with access to configured S3 bucket
 # http://docs.amazonwebservices.com/IAM/latest/UserGuide/GSGHowToCreateAdminsGroup.html
 default["webscreenshots"]["iam"]["username"] = "webscreenshost"
 default["webscreenshots"]["iam"]["accesskeyid"] = "AKIAJGUNM2DBSJAZ777Q"
 default["webscreenshots"]["iam"]["secretkey"] = "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"
+
+default["webscreenshots"]["supervisord"]["logpath"] = "/var/log/supervisord"
+default["webscreenshots"]["supervisord"]["conffile"] = "/etc/supervisord.conf"
+default["webscreenshots"]["supervisord"]["pidfile"] = "/var/run/supervisord.pid"

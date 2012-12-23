@@ -5,21 +5,13 @@ case node["platform"]
     include_recipe "webscreenshots::debian"
 end
 
-# make sure redis is installed
 include_recipe "redis"
-
-# make sure python is installed
 include_recipe "python"
-
-#python_virtualenv "#{node["webscreenshots"]["venvpath"]}" do
-#  action :create
-#end
 
 packages = ["Django", "PIL", "boto", "celery-with-redis", "flower", "ipython", "python-dateutil==1.5", "supervisor"]
 
 packages.each do |pkg|
   python_pip "#{pkg}" do
-    #virtualenv node["webscreenshots"]["venvpath"]
     action :install
   end
 end
@@ -29,15 +21,15 @@ directory "#{node["webscreenshots"]["supervisord"]["logpath"]}" do
   recursive true
 end
 
-template "/etc/init.d/supervisor" do
-  source "supervisor.init.erb"
-  mode 0755
-end
-
 service "supervisor" do
   reload_command "supervisorctl update"
   supports :reload => true, :status => true
   action [:enable, :start]
+end
+
+template "/etc/init.d/supervisor" do
+  source "supervisor.init.erb"
+  mode 0755
 end
 
 template "/etc/supervisord.conf" do
