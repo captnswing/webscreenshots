@@ -1,3 +1,7 @@
+# make sure python is installed
+include_recipe "python"
+include_recipe "postgresql::server"
+
 # from http://skookum.com/blog/dynamic-screenshots-on-the-server-with-phantomjs/
 remote_file "#{Chef::Config["file_cache_path"]}/phantomjs-#{node["phantomjs"]["version"]}.tar.bz2" do
   source node["phantomjs"]["uri"]

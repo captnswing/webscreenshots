@@ -19,11 +19,19 @@ Vagrant::Config.run do |config|
 
 #    chef.http_proxy = "http://proxy.svt.se:8080"
 #    chef.https_proxy = "https://proxy.svt.se:8080"
-#    chef.json = {
+
+    chef.json = {
+        # from https://github.com/opscode-cookbooks/postgresql#chef-solo-note
+        "postgresql" => {
+            "password" => {
+                "postgres" => "iloverandompasswordsbutthiswilldo"
+            }
+         },
+    }
+
 #        # yum::yum recipe sets http_proxy in /etc/yum.conf
 #        :yum => { :proxy => "http://proxy.svt.se:8080" },
 #        # svti-base::default recipe sets http_proxy in /etc/profile.d/svtidefaults.sh
 #        :chef_client => { :http_proxy => "http://proxy.svt.se:8080" }
-#    }
   end
 end
