@@ -134,3 +134,40 @@ curl -O http://assets.heroku.com/heroku-toolbelt/heroku-toolbelt.pkg
 sudo installer -pkg heroku-toolbelt.pkg -target '/'
 heroku login
 
+### posgresql
+
+sudo mkdir -p /opt/local/var/db/postgresql92/defaultdb
+sudo chown postgres:postgres /opt/local/var/db/postgresql92/defaultdb
+sudo su postgres -c '/opt/local/lib/postgresql92/bin/initdb -D /opt/local/var/db/postgresql92/defaultdb'
+/opt/local/lib/postgresql92/bin/postgres -D /opt/local/var/db/postgresql92/defaultdb
+/opt/local/lib/postgresql92/bin/pg_ctl -D /opt/local/var/db/postgresql92/defaultdb -l logfile start
+
+### install virtualbox
+
+curl -O http://dlc.sun.com.edgesuite.net/virtualbox/4.2.6/VirtualBox-4.2.6-82870-OSX.dmg
+sudo installer -target '/' -pkg /Volumes/VirtualBox/VirtualBox.pkg
+diskutil eject /Volumes/VirtualBox
+rm VirtualBox-4.2.6-82870-OSX.dmg
+
+### postgresql
+sudo mkdir -p /opt/local/var/db/postgresql92/defaultdb
+sudo chown postgres:postgres /opt/local/var/db/postgresql92/defaultdb
+sudo su postgres -c '/opt/local/lib/postgresql92/bin/initdb -D /opt/local/var/db/postgresql92/defaultdb'
+/opt/local/lib/postgresql92/bin/postgres -D /opt/local/var/db/postgresql92/defaultdb
+/opt/local/lib/postgresql92/bin/pg_ctl -D /opt/local/var/db/postgresql92/defaultdb -l logfile start
+
+### install rvm & ruby
+
+curl -L https://get.rvm.io | bash -s stable --ruby
+rvm --default use 1.9.3
+
+### install vagrant
+
+gem install vagrant
+sudo ln -s /usr/bin/llvm-gcc-4.2 /usr/bin/gcc-4.2
+vagrant box add lucid64 http://files.vagrantup.com/lucid32.box
+
+### install chef tool
+
+gem install foodcritic
+gem install berkshelf
