@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block customcss %}
+div.ui-datepicker {
+    font-size: 90%;
+}
+body { background-color:#000000; }
+{% endblock %}
+
+{% block extraheaders %}
+<script language="JavaScript" type="text/javascript" src="{{ STATIC_URL }}/contentflow/contentflow.js"></script>
+<script>
+//$(function() {
+//    $('.divforms').hide();
+//    $.datepicker.setDefaults($.datepicker.regional['sv']);
+//    $("#datepicker").datepicker({
+//        minDate: -30,
+//        maxDate: "0D",
+//        showOtherMonths: true,
+//        selectOtherMonths: true,
+//        showAnim: "slideDown",
+//        dateFormat: "d MM",
+//        showWeek: true,
+//        firstDay: 1
+////        showOn: "button",
+////        buttonImage: "images/calendar.gif",
+////        buttonImageOnly: true
+//    });
+//});
+var myNewFlow = new ContentFlow('myFantasticFlow', {
+    reflectionHeight: 0,
+    visibleItems: 2,
+//    verticalFlow: true,
+    circularFlow: false
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+{% for h in hourthumbs %}
+{% ifequal h currenthour %}yes {{ h }}{% endifequal %}
+{% endfor %}
+
+<div id="myFantasticFlow" class="ContentFlow">
+    <!--<div class="loadIndicator"><div class="indicator"></div></div>-->
+    <div class="flow">
+        {% for v in hourthumbs|dictsort:"hour" %}
+        <img width="200" class="item" src="{{ v.url }}" title="{{ v.hour|date:'H.i' }}"/>
+        {% endfor %}
+        <!--<img class="item" src="{{ STATIC_URL }}/contentflow/pics/pic0.png"/>-->
+        <!--<img class="item" src="{{ STATIC_URL }}/contentflow/pics/pic1.png"/>-->
+        <!--<img class="item" src="{{ STATIC_URL }}/contentflow/pics/pic2.png"/>-->
+    </div>
+    <div class="globalCaption"></div>
+    <div class="preButton"></div>
+    <div class="nextButton"></div>
+    <!--<div class="scrollbar">-->
+        <!--<div class="slider">-->
+            <!--<div class="position"></div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+
+{% endblock %}

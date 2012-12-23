@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block customcss %}
-div.ui-datepicker{
+div.ui-datepicker {
     font-size: 90%;
 }
 {% endblock %}
@@ -9,6 +9,7 @@ div.ui-datepicker{
 {% block extraheaders %}
 <script>
 $(function() {
+    $('.divforms').hide();
     $.datepicker.setDefaults($.datepicker.regional['sv']);
     $("#datepicker").datepicker({
         minDate: -30,
@@ -28,7 +29,7 @@ $(function() {
 {% endblock %}
 
 {% block content %}
-<h2>Sites</h2>
+<div class="divforms">
 <form>
 <fieldset>
 <div>
@@ -46,7 +47,24 @@ $(function() {
 </div>
 </fieldset>
 </form>
-{% for url in urls %}
-    <a href="{{ url|cut:'-thumb.jpg' }}-top.jpg"><img width="250px" src="{{ url }}" /></a>
+</div>
+{% for h in hourthumbs %}
+{% ifequal h currenthour %}yes {{ h }}{% endifequal %}
 {% endfor %}
+
+<table>
+    <thead>
+    <th>hour</th>
+    <th>image</th>
+    </thead>
+    <tbody>
+    {% for v in hourthumbs|dictsort:"hour" %}
+    <tr>
+        <td><a href="#{{ v.hour|date:'H.i' }}">{{ v.hour|date:"H.i" }}</a></td>
+        <td><img src="{{ v.url }}" width="250" /></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}

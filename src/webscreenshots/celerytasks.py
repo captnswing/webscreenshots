@@ -2,14 +2,17 @@ from __future__ import absolute_import
 import datetime
 import subprocess
 from urlparse import urlsplit
+import os
+
 from PIL import Image
 from celery.utils.log import get_task_logger
-import os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-from celeryapp import celery
+
+from src.webscreenshots.celeryapp import celery
+
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
-from main.models import WebSite
+from src.webscreenshots.main.models import WebSite
 
 
 logger = get_task_logger(__name__)
