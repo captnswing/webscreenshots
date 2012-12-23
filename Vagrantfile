@@ -7,6 +7,7 @@ Vagrant::Config.run do |config|
   # config.vm.box_url = "http://svt-box.s3.amazonaws.com/sl63-chefclient-10.16.2.box"
 
   config.vm.host_name = "webscreenshots.vagrant"
+  config.vm.forward_port 5555, 5555
 
   config.vm.customize ["modifyvm", :id, "--memory", 1024]
   config.vm.customize ["modifyvm", :id, "--cpus", 2 ]
