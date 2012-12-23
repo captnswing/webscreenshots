@@ -6,7 +6,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.2"
 
 depends "python"
-depends "postgresql"
+depends "redis"
 
 #supports "scientific", ">= 6.0"
 supports "ubuntu", ">= 10.4"
