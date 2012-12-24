@@ -14,7 +14,7 @@ bash "run ttf-mscorefonts-installer" do
   echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
   apt-get install -y ttf-mscorefonts-installer
   EOS
-  not_if "test -e /opt/phantomjs-#{node["phantomjs"]["version"]}-linux-#{node["webscreenshots"]["phantomjs"]["arch"]}"
+  not_if "test -e /opt/phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}-linux-#{node["webscreenshots"]["phantomjs"]["arch"]}"
 end
 
 cookbook_file "/etc/fonts/local.conf" do
