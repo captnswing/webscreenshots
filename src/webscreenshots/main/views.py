@@ -1,22 +1,15 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
-from django.shortcuts import HttpResponse
 from django.template.context import RequestContext
-import os
 from boto.s3.connection import S3Connection
-from boto.s3.key import Key
-import sys
-import json
 import datetime
 
 
 domain = "http://d2np6cnk6s6ggj.cloudfront.net/"
-AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
-AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
 
 
 def get_sites_for_day(selected_day):
-    conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    conn = S3Connection()
     bucket = conn.get_bucket('svti-webscreenshots')
     selected_day = selected_day.strftime("%Y/%m/%d")
     keys = bucket.get_all_keys(prefix=selected_day + "/", delimiter="/")
@@ -25,7 +18,7 @@ def get_sites_for_day(selected_day):
 
 
 def get_images_for_day_and_site(selected_site, selected_day):
-    conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    conn = S3Connection()
     bucket = conn.get_bucket('svti-webscreenshots')
     if isinstance(selected_day, datetime.datetime) or isinstance(selected_day, datetime.date):
         selected_day = selected_day.strftime("%Y/%m/%d")
@@ -67,7 +60,7 @@ def siteday(request, pubdate, site):
 
 
 def home(request):
-    conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    conn = S3Connection()
     bucket = conn.get_bucket('svti-webscreenshots')
     domain = bucket.get_website_endpoint()
     sites = get_sites_for_day(datetime.date.today())

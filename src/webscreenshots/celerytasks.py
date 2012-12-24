@@ -2,24 +2,21 @@ from __future__ import absolute_import
 import datetime
 import subprocess
 from urlparse import urlsplit
-import os
-
 from PIL import Image
 from celery.utils.log import get_task_logger
+import os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-
-from src.webscreenshots.celeryapp import celery
-
-os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
-from src.webscreenshots.main.models import WebSite
+from webscreenshots.celeryapp import celery
+os.environ["DJANGO_SETTINGS_MODULE"] = "webscreenshots.settings"
+from webscreenshots.main.models import WebSite
 
 
 logger = get_task_logger(__name__)
 BUCKET_NAME = "svti-webscreenshots"
 
 
-@celery.task(name='celerytasks.remove_files')
+@celery.task(name='webscreenshots.celerytasks.remove_files')
 def remove_files(filenames):
     if isinstance(filenames, basestring):
         filenames = [ filenames ]
@@ -28,7 +25,7 @@ def remove_files(filenames):
         os.remove(fn)
 
 
-@celery.task(name='celerytasks.upload_files')
+@celery.task(name='webscreenshots.celerytasks.upload_files')
 def upload_files(filenames, boto_cfg=True):
     if isinstance(filenames, basestring):
         filenames = [ filenames ]
@@ -50,7 +47,7 @@ def upload_files(filenames, boto_cfg=True):
     return filenames
 
 
-@celery.task(name='celerytasks.crop_and_scale_file')
+@celery.task(name='webscreenshots.celerytasks.crop_and_scale_file')
 def crop_and_scale_file(filename):
     origIm = Image.open(filename)
     # crop Image from the top
@@ -84,7 +81,7 @@ def create_filename(url):
     return filename
 
 
-@celery.task(name='celerytasks.fetch_webscreenshot_phantomjs')
+@celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot_phantomjs')
 def fetch_webscreenshot_phantomjs(url, dry_run=False):
     js_tmpl = """
     var pageurl = '%s';
@@ -119,7 +116,7 @@ def fetch_webscreenshot_phantomjs(url, dry_run=False):
     return os.path.join("images", filename + ".png")
 
 
-@celery.task(name='celerytasks.fetch_webscreenshot_webkit2png')
+@celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot_webkit2png')
 def fetch_webscreenshot_webkit2png(url, dry_run=False):
     user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
     webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
@@ -135,7 +132,7 @@ def fetch_webscreenshot_webkit2png(url, dry_run=False):
     return os.path.join("images", filename + "-full.png")
 
 
-@celery.task(name='celerytasks.cleanup')
+@celery.task(name='webscreenshots.celerytasks.cleanup')
 def cleanup():
     import glob
     for pngfile in glob.glob("images/*.png"):
@@ -149,7 +146,7 @@ def cleanup():
         chain()
 
 
-@celery.task(name='celerytasks.webscreenshots')
+@celery.task(name='webscreenshots.celerytasks.webscreenshots')
 def webscreenshots():
     for ws in WebSite.objects.all():
         chain = (
