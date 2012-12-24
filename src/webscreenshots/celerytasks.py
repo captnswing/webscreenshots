@@ -116,22 +116,6 @@ def fetch_webscreenshot_phantomjs(url, dry_run=False):
     return os.path.join("images", filename + ".png")
 
 
-@celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot_webkit2png')
-def fetch_webscreenshot_webkit2png(url, dry_run=False):
-    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1'
-    webkit2png_cmd = """./webkit2png --user-agent='{0}' -W 1280 -H 1280 -D images -F -o '{1}' {2}"""
-    webkit2png_cmd += """ 2>&1 >/dev/null"""
-    filename = create_filename(url)
-    webkit2png_cmd = webkit2png_cmd.format(user_agent, filename, url)
-    if dry_run:
-        logger.info(webkit2png_cmd)
-        return os.path.join("images", filename + "-full.png")
-    ret = subprocess.call(webkit2png_cmd, shell=True)
-    if ret != 0:
-        raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    return os.path.join("images", filename + "-full.png")
-
-
 @celery.task(name='webscreenshots.celerytasks.cleanup')
 def cleanup():
     import glob
@@ -150,7 +134,6 @@ def cleanup():
 def webscreenshots():
     for ws in WebSite.objects.all():
         chain = (
-            # fetch_webscreenshot_webkit2png.s(ws.url) |
             fetch_webscreenshot_phantomjs.s(ws.url) |
             crop_and_scale_file.s() |
             upload_files.s() |
@@ -163,4 +146,3 @@ if __name__ == '__main__':
     cleanup()
     for ws in WebSite.objects.all():
         print fetch_webscreenshot_phantomjs(ws.url, dry_run=True)
-#    webscreenshots.delay()
