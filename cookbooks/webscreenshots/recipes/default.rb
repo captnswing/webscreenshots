@@ -8,7 +8,11 @@ end
 include_recipe "redis"
 include_recipe "python"
 
-packages = ["Django", "PIL", "boto", "celery-with-redis", "flower", "ipython", "python-dateutil==1.5", "supervisor"]
+if node["webscreenshots"]["vagrant"]
+  log("------------------ vagrant ------------------")
+end
+
+packages = ["distribute", "django", "PIL", "boto", "celery-with-redis", "flower", "ipython", "python-dateutil==1.5", "supervisor"]
 
 packages.each do |pkg|
   python_pip "#{pkg}" do
@@ -21,12 +25,6 @@ directory "#{node["webscreenshots"]["supervisord"]["logpath"]}" do
   recursive true
 end
 
-service "supervisor" do
-  reload_command "supervisorctl update"
-  supports :reload => true, :status => true
-  action [:enable, :start]
-end
-
 template "/etc/init.d/supervisor" do
   source "supervisor.init.erb"
   mode 0755
@@ -36,6 +34,12 @@ template "/etc/supervisord.conf" do
   source "supervisord.conf.erb"
   mode 0644
   notifies :reload, 'service[supervisor]'
+end
+
+service "supervisor" do
+  reload_command "supervisorctl update"
+  supports :reload => true, :status => true
+  action [:enable, :start]
 end
 
 template "/etc/boto.cfg" do

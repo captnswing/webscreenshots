@@ -8,6 +8,7 @@ Vagrant::Config.run do |config|
 
   config.vm.host_name = "webscreenshots.vagrant"
   config.vm.forward_port 5555, 5555
+  config.vm.forward_port 8000, 8000
 
   config.vm.customize ["modifyvm", :id, "--memory", 1024]
   config.vm.customize ["modifyvm", :id, "--cpus", 2 ]
@@ -22,12 +23,12 @@ Vagrant::Config.run do |config|
 #    chef.https_proxy = "https://proxy.svt.se:8080"
 
     chef.json = {
-        # from https://github.com/opscode-cookbooks/postgresql#chef-solo-note
-        "postgresql" => {
-            "password" => {
-                "postgres" => "iloverandompasswordsbutthiswilldo"
-            }
-         },
+#        # from https://github.com/opscode-cookbooks/postgresql#chef-solo-note
+#        "postgresql" => {
+#            "password" => {
+#                "postgres" => "iloverandompasswordsbutthiswilldo"
+#            }
+#         },
     }
 
 #        # yum::yum recipe sets http_proxy in /etc/yum.conf

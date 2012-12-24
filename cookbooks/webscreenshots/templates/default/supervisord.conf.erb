@@ -55,7 +55,8 @@ serverurl=unix:///tmp/supervisor.sock ; use a unix:// URL  for a unix socket
 ; supervisor.
 
 [program:celeryd]
-command=celery worker -B -E -A celeryapp -l info
+;environment=A=1,B=2           ; process environment additions (def no adds)
+command=celery worker -B -E -A webscreenshots.celeryapp -l info
 stdout_logfile=<%= node["webscreenshots"]["supervisord"]["logpath"] %>/celeryd.log
 stderr_logfile=<%= node["webscreenshots"]["supervisord"]["logpath"] %>/celeryd.log
 autostart=true
@@ -65,6 +66,7 @@ stopwaitsecs=300
 stopsignal=TERM
 
 [program:flower]
+;environment=A=1,B=2           ; process environment additions (def no adds)
 command=celery flower --broker=redis://localhost:6379/0
 stdout_logfile=<%= node["webscreenshots"]["supervisord"]["logpath"] %>/flower.log
 stderr_logfile=<%= node["webscreenshots"]["supervisord"]["logpath"] %>/flower.log
@@ -72,6 +74,7 @@ autostart=true
 autorestart=true
 startsecs=10
 stopwaitsecs=300
+stopsignal=TERM
 
 ;[program:theprogramname]
 ;command=/bin/cat              ; the program (relative uses PATH, can take args)
@@ -101,7 +104,6 @@ stopwaitsecs=300
 ;stderr_logfile_backups=10     ; # of stderr logfile backups (default 10)
 ;stderr_capture_maxbytes=1MB   ; number of bytes in 'capturemode' (default 0)
 ;stderr_events_enabled=false   ; emit events on stderr writes (default false)
-;environment=A=1,B=2           ; process environment additions (def no adds)
 ;serverurl=AUTO                ; override serverurl computation (childutils)
 
 ; The below sample eventlistener section shows all possible
