@@ -25,6 +25,7 @@ setup(
         'django',
         'PIL',
         'boto',
+        'psycopg2',
         'celery-with-redis',
         'python-dateutil < 2',
         'flower',

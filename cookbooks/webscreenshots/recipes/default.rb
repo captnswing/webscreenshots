@@ -7,12 +7,24 @@ end
 
 include_recipe "redis"
 include_recipe "python"
+include_recipe "postgresql::server"
+
+#bash "django_db" do
+#  user "postgres"
+#  code <<-EOS
+#  psql <<-ESQL
+#    CREATE USER django WITH PASSWORD 'postgres';
+#    CREATE DATABASE webscreenshots;
+#    GRANT ALL PRIVILEGES ON DATABASE webscreenshots to django;
+#  ESQL
+#  EOS
+#end
 
 if node["webscreenshots"]["vagrant"]
   log("------------------ vagrant ------------------")
 end
 
-packages = ["distribute", "django", "PIL", "boto", "celery-with-redis", "flower", "ipython", "python-dateutil==1.5", "supervisor"]
+packages = ["psycopg2", "distribute", "django", "PIL", "boto", "celery-with-redis", "flower", "ipython", "python-dateutil==1.5", "supervisor"]
 
 packages.each do |pkg|
   python_pip "#{pkg}" do

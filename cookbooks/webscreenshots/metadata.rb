@@ -7,6 +7,7 @@ version          "0.0.2"
 
 depends "python"
 depends "redis"
+depends "postgresql"
 
 #supports "scientific", ">= 6.0"
 supports "ubuntu", ">= 10.4"
