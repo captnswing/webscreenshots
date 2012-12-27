@@ -1,8 +1,10 @@
 require 'berkshelf/vagrant'
 
 Vagrant::Config.run do |config|
-  config.vm.box = "lucid64"
-  config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  # config.vm.box = "lucid64"
+  # config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
   # config.vm.box = "sl63-chefclient"
   # config.vm.box_url = "http://svt-box.s3.amazonaws.com/sl63-chefclient-10.16.2.box"
 
