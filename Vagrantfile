@@ -14,9 +14,9 @@ Vagrant::Config.run do |config|
 
   # make postgres server accessible from host environment
   config.vm.forward_port 5432, 5432
-  # flower
+  # flower gui
   config.vm.forward_port 5555, 5555
-  # django
+  # django gui
   config.vm.forward_port 8000, 8000
 
   # http://vagrantup.com/v1/docs/nfs.html

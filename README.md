@@ -1,45 +1,65 @@
-# Skärmdumpar av webbplatser
+# Take regular screenshots of preconfigured websites
 
-Grundidé / Krav:
+##### Design ideas:
 
-1. spara regelbunden PNG snapshots och tumnaglar av valfria webbsidor och lagra de på S3
-    - använd celerybeat för att varje 5:e minut gå igenom en lista av förkonfigurerade url:er
-    - för varje url, spara ned hela sidan som hel PNG och tumnagel.
-    - ladda upp PNG och tumnagel till S3
-
-2. skapa en webbapplikation som tillåtar lätt utforskning av lagrade snapshots
+* save screenshots of configured websites in regular intervals as PNG or JPEG.
+* allow for configuration of websites through easy web interface
+* allow the easy comparison and exploration of the save screenshots for arbitrary times and time ranges
     - surfa på url http://appserver/svt.se/nyheter ger tillbaka senaste snapshot
     - surfa på url http://appserver/svt.se/nyheter/2012-11-27/12.23/ mappar mot snapshot som tagits närmast i tid
 
-## Utforskning 27 Nov 2012
+##### Implementation ideas:
 
-Google sök efter olika alternativ som finns
+* använd celerybeat för att varje 5:e minut gå igenom en lista av förkonfigurerade url:er
+* för varje url, spara ned hela sidan som hel PNG och tumnagel.
+* ladda upp PNG och tumnagel till S3
+* 
 
-- [www.paulhammond.org/webkit2png](http://www.paulhammond.org/webkit2png)
-- [www.corpocrat.com/2008/08/26/capturing-a-screenshot-of-a-website](http://corpocrat.com/2008/08/26/capturing-a-screenshot-of-a-website)
-- [news.ycombinator.com/item?id=1256381](http://news.ycombinator.com/item?id=1256381)
+### research for screenshot solutions
 
-## Utforskning 12 Dec 2012
+##### requirements:
 
-- There's thumbalizr
-- http://www.moreofit.com/similar-to/www.thumbalizr.com/Top_10_Sites_Like_Thumbalizr/
-- There's phantom.js. that's it. proxy + linux (EC2) support
+* headless
+* runs on virtualized linux (Vagrant, VMWare ESX, EC2)
+* supports html5 & css3 & javascript & flash
+* makes nice screenshots (fonts)
+* optionally: supports http proxy
 
-## S3 Bucket
+##### articles:
+
+* [skookum.com/blog/dynamic-screenshots-on-the-server-with-phantomjs/](http://skookum.com/blog/dynamic-screenshots-on-the-server-with-phantomjs/)
+* [corpocrat.com/2008/08/26/capturing-a-screenshot-of-a-website](http://corpocrat.com/2008/08/26/capturing-a-screenshot-of-a-website)
+* [news.ycombinator.com/item?id=1256381](http://news.ycombinator.com/item?id=1256381)
+* [gfdsa.gfdsa.org/2012/08/making-web-pages-screenshots-with-webkit2png-flash-included](http://gfdsa.gfdsa.org/2012/08/making-web-pages-screenshots-with-webkit2png-flash-included)
+* [coderholic.com/pywebshot-generate-website-thumbnails-using-python/](http://www.coderholic.com/pywebshot-generate-website-thumbnails-using-python/)
+* [blogs.uni-osnabrueck.de/rotapken/2008/12/03/create-screenshots-of-a-web-page-using-python-and-qtwebkit/](http://www.blogs.uni-osnabrueck.de/rotapken/2008/12/03/create-screenshots-of-a-web-page-using-python-and-qtwebkit/)
+
+##### alternatives:
+
+* [khtml2png](http://khtml2png.sourceforge.net)
+* [python-webkit2png](https://github.com/AdamN/python-webkit2png)
+* [webkit2png](http://www.paulhammond.org/webkit2png)
+* [cutycapt](http://cutycapt.sourceforge.net)
+* [pywebshot](https://github.com/coderholic/PyWebShot)
+* [phantom.js](http://phantomjs.org/)
+* [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/)
+* [htmlshots](https://github.com/w3p/htmlshots)
+
+##### webservices:
+
+* [node-urlshot](http://node-urlshot.herokuapp.com), example with [svt.se](http://node-urlshot.herokuapp.com/?url=http://svt.se/&viewport=1280x900&format=jpg)
+* [thumbalizr](http://www.thumbalizr.com/)
+* [thumbalizr alternatives](http://www.moreofit.com/similar-to/www.thumbalizr.com/Top_10_Sites_Like_Thumbalizr/)
+* loads of others
+
+### S3 Bucket
 
     - world readable
     - 90 days expiration for files
     - cloudfront enabled
     - custom IAM user with custom policy
 
-## UX mockups
-
-    - http://www.artrage.com/artrage-demos.html
-    - http://pencil.evolus.vn/Features.html
-    - http://uxpin.com/
-    - https://moqups.com/#!/
-
-## run celery workers and flower with supervisor
+### run celery workers and flower with supervisor
 
     # start supervisord, starts celery & flower automatically
     supervisor
@@ -54,48 +74,36 @@ Google sök efter olika alternativ som finns
     # stop supervisord
     kill -HUP `cat /tmp/supervisord.pid`
 
-## Heroku
+### Heroku
 
 following https://devcenter.heroku.com/articles/python
-
-curl -O http://assets.heroku.com/heroku-toolbelt/heroku-toolbelt.pkg
-sudo installer -pkg heroku-toolbelt.pkg -target '/'
-heroku login
-
-### posgresql
-
-sudo mkdir -p /opt/local/var/db/postgresql92/defaultdb
-sudo chown postgres:postgres /opt/local/var/db/postgresql92/defaultdb
-sudo su postgres -c '/opt/local/lib/postgresql92/bin/initdb -D /opt/local/var/db/postgresql92/defaultdb'
-/opt/local/lib/postgresql92/bin/postgres -D /opt/local/var/db/postgresql92/defaultdb
-/opt/local/lib/postgresql92/bin/pg_ctl -D /opt/local/var/db/postgresql92/defaultdb -l logfile start
+    
+    curl -O http://assets.heroku.com/heroku-toolbelt/heroku-toolbelt.pkg
+    sudo installer -pkg heroku-toolbelt.pkg -target '/'
+    heroku login
 
 ### install virtualbox
 
-curl -O http://dlc.sun.com.edgesuite.net/virtualbox/4.2.6/VirtualBox-4.2.6-82870-OSX.dmg
-sudo installer -target '/' -pkg /Volumes/VirtualBox/VirtualBox.pkg
-diskutil eject /Volumes/VirtualBox
-rm VirtualBox-4.2.6-82870-OSX.dmg
-
-### postgresql
-sudo mkdir -p /opt/local/var/db/postgresql92/defaultdb
-sudo chown postgres:postgres /opt/local/var/db/postgresql92/defaultdb
-sudo su postgres -c '/opt/local/lib/postgresql92/bin/initdb -D /opt/local/var/db/postgresql92/defaultdb'
-/opt/local/lib/postgresql92/bin/postgres -D /opt/local/var/db/postgresql92/defaultdb
-/opt/local/lib/postgresql92/bin/pg_ctl -D /opt/local/var/db/postgresql92/defaultdb -l logfile start
+    curl -O http://dlc.sun.com.edgesuite.net/virtualbox/4.2.6/VirtualBox-4.2.6-82870-OSX.dmg
+    hdid VirtualBox-4.2.6-82870-OSX.dmg
+    sudo installer -target '/' -pkg /Volumes/VirtualBox/VirtualBox.pkg
+    diskutil eject /Volumes/VirtualBox
+    rm VirtualBox-4.2.6-82870-OSX.dmg
 
 ### install rvm & ruby
 
-curl -L https://get.rvm.io | bash -s stable --ruby
-rvm --default use 1.9.3
+    curl -L https://get.rvm.io | bash -s stable --ruby
+    rvm --default use 1.9.3
 
-### install vagrant
+### install vagrant &
 
-gem install vagrant
-sudo ln -s /usr/bin/llvm-gcc-4.2 /usr/bin/gcc-4.2
-vagrant box add lucid64 http://files.vagrantup.com/lucid32.box
+    gem install vagrant
+    vagrant box add precise64 http://files.vagrantup.com/precise64.box
 
-### install chef tool
+### install chef tools
 
-gem install foodcritic
-gem install berkshelf
+    sudo ln -s /usr/bin/llvm-gcc-4.2 /usr/bin/gcc-4.2
+    gem install bundler yajl-ruby nokogiri
+    gem install ffi -v 1.0.11
+    gem install net-ssh net-ssh-multi fog highline
+    gem install knife-ec2 knife-solo
