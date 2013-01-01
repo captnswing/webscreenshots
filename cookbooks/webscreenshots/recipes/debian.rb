@@ -57,7 +57,7 @@ end
 #end
 
 #---------------
-# regenerate font chache
+# regenerate font cache
 #---------------
 bash "regenerate fontchache" do
   code "fc-cache -fv"

@@ -1,9 +1,10 @@
-maintainer       "Frank Hoffsümmer"
+name "chef-webscreenshots"
+maintainer "Frank Hoffsümmer"
 maintainer_email "frank.hoffsummer@gmail.com"
-license          "All rights reserved"
-description      "Installs/Configures webscreenshots system"
+license "All rights reserved"
+description "Installs and configures webscreenshots application"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.0.2"
+version "0.0.2"
 
 depends "python"
 depends "redis"

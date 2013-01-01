@@ -13,7 +13,6 @@
 * använd celerybeat för att varje 5:e minut gå igenom en lista av förkonfigurerade url:er
 * för varje url, spara ned hela sidan som hel PNG och tumnagel.
 * ladda upp PNG och tumnagel till S3
-* 
 
 ### research for screenshot solutions
 
@@ -77,7 +76,7 @@
 ### Heroku
 
 following https://devcenter.heroku.com/articles/python
-    
+
     curl -O http://assets.heroku.com/heroku-toolbelt/heroku-toolbelt.pkg
     sudo installer -pkg heroku-toolbelt.pkg -target '/'
     heroku login
@@ -90,7 +89,7 @@ following https://devcenter.heroku.com/articles/python
     diskutil eject /Volumes/VirtualBox
     rm VirtualBox-4.2.6-82870-OSX.dmg
 
-### install rvm & ruby
+### install rvm & ruby 1.9.3
 
     curl -L https://get.rvm.io | bash -s stable --ruby
     rvm --default use 1.9.3
