@@ -26,6 +26,7 @@ Vagrant::Config.run do |config|
     chef.cookbooks_path = "./cookbooks"
     chef.log_level = :info
     chef.add_recipe "chef-base"
+    chef.add_recipe "chef-msttcorefonts"
     chef.add_recipe "webscreenshots"
 
     chef.json = {

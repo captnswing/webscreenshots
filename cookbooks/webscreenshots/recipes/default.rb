@@ -1,8 +1,8 @@
 case node["platform_family"]
-  when "redhat"
-    include_recipe "webscreenshots::redhat"
   when "debian"
     include_recipe "webscreenshots::debian"
+  when "redhat"
+    include_recipe "webscreenshots::redhat"
 end
 
 include_recipe "redis"
