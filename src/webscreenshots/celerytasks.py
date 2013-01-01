@@ -1,13 +1,16 @@
-from __future__ import absolute_import
 import datetime
 import subprocess
 from urlparse import urlsplit
+import os
+
 from PIL import Image
 from celery.utils.log import get_task_logger
-import os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
+
 from webscreenshots.celeryapp import celery
+
+
 os.environ["DJANGO_SETTINGS_MODULE"] = "webscreenshots.settings"
 from webscreenshots.main.models import WebSite
 
@@ -19,7 +22,7 @@ BUCKET_NAME = "svti-webscreenshots"
 @celery.task(name='webscreenshots.celerytasks.remove_files')
 def remove_files(filenames):
     if isinstance(filenames, basestring):
-        filenames = [ filenames ]
+        filenames = [filenames]
     for fn in filenames:
         logger.info("removing %s" % fn)
         os.remove(fn)
@@ -28,7 +31,7 @@ def remove_files(filenames):
 @celery.task(name='webscreenshots.celerytasks.upload_files')
 def upload_files(filenames, boto_cfg=True):
     if isinstance(filenames, basestring):
-        filenames = [ filenames ]
+        filenames = [filenames]
     for fn in filenames:
         logger.info(fn.split('__')[-1])
         if boto_cfg:
@@ -81,8 +84,8 @@ def create_filename(url):
     return filename
 
 
-@celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot_phantomjs')
-def fetch_webscreenshot_phantomjs(url, dry_run=False):
+@celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot')
+def fetch_webscreenshot(url, dry_run=False):
     js_tmpl = """
     var pageurl = '%s';
     var pagepng = '%s';
@@ -119,6 +122,7 @@ def fetch_webscreenshot_phantomjs(url, dry_run=False):
 @celery.task(name='webscreenshots.celerytasks.cleanup')
 def cleanup():
     import glob
+
     for pngfile in glob.glob("images/*.png"):
         crop_and_scale_file(pngfile)
     jpegs = glob.glob("images/*.jpg")
@@ -134,7 +138,7 @@ def cleanup():
 def webscreenshots():
     for ws in WebSite.objects.all():
         chain = (
-            fetch_webscreenshot_phantomjs.s(ws.url) |
+            fetch_webscreenshot.s(ws.url) |
             crop_and_scale_file.s() |
             upload_files.s() |
             remove_files.s()
@@ -145,4 +149,4 @@ def webscreenshots():
 if __name__ == '__main__':
     cleanup()
     for ws in WebSite.objects.all():
-        print fetch_webscreenshot_phantomjs(ws.url, dry_run=True)
+        print fetch_webscreenshot(ws.url, dry_run=True)
