@@ -1,7 +1,7 @@
-case node["platform"]
-  when "fedora", "redhat", "centos", "scientific"
+case node["platform_family"]
+  when "redhat"
     include_recipe "webscreenshots::redhat"
-  when "ubuntu", "debian", "amazon"
+  when "debian"
     include_recipe "webscreenshots::debian"
 end
 
