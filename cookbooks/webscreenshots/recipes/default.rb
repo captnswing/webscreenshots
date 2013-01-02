@@ -1,20 +1,16 @@
 #--------
 # install dependencies
 #--------
-# don't start the redis service
-node.set["redis"]["source"]["create_service"] = false
-# just install redis from source
-include_recipe "redis::source"
 include_recipe "python"
 include_recipe "postgresql::server"
 
-#--------
-# create group, user and config dir
-#--------
 my_user = node["webscreenshots"]["user"]
 my_group = node["webscreenshots"]["group"]
 my_venv = node["webscreenshots"]["home"]
 
+#--------
+# create group and user
+#--------
 group my_group
 
 user my_user do
@@ -23,24 +19,15 @@ user my_user do
   system true
 end
 
-directory "#{my_venv}/etc/" do
-  owner my_user
-  group my_group
-  mode "0750"
-end
-
-directory "#{my_venv}/var/log" do
-  owner my_user
-  group my_group
-  mode "0750"
-  recursive true
-end
-
-directory "#{my_venv}/var/run" do
-  owner my_user
-  group my_group
-  mode "0750"
-  recursive true
+#--------
+# create required directories
+#--------
+["#{my_venv}", "#{my_venv}/etc/", "#{my_venv}/var", "#{my_venv}/var/log", "#{my_venv}/var/run"].each do |dir|
+  directory "#{dir}" do
+    owner my_user
+    group my_group
+    mode "0750"
+  end
 end
 
 #--------
@@ -114,6 +101,7 @@ else
   log("------------------ not using vagrant ------------------")
 end
 
+include_recipe "webscreenshots::redis"
 include_recipe "webscreenshots::phantomjs"
 include_recipe "webscreenshots::supervisord"
 
