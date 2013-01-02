@@ -21,15 +21,16 @@ setup(
     # make setuptools work with mercurial, see http://pypi.python.org/pypi/setuptools_hg
     setup_requires=["distribute", "setuptools_hg"],
     install_requires=[
-        'distribute',
-        'django',
-        'PIL',
-        'boto',
-        'psycopg2',
-        'celery-with-redis',
-        'python-dateutil < 2',
-        'flower',
-        'ipython',
-        'supervisor',
+        "boto",
+        "celery-with-redis",
+        "distribute",
+        "django",
+        "flower",
+        "gunicorn",
+        "ipython",
+        "pillow",
+        "psycopg2",
+        "python-dateutil < 2",
+        "supervisor"
     ],
 )

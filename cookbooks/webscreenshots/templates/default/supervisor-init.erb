@@ -18,27 +18,17 @@
 # Do NOT "set -e"
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
-PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+PATH=/sbin:/usr/sbin:/bin:<%= node['webscreenshots']['supervisord']['prefix'] %>/bin
 DESC="Run a set of applications as daemons."
 NAME=supervisord
-DAEMON=/usr/local/bin/$NAME
-SUPERVISORCTL=/usr/local/bin/supervisorctl
+DAEMON=<%= node['webscreenshots']['supervisord']['prefix'] %>/bin/$NAME
+SUPERVISORCTL=<%= node['webscreenshots']['supervisord']['prefix'] %>/bin/supervisorctl
 PIDFILE=<%= node['webscreenshots']['supervisord']['pidfile'] %>
 DAEMON_ARGS="--pidfile ${PIDFILE} -c <%= node['webscreenshots']['supervisord']['conffile'] %>"
 SCRIPTNAME=/etc/init.d/$NAME
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
-
-# Read configuration variable file if it is present
-[ -r /etc/default/$NAME ] && . /etc/default/$NAME
-
-# Load the VERBOSE setting and other rcS variables
-. /lib/init/vars.sh
-
-# Define LSB log_* functions.
-# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
-. /lib/lsb/init-functions
 
 #
 # Function that starts the daemon/service
