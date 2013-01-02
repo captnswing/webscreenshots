@@ -2,21 +2,18 @@ import datetime
 import subprocess
 from urlparse import urlsplit
 import os
-
 from PIL import Image
 from celery.utils.log import get_task_logger
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-
 from webscreenshots.celeryapp import celery
-
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "webscreenshots.settings"
 from webscreenshots.main.models import WebSite
 
-
 logger = get_task_logger(__name__)
 BUCKET_NAME = "svti-webscreenshots"
+IMAGE_DIR = "/tmp"
 
 
 @celery.task(name='webscreenshots.celerytasks.remove_files')
@@ -33,7 +30,6 @@ def upload_files(filenames, boto_cfg=True):
     if isinstance(filenames, basestring):
         filenames = [filenames]
     for fn in filenames:
-        logger.info(fn.split('__')[-1])
         if boto_cfg:
             # keys defined in /etc/boto.cfg
             conn = S3Connection()
@@ -45,7 +41,7 @@ def upload_files(filenames, boto_cfg=True):
         bucket = conn.get_bucket(BUCKET_NAME)
         k = Key(bucket)
         logger.info('Uploading %s to Amazon S3 bucket %s' % (fn, BUCKET_NAME))
-        k.key = fn.replace('images/', '').replace('__', '/')
+        k.key = fn.replace(IMAGE_DIR + '/', '').replace('__', '/')
         k.set_contents_from_filename(fn)
     return filenames
 
@@ -109,23 +105,23 @@ def fetch_webscreenshot(url, dry_run=False):
     if dry_run:
         logger.info(js_tmpl % (url, filename + ".png"))
         logger.info(phantomjs_cmd)
-        return os.path.join("images", filename + ".png")
+        return os.path.join(IMAGE_DIR, filename + ".png")
     jsfile = open("/tmp/%s" % filename + ".js", 'w')
-    jsfile.write(js_tmpl % (url, "images/" + filename + ".png"))
+    jsfile.write(js_tmpl % (url, IMAGE_DIR+ "/" + filename + ".png"))
     jsfile.close()
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    return os.path.join("images", filename + ".png")
+    return os.path.join(IMAGE_DIR, filename + ".png")
 
 
 @celery.task(name='webscreenshots.celerytasks.cleanup')
 def cleanup():
     import glob
 
-    for pngfile in glob.glob("images/*.png"):
+    for pngfile in glob.glob(IMAGE_DIR + "/*.png"):
         crop_and_scale_file(pngfile)
-    jpegs = glob.glob("images/*.jpg")
+    jpegs = glob.glob(IMAGE_DIR + "/*.jpg")
     for fn in jpegs:
         chain = (
             upload_files.s(fn) |
