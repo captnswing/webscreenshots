@@ -43,12 +43,15 @@ end
 #--------
 # install python packages into venv
 #--------
-# for PIL / pillow
 case node["platform_family"]
   when "debian"
+    # for PIL / pillow
     package "libjpeg8-dev"
     package "libfreetype6-dev"
+    # for flower
+    package "git-all"
   when "rhel"
+    # for PIL / pillow
     package "libjpeg-devel"
     package "libpng-devel"
     package "freetype-devel"
@@ -59,7 +62,8 @@ python_packages = [
     "celery-with-redis",
     "distribute",
     "django",
-    "flower",
+    "git+git://github.com/mher/flower.git",
+    #"flower",
     "gunicorn",
     "ipython",
     # PIL --> pillow, see http://stackoverflow.com/a/12359864/41404
