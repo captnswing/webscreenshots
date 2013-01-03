@@ -5,10 +5,10 @@ case node["platform_family"]
   when "debian"
     package "make"
   when "rhel"
-    #package "freetype-devel"
+    #package "make"?
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}.tar.gz" do
+remote_file "/tmp/redis-#{node["webscreenshots"]["redis"]["version"]}.tar.gz" do
   owner node["webscreenshots"]["user"]
   group node["webscreenshots"]["group"]
   source node["webscreenshots"]["redis"]["tar_url"]
@@ -17,29 +17,26 @@ remote_file "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["r
   action :create_if_missing
 end
 
-execute "extract redis tar" do
-  cwd "#{Chef::Config[:file_cache_path]}"
+execute "extract redis.tar" do
+  cwd "/tmp"
+  user node["webscreenshots"]["user"]
+  group node["webscreenshots"]["group"]
   command "tar zxf redis-#{node["webscreenshots"]["redis"]["version"]}.tar.gz"
-  creates "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}/utils/redis_init_script"
-end
-
-execute "chown redis dir" do
-  cwd "#{Chef::Config[:file_cache_path]}"
-  command "chown -R #{node["webscreenshots"]["user"]}:#{node["webscreenshots"]["group"]} #{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}"
+  creates "/tmp/redis-#{node["webscreenshots"]["redis"]["version"]}/README"
 end
 
 execute "build & install redis" do
   user node["webscreenshots"]["user"]
   group node["webscreenshots"]["group"]
-  cwd "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}"
-  command "make install PREFIX=#{node["webscreenshots"]["home"]} >/dev/null 2>&1"
+  cwd "/tmp/redis-#{node["webscreenshots"]["redis"]["version"]}"
+  command "make install PREFIX=#{node["webscreenshots"]["home"]} >/dev/null"
   creates "#{node["webscreenshots"]["home"]}/bin/redis-server"
 end
 
 #TODO: redis.conf, location of db
-directory "#{node["webscreenshots"]["home"]}/var/lib/redis" do
-  owner node["webscreenshots"]["user"]
-  group node["webscreenshots"]["group"]
-  mode "0750"
-  recursive true
-end
+#directory "#{node["webscreenshots"]["home"]}/var/lib/redis" do
+#  owner node["webscreenshots"]["user"]
+#  group node["webscreenshots"]["group"]
+#  mode "0750"
+#  recursive true
+#end

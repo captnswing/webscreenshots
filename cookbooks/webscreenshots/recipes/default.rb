@@ -107,7 +107,7 @@ else
     user my_user
     group my_group
     cwd "#{node["webscreenshots"]["working_dir"]}"
-    command "hg pull; hg update"
+    command "hg pull >/dev/null; hg update >/dev/null"
   end
 end
 
@@ -115,14 +115,14 @@ execute "install webscreenshots" do
   user my_user
   group my_group
   cwd "#{node["webscreenshots"]["working_dir"]}"
-  command "#{node["webscreenshots"]["home"]}/bin/python setup.py develop >/dev/null 2>&1"
+  command "#{node["webscreenshots"]["home"]}/bin/python setup.py develop >/dev/null"
 end
 
 execute "webscreenshots syncdb" do
   user my_user
   group my_group
   cwd "#{node["webscreenshots"]["working_dir"]}/src/webscreenshots"
-  command "#{node["webscreenshots"]["home"]}/bin/python manage.py syncdb --noinput"
+  command "#{node["webscreenshots"]["home"]}/bin/python manage.py syncdb --noinput >/dev/null"
 end
 
 include_recipe "webscreenshots::redis"

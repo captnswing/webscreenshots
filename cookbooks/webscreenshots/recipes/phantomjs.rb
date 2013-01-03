@@ -15,5 +15,5 @@ bash "install phantomjs" do
     tar -jxvf phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}.tar.bz2
     mv phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}-linux-x86_64 /opt
   EOS
-  not_if "test -e /opt/phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}-linux-x86_64"
+  creates "/opt/phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}-linux-x86_64"
 end
