@@ -2,7 +2,7 @@ import datetime
 import subprocess
 from urlparse import urlsplit
 import os
-from PIL import Image
+from PIL import Image, ImageFile
 from celery.utils.log import get_task_logger
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -54,18 +54,26 @@ def crop_and_scale_file(filename):
     croppedIm = origIm.crop(box)
     # croppedfilename = filename.replace('-full.png', '-top.jpg')
     croppedfilename = filename.replace('.png', '-top.jpg')
-    croppedIm.save(croppedfilename)
+    # from http://stackoverflow.com/a/6789306/41404
+    ImageFile.MAXBLOCK = croppedIm.size[0] * croppedIm.size[1]
+    croppedIm.save(croppedfilename, quality=90, optimize=True, progressive=True)
     # resize cropped image
     newwidth = croppedIm.size[0] / 2
     newheight = croppedIm.size[1] / 2
     thumbIm = croppedIm.resize((newwidth, newheight), Image.ANTIALIAS)
-    # thumbfilename = filename.replace('-full.png', '-thumb.jpg')
     thumbfilename = filename.replace('.png', '-thumb.jpg')
-    thumbIm.save(thumbfilename)
+    # from http://stackoverflow.com/a/6789306/41404
+    ImageFile.MAXBLOCK = thumbIm.size[0] * thumbIm.size[1]
+    thumbIm.save(thumbfilename, quality=90, optimize=True, progressive=True)
     # save origin as jpg, and remove png
     newfilename = filename.replace('.png', '.jpg')
-    origIm.save(newfilename)
-    os.remove(filename)
+    # from http://stackoverflow.com/a/6789306/41404
+    ImageFile.MAXBLOCK = origIm.size[0] * origIm.size[1]
+    origIm.save(newfilename, quality=90, optimize=True, progressive=True)
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
     return thumbfilename, croppedfilename, newfilename
 
 
@@ -112,6 +120,7 @@ def fetch_webscreenshot(url, dry_run=False):
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
+    os.remove("/tmp/%s" % filename + ".js")
     return os.path.join(IMAGE_DIR, filename + ".png")
 
 
