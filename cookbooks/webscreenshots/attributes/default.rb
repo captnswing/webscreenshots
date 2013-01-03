@@ -13,3 +13,5 @@ default["webscreenshots"]["home"] = "/opt/webscreenshots"
 
 # running as vagrant?
 default["webscreenshots"]["vagrant"] = node["kernel"]["modules"].attribute?("vboxguest")
+
+set["postgresql"]["password"]["postgres"] = "postgres"

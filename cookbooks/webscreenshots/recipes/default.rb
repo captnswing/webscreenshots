@@ -16,13 +16,14 @@ group my_group
 user my_user do
   gid my_group
   home my_venv
+  shell "/bin/bash"
   system true
 end
 
 #--------
 # create required directories
 #--------
-["#{my_venv}", "#{my_venv}/etc/", "#{my_venv}/var", "#{my_venv}/var/log", "#{my_venv}/var/run"].each do |dir|
+["#{my_venv}", "#{my_venv}/etc/", "#{my_venv}/var", "#{my_venv}/var/log", "#{my_venv}/var/run", "#{my_venv}/src"].each do |dir|
   directory "#{dir}" do
     owner my_user
     group my_group
@@ -42,13 +43,12 @@ end
 #--------
 # install python packages into venv
 #--------
+# for PIL / pillow
 case node["platform_family"]
   when "debian"
-    # for PIL / pillow
     package "libjpeg8-dev"
     package "libfreetype6-dev"
   when "rhel"
-    # for PIL / pillow
     package "libjpeg-devel"
     package "libpng-devel"
     package "freetype-devel"
@@ -65,7 +65,7 @@ python_packages = [
     # PIL --> pillow, see http://stackoverflow.com/a/12359864/41404
     "pillow",
     "psycopg2",
-    "python-dateutil==1.5",
+    "python-dateutil",
     "supervisor"
 ]
 
@@ -81,24 +81,50 @@ end
 #--------
 # install webscreenshots app
 #--------
+
 if node["webscreenshots"]["vagrant"]
   log("------------------ using vagrant ------------------")
 
-  node.set["webscreenshots"]["working_dir"] = "/vagrant/src/webscreenshots"
+  node.set["webscreenshots"]["working_dir"] = "/vagrant"
 
-  execute "install webscreenshots" do
-    cwd "/vagrant"
-    command "#{node["webscreenshots"]["home"]}/bin/python setup.py develop"
+else
+  log("------------------ not using vagrant ------------------")
+
+  node.set["webscreenshots"]["working_dir"] = "#{node["webscreenshots"]["home"]}/src/webscreenshots"
+
+  case node["platform_family"]
+    when "debian"
+      package "mercurial"
   end
 
-  execute "webscreenshots syncdb" do
+  execute "clone repo" do
+    user my_user
+    group my_group
+    cwd "#{node["webscreenshots"]["home"]}/src"
+    command "hg clone https://captnswing@bitbucket.org/captnswing/webscreenshots"
+    creates "#{node["webscreenshots"]["home"]}/src/webscreenshots"
+  end
+
+  execute "update repo" do
     user my_user
     group my_group
     cwd "#{node["webscreenshots"]["working_dir"]}"
-    command "#{node["webscreenshots"]["home"]}/bin/python manage.py syncdb --noinput"
+    command "hg pull; hg update"
   end
-else
-  log("------------------ not using vagrant ------------------")
+end
+
+execute "install webscreenshots" do
+  user my_user
+  group my_group
+  cwd "#{node["webscreenshots"]["working_dir"]}"
+  command "#{node["webscreenshots"]["home"]}/bin/python setup.py develop"
+end
+
+execute "webscreenshots syncdb" do
+  user my_user
+  group my_group
+  cwd "#{node["webscreenshots"]["working_dir"]}/src/webscreenshots"
+  command "#{node["webscreenshots"]["home"]}/bin/python manage.py syncdb --noinput"
 end
 
 include_recipe "webscreenshots::redis"
