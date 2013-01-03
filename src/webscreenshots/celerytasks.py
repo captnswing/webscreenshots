@@ -77,6 +77,7 @@ def crop_and_scale_file(filename):
     return thumbfilename, croppedfilename, newfilename
 
 
+@celery.task(name='webscreenshots.celerytasks.create_filename')
 def create_filename(url):
     parsed = urlsplit(url)
     canonicalurl = parsed.netloc.lstrip('www.')
