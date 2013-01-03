@@ -85,15 +85,9 @@ end
 #--------
 # install webscreenshots app
 #--------
-
 if node["webscreenshots"]["vagrant"]
-  log("------------------ using vagrant ------------------")
-
   node.set["webscreenshots"]["working_dir"] = "/vagrant"
-
 else
-  log("------------------ not using vagrant ------------------")
-
   node.set["webscreenshots"]["working_dir"] = "#{node["webscreenshots"]["home"]}/src/webscreenshots"
 
   case node["platform_family"]
@@ -121,7 +115,7 @@ execute "install webscreenshots" do
   user my_user
   group my_group
   cwd "#{node["webscreenshots"]["working_dir"]}"
-  command "#{node["webscreenshots"]["home"]}/bin/python setup.py develop"
+  command "#{node["webscreenshots"]["home"]}/bin/python setup.py develop >/dev/null 2>&1"
 end
 
 execute "webscreenshots syncdb" do
@@ -134,7 +128,3 @@ end
 include_recipe "webscreenshots::redis"
 include_recipe "webscreenshots::phantomjs"
 include_recipe "webscreenshots::supervisord"
-
-#http://cuppster.com/2011/05/18/using-supervisor-with-upstart/
-#http://zerokspot.com/weblog/2012/06/17/sitemanagement-with-supervisord/
-#http://pypi.python.org/pypi/django-supervisor/

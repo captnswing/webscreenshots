@@ -18,18 +18,21 @@ remote_file "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["r
 end
 
 execute "extract redis tar" do
-  user node["webscreenshots"]["user"]
-  group node["webscreenshots"]["group"]
   cwd "#{Chef::Config[:file_cache_path]}"
   command "tar zxf redis-#{node["webscreenshots"]["redis"]["version"]}.tar.gz"
   creates "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}/utils/redis_init_script"
+end
+
+execute "chown redis dir" do
+  cwd "#{Chef::Config[:file_cache_path]}"
+  command "chown -R #{node["webscreenshots"]["user"]}:#{node["webscreenshots"]["group"]} #{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}"
 end
 
 execute "build & install redis" do
   user node["webscreenshots"]["user"]
   group node["webscreenshots"]["group"]
   cwd "#{Chef::Config[:file_cache_path]}/redis-#{node["webscreenshots"]["redis"]["version"]}"
-  command "make install PREFIX=#{node["webscreenshots"]["home"]}"
+  command "make install PREFIX=#{node["webscreenshots"]["home"]} >/dev/null 2>&1"
   creates "#{node["webscreenshots"]["home"]}/bin/redis-server"
 end
 
