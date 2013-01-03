@@ -26,3 +26,4 @@ images/
 screenshotadmin.sqlite
 celerybeat-schedule
 Berksfile.lock
+webscreenshots_kitchen
