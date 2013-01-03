@@ -29,7 +29,7 @@ command=<%= node["webscreenshots"]["home"] %>/bin/celery worker -c 4 -E -A websc
 stdout_logfile=<%= node["webscreenshots"]["supervisord"]["logdir"] %>/celeryd.log
 redirect_stderr=true
 startsecs=10
-;stopwaitsecs=300
+stopwaitsecs=30
 ;stopsignal=KILL
 killasgroup=true
 priority=20
@@ -42,7 +42,6 @@ redirect_stderr=true
 startsecs=10
 ;stopwaitsecs=300
 ;stopsignal=KILL
-killasgroup=true
 priority=30
 
 [program:flower]
