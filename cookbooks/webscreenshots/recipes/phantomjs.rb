@@ -2,14 +2,14 @@
 # install phantomjs
 #--------
 # from http://skookum.com/blog/dynamic-screenshots-on-the-server-with-phantomjs/
-remote_file "#{Chef::Config["file_cache_path"]}/phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}.tar.bz2" do
+remote_file "/tmp/phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}.tar.bz2" do
   source node["webscreenshots"]["phantomjs"]["uri"]
   mode "0644"
   action :create_if_missing
 end
 
 bash "install phantomjs" do
-  cwd Chef::Config["file_cache_path"]
+  cwd "/tmp"
   user "root"
   code <<-EOS
     tar -jxvf phantomjs-#{node["webscreenshots"]["phantomjs"]["version"]}.tar.bz2
