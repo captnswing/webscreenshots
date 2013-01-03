@@ -33,7 +33,7 @@ execute "build & install redis" do
   creates "#{node["webscreenshots"]["home"]}/bin/redis-server"
 end
 
-#TODO: redis.conf
+#TODO: redis.conf, location of db
 directory "#{node["webscreenshots"]["home"]}/var/lib/redis" do
   owner node["webscreenshots"]["user"]
   group node["webscreenshots"]["group"]

@@ -27,7 +27,7 @@ end
   directory "#{dir}" do
     owner my_user
     group my_group
-    mode "0750"
+    mode "0755"
   end
 end
 
@@ -102,7 +102,7 @@ else
     group my_group
     cwd "#{node["webscreenshots"]["home"]}/src"
     command "hg clone https://captnswing@bitbucket.org/captnswing/webscreenshots"
-    creates "#{node["webscreenshots"]["home"]}/src/webscreenshots"
+    creates "#{node["webscreenshots"]["working_dir"]}"
   end
 
   execute "update repo" do
@@ -130,17 +130,6 @@ end
 include_recipe "webscreenshots::redis"
 include_recipe "webscreenshots::phantomjs"
 include_recipe "webscreenshots::supervisord"
-
-#bash "django_db" do
-#  user "postgres"
-#  code <<-EOS
-#  psql <<-ESQL
-#    CREATE USER django WITH PASSWORD 'postgres';
-#    CREATE DATABASE webscreenshots;
-#    GRANT ALL PRIVILEGES ON DATABASE webscreenshots to django;
-#  ESQL
-#  EOS
-#end
 
 #http://cuppster.com/2011/05/18/using-supervisor-with-upstart/
 #http://zerokspot.com/weblog/2012/06/17/sitemanagement-with-supervisord/
