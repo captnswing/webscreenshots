@@ -9,6 +9,7 @@ celery = Celery('proj.celery',
 
 # Optional configuration, see the application user guide.
 celery.conf.update(
+    CELERY_TIMEZONE = 'Europe/Stockholm',
     CELERY_IMPORTS='webscreenshots.celerytasks',
     CELERY_DISABLE_RATE_LIMITS = True,
     CELERY_TASK_RESULT_EXPIRES=3600,
@@ -27,7 +28,6 @@ celery.conf.update(
     }
 )
 
-CELERY_TIMEZONE = 'Europe/Stockholm'
 
 if __name__ == '__main__':
     celery.start()
