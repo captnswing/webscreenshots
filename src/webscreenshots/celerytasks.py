@@ -21,7 +21,7 @@ def remove_files(filenames):
     if isinstance(filenames, basestring):
         filenames = [filenames]
     for fn in filenames:
-        logger.info("removing %s" % fn)
+        # logger.info("removing %s" % fn)
         os.remove(fn)
 
 
@@ -56,6 +56,7 @@ def crop_and_scale_file(filename):
     croppedfilename = filename.replace('.png', '-top.jpg')
     # from http://stackoverflow.com/a/6789306/41404
     ImageFile.MAXBLOCK = croppedIm.size[0] * croppedIm.size[1]
+    logger.info('saving croppedfile %s' % croppedfilename)
     croppedIm.save(croppedfilename, quality=90, optimize=True, progressive=True)
     # resize cropped image
     newwidth = croppedIm.size[0] / 2
@@ -64,11 +65,13 @@ def crop_and_scale_file(filename):
     thumbfilename = filename.replace('.png', '-thumb.jpg')
     # from http://stackoverflow.com/a/6789306/41404
     ImageFile.MAXBLOCK = thumbIm.size[0] * thumbIm.size[1]
+    logger.info('saving thumbfile %s' % thumbfilename)
     thumbIm.save(thumbfilename, quality=90, optimize=True, progressive=True)
     # save origin as jpg, and remove png
     newfilename = filename.replace('.png', '.jpg')
     # from http://stackoverflow.com/a/6789306/41404
     ImageFile.MAXBLOCK = origIm.size[0] * origIm.size[1]
+    logger.info('saving newfile %s' % newfilename)
     origIm.save(newfilename, quality=90, optimize=True, progressive=True)
     try:
         os.remove(filename)
@@ -115,20 +118,20 @@ def fetch_webscreenshot(url, dry_run=False):
         logger.info(js_tmpl % (url, filename + ".png"))
         logger.info(phantomjs_cmd)
         return os.path.join(IMAGE_DIR, filename + ".png")
-    jsfile = open("/tmp/%s" % filename + ".js", 'w')
+    jsfile = open("/tmp/%s.js" % filename, 'w')
     jsfile.write(js_tmpl % (url, IMAGE_DIR+ "/" + filename + ".png"))
     jsfile.close()
+    logger.info('running phantomjs /tmp/%s.js' % filename)
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    os.remove("/tmp/%s" % filename + ".js")
+    os.remove("/tmp/%s.js" % filename)
     return os.path.join(IMAGE_DIR, filename + ".png")
 
 
 @celery.task(name='webscreenshots.celerytasks.cleanup')
 def cleanup():
     import glob
-
     for pngfile in glob.glob(IMAGE_DIR + "/*.png"):
         crop_and_scale_file(pngfile)
     jpegs = glob.glob(IMAGE_DIR + "/*.jpg")
