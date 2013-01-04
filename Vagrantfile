@@ -3,10 +3,8 @@ require 'berkshelf/vagrant'
 Vagrant::Config.run do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-  # config.vm.box = "lucid64"
-  # config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
-  # config.vm.box = "sl63-chefclient"
-  # config.vm.box_url = "http://svt-box.s3.amazonaws.com/sl63-chefclient-10.16.2.box"
+  #config.vm.box = "sl63-chefclient"
+  #config.vm.box_url = "http://svt-box.s3.amazonaws.com/sl63-chefclient-10.16.2.box"
 
   config.vm.host_name = "webscreenshots.vagrant"
   config.vm.customize ["modifyvm", :id, "--memory", 1024]
@@ -16,6 +14,8 @@ Vagrant::Config.run do |config|
   config.vm.forward_port 5432, 5432
   # flower gui
   config.vm.forward_port 5555, 5555
+  # supervisor gui
+  config.vm.forward_port 9001, 9001
   # django gui
   config.vm.forward_port 8000, 8000
 
@@ -23,7 +23,6 @@ Vagrant::Config.run do |config|
   #config.vm.share_folder "v-root", "/vagrant", ".", :nfs => true
 
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "./cookbooks"
     chef.log_level = :info
     chef.add_recipe "chef-base"
     chef.add_recipe "chef-msttcorefonts"
