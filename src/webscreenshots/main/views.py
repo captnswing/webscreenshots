@@ -47,7 +47,6 @@ def get_hour_thumbs(selected_site, selected_day):
 def siteday(request, pubdate):
     sites = request.POST.getlist('sites[]')
     y, m, d = pubdate.split('-')
-    extension = "-thumb.jpg"
     d = datetime.datetime(int(y), int(m), int(d))
     d = d.replace(microsecond=0).replace(second=0).replace(minute=0)
     dhours = [ d.replace(hour=i) for i in range(24) ]
@@ -55,7 +54,7 @@ def siteday(request, pubdate):
     result_data = []
     for site in sites:
         baseurl = domain + "/" + pubdate.replace('-', '/') + "/" + site.replace('/', '|') + "/"
-        siteurls = [ baseurl + d.strftime("%H.%M") + extension for d in dhours ]
+        siteurls = [ baseurl + d.strftime("%H.%M") for d in dhours ]
         result_data.append(siteurls)
 #        for k, v in zip(dhours, siteurls):
 #            result_data[k.isoformat()].append(v)
