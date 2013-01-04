@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block extraheaders %}
+    {#    <script src="{{ STATIC_URL }}/carouFredSel/jquery.carouFredSel-6.1.0-packed.js"></script>#}
+    <script>
+        function pad(num, size) {
+            var s = num + "";
+            while (s.length < size) s = "0" + s;
+            return s;
+        }
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/2013-01-04/',
+                type: "POST",
+                data: {
+                    'sites': ["aftonbladet.se", "svt.se/nyheter", "expressen.se", "tv4.se/nyheterna"]
+                },
+                dataType: "json",
+                success: function (data) {
+                    var items = [];
+                    $.each(data, function (hour, row) {
+                        var myrow = "";
+                        var mytime = pad(hour, 2) + ".00";
+                        myrow += "<tr><td>" + mytime + "<td>";
+                        $.each(row, function (i, url) {
+                            myrow += "<td><img width='450' src='" + url + "' /></td>";
+                        })
+                        myrow += "</tr>"
+                        console.log(myrow);
+                        $('#mytable > tbody:last').append(myrow);
+                    });
+                }
+            });
+        })
+
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+
+    <table id="mytable" border="5" cellspacing="20">
+    <thead></thead>
+    <tbody></tbody>
+    </table>
+
+{% endblock %}

@@ -1,16 +1,15 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
-from django.test import TestCase
+import os
+os.environ["DJANGO_SETTINGS_MODULE"] = "webscreenshots.settings"
+from django.utils import unittest
+from django.test import Client
+import json
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+class ViewTest(unittest.TestCase):
+
+    def setUp(self):
+        self.c = Client()
+
+    def test_post(self):
+        myjson_response = self.c.post('/2013-01-04/', {'sites[]': ('aftonbladet.se', 'svt.se')})
+        print json.loads(myjson_response.content)

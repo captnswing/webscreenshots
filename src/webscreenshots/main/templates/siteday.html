@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table>
+<h1>{{ site }}, {{ selected_date|date:"d M Y" }}</h1>
+<thead>
+<tr>
+    <th>hour</th>
+    <th>thumb</th>
+</tr>
+</thead>
+<tbody>
+{% for hour, urlb in hour_urls %}
+<tr>
+    <td>{{ hour|date:"H.00" }}</td>
+    <td><a href="{{ urlb }}-top.jpg"><img width="400px" src="{{ urlb }}-thumb.jpg" /></a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
