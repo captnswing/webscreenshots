@@ -70,6 +70,7 @@ python_packages = [
     "pillow",
     "psycopg2",
     "python-dateutil",
+    "pytz",
     "supervisor"
 ]
 
