@@ -21,8 +21,10 @@ def remove_files(filenames):
     if isinstance(filenames, basestring):
         filenames = [filenames]
     for fn in filenames:
-        # logger.info("removing %s" % fn)
-        os.remove(fn)
+        try:
+            os.remove(fn)
+        except OSError:
+            pass
 
 
 @celery.task(name='webscreenshots.celerytasks.upload_files')
@@ -46,38 +48,34 @@ def upload_files(filenames, boto_cfg=True):
     return filenames
 
 
+def save_progressive_jpeg(im, filepath):
+    # http://calendar.perfplanet.com/2012/progressive-jpegs-a-new-best-practice/
+    logger.info('saving %s as progressive jpeg' % filepath)
+    # from http://stackoverflow.com/a/6789306/41404
+    try:
+        im.save(filepath, "JPEG", quality=90, optimize=True, progressive=True)
+    except IOError:
+        ImageFile.MAXBLOCK = im.size[0] * im.size[1]
+        im.save(filepath, "JPEG", quality=90, optimize=True, progressive=True)
+
+
 @celery.task(name='webscreenshots.celerytasks.crop_and_scale_file')
 def crop_and_scale_file(filename):
     origIm = Image.open(filename)
     # crop Image from the top
-    box = (0, 0, 1280, 1280)
-    croppedIm = origIm.crop(box)
-    # croppedfilename = filename.replace('-full.png', '-top.jpg')
+    croppedIm = origIm.crop((0, 0, 1280, 1280))
     croppedfilename = filename.replace('.png', '-top.jpg')
-    # from http://stackoverflow.com/a/6789306/41404
-    ImageFile.MAXBLOCK = croppedIm.size[0] * croppedIm.size[1]
-    logger.info('saving croppedfile %s' % croppedfilename)
-    croppedIm.save(croppedfilename, quality=90, optimize=True, progressive=True)
+    save_progressive_jpeg(croppedIm, croppedfilename)
     # resize cropped image
-    newwidth = croppedIm.size[0] / 2
-    newheight = croppedIm.size[1] / 2
-    thumbIm = croppedIm.resize((newwidth, newheight), Image.ANTIALIAS)
+    thumbIm = croppedIm.resize((croppedIm.size[0]/2, croppedIm.size[1]/2), Image.ANTIALIAS)
     thumbfilename = filename.replace('.png', '-thumb.jpg')
-    # from http://stackoverflow.com/a/6789306/41404
-    ImageFile.MAXBLOCK = thumbIm.size[0] * thumbIm.size[1]
-    logger.info('saving thumbfile %s' % thumbfilename)
-    thumbIm.save(thumbfilename, quality=90, optimize=True, progressive=True)
-    # save origin as jpg, and remove png
-    newfilename = filename.replace('.png', '.jpg')
-    # from http://stackoverflow.com/a/6789306/41404
-    ImageFile.MAXBLOCK = origIm.size[0] * origIm.size[1]
-    logger.info('saving newfile %s' % newfilename)
-    origIm.save(newfilename, quality=90, optimize=True, progressive=True)
-    try:
-        os.remove(filename)
-    except OSError:
-        pass
-    return thumbfilename, croppedfilename, newfilename
+    save_progressive_jpeg(thumbIm, thumbfilename)
+    # save origin as .jpg
+    origfilename = filename.replace('.png', '.jpg')
+    save_progressive_jpeg(origIm, origfilename)
+    # and remove the original .png
+    remove_files.s(filename)
+    return thumbfilename, croppedfilename, origfilename
 
 
 def create_filename(url):
@@ -124,7 +122,8 @@ def fetch_webscreenshot(url, dry_run=False):
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    os.remove("/tmp/%s.js" % filename)
+    # remove .js script
+    remove_files.s("/tmp/%s.js" % filename)
     return os.path.join(IMAGE_DIR, filename + ".png")
 
 
