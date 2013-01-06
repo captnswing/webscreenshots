@@ -2,60 +2,59 @@
 
 
 {% block extraheaders %}
-    {#    <script src="{{ STATIC_URL }}/carouFredSel/jquery.carouFredSel-6.1.0-packed.js"></script>#}
-    <script>
-        function pad(num, size) {
-            var s = num + "";
-            while (s.length < size) s = "0" + s;
-            return s;
-        }
+<!--<script src="{{ STATIC_URL }}/carouFredSel/jquery.carouFredSel-6.1.0-packed.js"></script>-->
+<script>
+    function pad(num, size) {
+        var s = num + "";
+        while (s.length < size) s = "0" + s;
+        return s;
+    }
 
-        $(document).ready(function () {
-            $.ajax({
-                url: '/2013-01-04/',
-                type: "POST",
-                data: {
-                    'sites': ["aftonbladet.se", "svt.se/nyheter", "expressen.se", "tv4.se/nyheterna"]
-                },
-                dataType: "json",
-                success: function (data) {
-                    var items = [];
-                    $.each(data, function (hour, row) {
-                        var myrow = "";
-                        var mytime = pad(hour, 2) + ".00";
-                        myrow += "<tr><td>" + mytime + "</td>";
-                        $.each(row, function (i, url) {
-                            imagetag = "<img width='450' src='" + url + "-thumb.jpg' />"
-                            imagetag = "<a href='" + url + "-top.jpg'>" + imagetag + "</a>"
-                            myrow += "<td>" + imagetag + "</td>";
-                        })
-                        myrow += "</tr>"
-                        console.log(myrow);
-                        $('#mytable > tbody:last').append(myrow);
-                    });
-                }
-            });
-        })
+    $(document).ready(function () {
+        $.ajax({
+            url:'/2013-01-04/',
+            type:"POST",
+            data:{
+                'sites':["aftonbladet.se", "svt.se/nyheter", "expressen.se"]
+            },
+            dataType:"json",
+            success:function (data) {
+                var items = [];
+                $.each(data, function (hour, row) {
+                    var myrow = "";
+                    var mytime = pad(hour, 2) + ".00";
+                    myrow += "<tr><td>" + mytime + "</td>";
+                    $.each(row, function (i, url) {
+                        imagetag = "<img width='400' src='" + url + "-thumb.jpg' />"
+                        imagetag = "<a href='" + url + "-top.jpg'>" + imagetag + "</a>"
+                        myrow += "<td>" + imagetag + "</td>";
+                    })
+                    myrow += "</tr>"
+                    console.log(myrow);
+                    $('#mytable > tbody:last').append(myrow);
+                });
+            }
+        });
+    })
 
-    </script>
+</script>
 
 
 {% endblock %}
 
 {% block content %}
 
-    <h1>2013-01-04</h1>
-    <table id="mytable" border="1" cellpadding="20">
+<h1>2013-01-04</h1>
+<table id="mytable" border="1" cellpadding="10">
     <thead>
     <tr>
         <th>klockan</th>
         <th>aftonbladet.se</th>
         <th>svt.se/nyheter</th>
         <th>expressen.se</th>
-        <th>tv4.se/nyheterna</th>
     </tr>
     </thead>
     <tbody></tbody>
-    </table>
+</table>
 
 {% endblock %}
