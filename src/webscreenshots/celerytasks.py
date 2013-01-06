@@ -21,10 +21,7 @@ def remove_files(filenames):
     if isinstance(filenames, basestring):
         filenames = [filenames]
     for fn in filenames:
-        try:
-            os.remove(fn)
-        except OSError:
-            pass
+        os.remove(fn)
 
 
 @celery.task(name='webscreenshots.celerytasks.upload_files')
@@ -74,7 +71,7 @@ def crop_and_scale_file(filename):
     origfilename = filename.replace('.png', '.jpg')
     save_progressive_jpeg(origIm, origfilename)
     # and remove the original .png
-    remove_files.s(filename)
+    os.remove(filename)
     return thumbfilename, croppedfilename, origfilename
 
 
@@ -123,7 +120,7 @@ def fetch_webscreenshot(url, dry_run=False):
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
     # remove .js script
-    remove_files.s("/tmp/%s.js" % filename)
+    os.remove("/tmp/%s.js" % filename)
     return os.path.join(IMAGE_DIR, filename + ".png")
 
 
