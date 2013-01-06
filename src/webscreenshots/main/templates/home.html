@@ -3,40 +3,186 @@
 
 {% block extraheaders %}
 <!--<script src="{{ STATIC_URL }}/carouFredSel/jquery.carouFredSel-6.1.0-packed.js"></script>-->
+<script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
 <script>
-    function pad(num, size) {
-        var s = num + "";
-        while (s.length < size) s = "0" + s;
-        return s;
+    // see http://jsfiddle.net/captnswing/VM98S/
+
+    // from http://trentrichardson.com/2011/09/27/better-javascript-date-add-and-diff/
+    Date.prototype.adjust = function (part, amount) {
+        part = part.toLowerCase();
+        var map = {
+            years:'FullYear',
+            months:'Month',
+            weeks:'Hours',
+            days:'Hours',
+            hours:'Hours',
+            minutes:'Minutes',
+            seconds:'Seconds',
+            milliseconds:'Milliseconds',
+            utcyears:'UTCFullYear',
+            utcmonths:'UTCMonth',
+            utcweeks:'UTCHours',
+            utcdays:'UTCHours',
+            utchours:'UTCHours',
+            utcminutes:'UTCMinutes',
+            utcseconds:'UTCSeconds',
+            utcmilliseconds:'UTCMilliseconds'
+        };
+        var mapPart = map[part];
+        if (part == 'weeks' || part == 'utcweeks') amount *= 168;
+        if (part == 'days' || part == 'utcdays') amount *= 24;
+        this['set' + mapPart](this['get' + mapPart]() + amount);
+        return this;
+    };
+
+    // from http://trentrichardson.com/2011/09/29/looping-through-dates-with-javascript/
+    Date.prototype.each = function (endDate, part, step, fn, bind) {
+        var fromDate = new Date(this.getTime()),
+                toDate = new Date(endDate.getTime()),
+                pm = fromDate <= toDate ? 1 : -1,
+                i = 0;
+        while ((pm === 1 && fromDate <= toDate) || (pm === -1 && fromDate >= toDate)) {
+            if (fn.call(bind, fromDate, i, this) === false) break;
+            i += step;
+            fromDate.adjust(part, step * pm);
+        }
+        return this;
+    };
+
+    function addZero(val) {
+        return (parseInt(val) < 10) ? "0" + val : val;
+    }
+
+    function getbaseurl(chosendate) {
+        var domain = "http://d2np6cnk6s6ggj.cloudfront.net";
+        var curr_year = chosendate.getFullYear();
+        var curr_month = chosendate.getMonth() + 1; //Months are zero based
+        var curr_date = chosendate.getDate();
+        return [domain, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
+    }
+
+    function getminuteurls(chosendate, chosensite, chosenext) {
+        if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
+            return [];
+        }
+        var curr_hour = chosendate.getHours();
+        if ($.inArray(curr_hour, offhours) > -1) {
+            minutes = [0];
+        } else {
+            minutes = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+        }
+        var baseurl = getbaseurl(chosendate);
+        var minuteurls = [];
+        $.each(minutes, function (i, m) {
+            minuteurls[i] = baseurl;
+            minuteurls[i] += chosensite + '/' + addZero(curr_hour) + '.' + addZero(m);
+            if (typeof chosenext !== 'undefined') {
+                minuteurls[i] += '-' + chosenext
+            }
+            minuteurls[i] += '.jpg'
+
+        });
+        return minuteurls;
+    }
+
+    function gethoururls(chosendate, chosensite, chosenext) {
+        if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
+            return [];
+        }
+        var is_today = false;
+        var today = new Date();
+        var curr_hour = new Date().getHours();
+        if (today.setHours(0, 0, 0, 0) === chosendate.setHours(0, 0, 0, 0)) is_today = true;
+        var baseurl = getbaseurl(chosendate);
+        var hoururls = [];
+        for (i = 0; i < 24; i++) {
+            if (is_today && (i > curr_hour)) break;
+            hoururls[i] = baseurl;
+            hoururls[i] += chosensite + '/' + addZero(i) + '.00';
+            if (typeof chosenext !== 'undefined') {
+                hoururls[i] += '-' + chosenext
+            }
+            hoururls[i] += '.jpg'
+        }
+        return hoururls;
+    }
+
+    function gethoururl(chosendate, chosensite, chosenext) {
+        if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
+            return [];
+        }
+        var myurl;
+        myurl = getbaseurl(chosendate);
+        myurl += chosensite.replace('/', '|') + '/' + addZero(chosendate.getHours()) + '.00';
+        if (typeof chosenext !== 'undefined') {
+            myurl += '-' + chosenext;
+        }
+        myurl += '.jpg';
+        return myurl;
+    }
+
+    function getimgtd(chosendate, chosensite) {
+        //  <td class="aftonbladet.se">
+        //      <a href="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-top.jpg">
+        //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg">
+        //      </a>
+        // </td>
+        var url = gethoururl(chosendate, chosensite, "thumb");
+        var tdstring = "<td class='" + chosensite + "'>";
+        tdstring += "<a href='" + url.replace('-thumb', '-top') + "'>";
+        tdstring += "<img width='250px' src='" + url + "' />";
+        tdstring += "</a></td>";
+        return tdstring;
     }
 
     $(document).ready(function () {
-        $.ajax({
-            url:'/2013-01-04/',
-            type:"POST",
-            data:{
-                'sites':["aftonbladet.se", "svt.se/nyheter", "expressen.se"]
-            },
-            dataType:"json",
-            success:function (data) {
-                var items = [];
-                $.each(data, function (hour, row) {
-                    var myrow = "";
-                    var mytime = pad(hour, 2) + ".00";
-                    myrow += "<tr><td>" + mytime + "</td>";
-                    $.each(row, function (i, url) {
-                        imagetag = "<img width='400' src='" + url + "-thumb.jpg' />"
-                        imagetag = "<a href='" + url + "-top.jpg'>" + imagetag + "</a>"
-                        myrow += "<td>" + imagetag + "</td>";
-                    })
-                    myrow += "</tr>"
-                    console.log(myrow);
-                    $('#mytable > tbody:last').append(myrow);
-                });
-            }
-        });
-    })
+        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter"];
+        var chosenDate = new Date();
+        var showlasthours = 6;
+        $('h1#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
 
+
+        var visiblehours = [];
+        var today = new Date();
+        var cdate = new Date(chosenDate.getTime());
+
+        if (today.setHours(0, 0, 0, 0) === cdate.setHours(0, 0, 0, 0)) {
+            // chosenDate = today
+            // clone chosendate
+            var startDate = new Date(chosenDate.getTime());
+            startDate.adjust('hours', -1 * showlasthours);
+            chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+                visiblehours.push(new Date(currentDate.getTime()));
+            });
+        } else {
+            // chosenDate != today
+
+        }
+
+        $.each(visiblehours, function (i, d) {
+            console.log(d);
+        });
+
+        var offhours = [23, 0, 1, 2, 3, 4, 5, 6];
+
+        chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+            myrow = "<tr>";
+            myrow += "<td>";
+            var curr_hour = currentDate.getHours();
+            if ($.inArray(curr_hour, offhours) == -1) {
+                myrow += "<a href='" + 'test' + "'> kl " + addZero(currentDate.getHours()) + ".00</a>";
+            } else {
+                myrow += "kl " + addZero(currentDate.getHours()) + ".00";
+            }
+            myrow += "</td>";
+            $.each(sites, function (i, site) {
+                var imgtd = getimgtd(currentDate, site);
+                myrow += imgtd;
+            });
+            $("#mytable").find("> tbody:last").append(myrow);
+        });
+
+    });
 </script>
 
 
@@ -44,8 +190,8 @@
 
 {% block content %}
 
-<h1>2013-01-04</h1>
-<table id="mytable" border="1" cellpadding="10">
+<h1 id="date">2013-01-04</h1>
+<table id="mytable" border="1">
     <thead>
     <tr>
         <th>klockan</th>
