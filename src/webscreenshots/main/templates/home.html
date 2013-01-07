@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block customcss %}
+.ui-datepicker {
+    font-size: 0.85em;
+}
+div#header {
+    background-color: #aaaaaa;
+}
+{% endblock %}
+
 {% block extraheaders %}
 <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
 <script>
@@ -80,7 +89,7 @@
         var url = gethoururl(chosendate, chosensite, "thumb");
         var tdstring = "<td class='" + chosensite + "'>";
         tdstring += "<a href='" + url.replace('-thumb', '-top') + "'>";
-        tdstring += "<img width='300px' src='" + url + "' />";
+        tdstring += "<img width='280px' src='" + url + "' />";
         tdstring += "</a></td>";
         return tdstring;
     }
@@ -111,6 +120,21 @@
     }
 
     $(document).ready(function () {
+        $.datepicker.setDefaults($.datepicker.regional['sv']);
+        $("#datepicker").datepicker({
+            minDate:-30,
+            maxDate:"0D",
+            showOtherMonths:true,
+            selectOtherMonths:true,
+            showAnim:"slideDown",
+            dateFormat:"d MM",
+            showWeek:true,
+            firstDay:1
+//        showOn: "button",
+//        buttonImage: "images/calendar.gif",
+//        buttonImageOnly: true
+        });
+
         var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
         var chosenDate = new Date("{{ selected_day }}");
         console.log(chosenDate);
@@ -141,21 +165,45 @@
 {% endblock %}
 
 {% block content %}
+<div id="header" class="row">
+    <div id="datepicker" class="span2"></div>
+    {% for sc in sitechunks %}
+    <div class="span2">
+        <form class="form-horizontal">
+            {% for s in sc %}
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox">{{ s }}
+                </label>
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+    {% endfor %}
+</div>
 
-<h1 id="date"></h1>
-<table id="mytable" border="1">
-    <thead>
-    <tr>
-        <th>klockan</th>
-        <th>aftonbladet.se</th>
-        <th>svt.se</th>
-        <th>svt.se/nyheter</th>
-        <th>expressen.se</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div class="row">
+    <h1 id="date"></h1>
+</div>
 
-// a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> <a href="https://bitbucket.org/captnswing/webscreenshots">production</a> ☺
+<div class="row">
+    <table id="mytable" border="1">
+        <thead>
+        <tr>
+            <th>klockan</th>
+            <th>aftonbladet.se</th>
+            <th>svt.se</th>
+            <th>svt.se/nyheter</th>
+            <th>expressen.se</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="row">
+    // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> <a
+        href="https://bitbucket.org/captnswing/webscreenshots">production</a> ☺
+</div>
 
 {% endblock %}
