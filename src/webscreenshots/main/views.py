@@ -34,6 +34,9 @@ def home(request, pubdate=None):
     else:
         y, m, d = pubdate.split('-')
         d = datetime.datetime(int(y), int(m), int(d))
+        # if specified date is todays'
+        if d.timetuple()[:3] == today.timetuple()[:3]:
+            d = today
     if d < firstdataday:
         return HttpResponseRedirect('/%s' % firstdataday.strftime("%Y-%m-%d"))
     if d > today:

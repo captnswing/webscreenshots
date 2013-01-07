@@ -62,7 +62,7 @@ div#header {
         var cmpdate = new Date(chosenDate.getTime());
         if (today.setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
             // chosenDate = today
-            // set hour range to last 6 hours
+            // set hour range to last 9 hours
             startDate.adjust('hours', -1 * showlasthours);
         } else {
             // chosenDate != today
@@ -97,7 +97,6 @@ div#header {
             firstDay:1,
             onSelect: function (dateText, inst) {
                 var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth+1) + "-" + addZero(inst.selectedDay)
-                console.log(datestr);
                 window.location = '/' + datestr;
             }
         });
