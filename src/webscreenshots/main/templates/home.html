@@ -2,10 +2,10 @@
 
 {% block customcss %}
 .ui-datepicker {
-    font-size: 0.85em;
+font-size: 0.85em;
 }
 div#header {
-    background-color: #aaaaaa;
+background-color: #aaaaaa;
 }
 {% endblock %}
 
@@ -17,6 +17,21 @@ div#header {
         return (parseInt(val) < 10) ? "0" + val : val;
     }
 
+    function range() {
+        // Similar to the python range() function
+        var L = arguments, start, stop, step, r = []
+        if (L.length == 1) {
+            start = 0, stop = L[0], step = 1
+        }
+        else {
+            start = L[0], stop = L[1], step = L[2] == null ? 1 : L[2]
+        }
+        for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+            r.push(i)
+        }
+        return r
+    }
+
     function getbaseurl(chosendate) {
         var domain = "http://d2np6cnk6s6ggj.cloudfront.net";
         var curr_year = chosendate.getFullYear();
@@ -25,42 +40,65 @@ div#header {
         return [domain, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
     }
 
-    function gethoururl(chosendate, chosensite, chosenext) {
-        if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
+    function geturl(chosenDate, chosenSite, chosenExt) {
+        if ((typeof chosenDate === 'undefined') || (typeof chosenSite === 'undefined')) {
             return [];
         }
         var myurl;
-        myurl = getbaseurl(chosendate);
-        myurl += chosensite.replace('/', '|') + '/' + addZero(chosendate.getHours()) + '.00';
-        if (typeof chosenext !== 'undefined') {
-            myurl += '-' + chosenext;
+        myurl = getbaseurl(chosenDate);
+        myurl += chosenSite.replace('/', '|') + '/' + addZero(chosenDate.getHours()) + '.' + addZero(chosenDate.getMinutes());
+        if (typeof chosenExt !== 'undefined') {
+            myurl += '-' + chosenExt;
         }
         myurl += '.jpg';
         return myurl;
     }
 
-    function getimgtd(chosendate, chosensite) {
+    function getimgtd(chosenDate, chosenSite) {
         //  <td class="aftonbladet.se">
         //      <a href="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-top.jpg">
         //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg">
         //      </a>
         // </td>
-        var url = gethoururl(chosendate, chosensite, "thumb");
-        var tdstring = "<td class='" + chosensite + "'>";
+        var url = geturl(chosenDate, chosenSite, "thumb");
+        var tdstring = "<td class='" + chosenSite + "'>";
         tdstring += "<a href='" + url.replace('-thumb', '-top') + "'>";
         tdstring += "<img width='280px' src='" + url + "' />";
         tdstring += "</a></td>";
         return tdstring;
     }
 
-    function getvisiblehours(chosenDate) {
+    function getminuterange(chosenHour) {
+        var minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+        var isoffhours = $.inArray(chosenHour.getHours(), offhours) > -1
+        if (isoffhours) {
+            minutes = [0];
+        }
+        var cmpdate = new Date(chosenHour.getTime());
+        if (new Date().setMinutes(0, 0, 0) === cmpdate.setMinutes(0, 0, 0)) {
+            // chosenHour = this hour
+            var thismin = new Date().getMinutes();
+            var factor = parseInt(thismin / 5) + 1;
+            minutes = range(5, factor * 5, 5);
+        }
+        minutes = minutes.reverse();
+        var visibleminutes = [];
+        $.each(minutes, function (i, minute) {
+            chosenHour.setMinutes(minute);
+            visibleminutes.push(new Date(chosenHour.getTime()));
+        });
+        return visibleminutes;
+
+    }
+
+    function gethourrange(chosenDate) {
+        // returns default hour range for which rows are displayd
         var primetime = 20;
         var showlasthours = 9;
         var visiblehours = [];
         var startDate = new Date(chosenDate.getTime());
-        var today = new Date();
         var cmpdate = new Date(chosenDate.getTime());
-        if (today.setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
+        if (new Date().setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
             // chosenDate = today
             // set hour range to last 9 hours
             startDate.adjust('hours', -1 * showlasthours);
@@ -72,31 +110,59 @@ div#header {
         }
         // iterate over date interval, in 1 hour steps
         chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+            var newdate = new Date(currentDate.getTime());
+            // set minutes, seconds and milliseconds to 0
+            newdate.setMinutes(0, 0, 0);
             // add new date object to array
-            visiblehours.push(new Date(currentDate.getTime()));
+            visiblehours.push(newdate);
         });
         return visiblehours;
     }
 
+    function getrows(chosenMoments, chosenSites) {
+        var allrows = [];
+        $.each(chosenMoments, function (i, currentHour) {
+            var curr_hour = addZero(currentHour.getHours()) + "." + addZero(currentHour.getMinutes());
+            // set tr id to epoch milliseconds
+            var myrow = "<tr id='" + currentHour.getTime() + "'>";
+            myrow += "<td>";
+            var hourstring = "kl " + curr_hour;
+            var isnotoffhour = ($.inArray(curr_hour, offhours) == -1);
+            var isfullhour = (currentHour.getMinutes() == 0);
+            if (isfullhour && isnotoffhour) {
+                hourstring = "<a class='hour'>kl " + curr_hour + "</a>";
+            }
+            myrow += hourstring + "</td>";
+            $.each(chosenSites, function (i, site) {
+                myrow += getimgtd(currentHour, site);
+            });
+            allrows.push(myrow);
+        });
+        return allrows;
+    }
+
+    var offhours = [23, 0, 1, 2, 3, 4, 5, 6];
+    var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
+
     $(document).ready(function () {
-        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
         var chosenDate = new Date("{{ selected_day }}");
         var firstData = new Date("{{ first_data_day }}");
         var ddiff = firstData.diff(new Date(), 'days');
-        var longestback = ddiff > 30 ? 30: ddiff;
+        var longestback = ddiff > 30 ? 30 : ddiff;
+
         $.datepicker.setDefaults($.datepicker.regional['sv']);
         $("#datepicker").datepicker({
             minDate:-longestback,
             maxDate:"0D",
-            defaultDate: chosenDate,
+            defaultDate:chosenDate,
             showOtherMonths:true,
             selectOtherMonths:true,
             showAnim:"slideDown",
             dateFormat:"d MM",
             showWeek:true,
             firstDay:1,
-            onSelect: function (dateText, inst) {
-                var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth+1) + "-" + addZero(inst.selectedDay)
+            onSelect:function (dateText, inst) {
+                var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth + 1) + "-" + addZero(inst.selectedDay)
                 window.location = '/' + datestr;
             }
         });
@@ -104,23 +170,21 @@ div#header {
 
         $('h1#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
 
-        var visiblehours = getvisiblehours(chosenDate);
-        var offhours = [23, 0, 1, 2, 3, 4, 5, 6];
-
-        $.each(visiblehours, function (i, currentHour) {
-            myrow = "<tr>";
-            myrow += "<td>";
-            var curr_hour = currentHour.getHours();
-            if ($.inArray(curr_hour, offhours) == -1) {
-                myrow += "<a href='" + '#not_implementet_yet' + "'>kl " + addZero(currentHour.getHours()) + ".00</a>";
-            } else {
-                myrow += "kl " + addZero(currentHour.getHours()) + ".00";
-            }
-            myrow += "</td>";
-            $.each(sites, function (i, site) {
-                myrow += getimgtd(currentHour, site);
+        $("#mytable tbody").on("click", "a.hour", function (event) {
+            // epoch milliseconds, eg 1357581600000
+            var tr_id = $(this).parent().parent().attr('id');
+            var rowHour = new Date(parseInt(tr_id));
+            var visibleminutes = getminuterange(rowHour);
+            var allrows = getrows(visibleminutes, sites);
+            $.each(allrows, function (i, rowhtml) {
+                $("#" + tr_id).closest("tr").before(rowhtml);
             });
-            $("#mytable").find("> tbody:last").append(myrow);
+        });
+
+        var visiblehours = gethourrange(chosenDate);
+        var allrows = getrows(visiblehours, sites);
+        $.each(allrows, function (i, rowhtml) {
+            $("#mytable").find("> tbody:last").append(rowhtml);
         });
     });
 </script>
@@ -166,8 +230,7 @@ div#header {
 </div>
 
 <div class="row">
-    // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> <a
-        href="https://bitbucket.org/captnswing/webscreenshots">production</a> ☺
+    // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
 </div>
 
 {% endblock %}
