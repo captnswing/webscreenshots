@@ -11,27 +11,8 @@ background-color: #aaaaaa;
 
 {% block extraheaders %}
 <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
-<script src="{{ STATIC_URL }}/datehandling.js"></script>
+<script src="{{ STATIC_URL }}/utils.js"></script>
 <script>
-    function addZero(val) {
-        return (parseInt(val) < 10) ? "0" + val : val;
-    }
-
-    function range() {
-        // Similar to the python range() function
-        var L = arguments, start, stop, step, r = []
-        if (L.length == 1) {
-            start = 0, stop = L[0], step = 1
-        }
-        else {
-            start = L[0], stop = L[1], step = L[2] == null ? 1 : L[2]
-        }
-        for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
-            r.push(i)
-        }
-        return r
-    }
-
     function getbaseurl(chosendate) {
         var domain = "http://d2np6cnk6s6ggj.cloudfront.net";
         var curr_year = chosendate.getFullYear();

@@ -80,4 +80,24 @@ Date.prototype.diff = function (date2, parts) {
     if (parts.length == 1)
         return result[parts[0]];
     return result;
+};
+
+function addZero(val) {
+    return (parseInt(val) < 10) ? "0" + val : val;
+}
+
+// from a comment under http://yesudeep.wordpress.com/2009/07/25/implementing-a-pythonic-range-function-in-javascript-2/
+function range() {
+    // Similar to the python range() function
+    var L = arguments, start, stop, step, r = []
+    if (L.length == 1) {
+        start = 0, stop = L[0], step = 1
+    }
+    else {
+        start = L[0], stop = L[1], step = L[2] == null ? 1 : L[2]
+    }
+    for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+        r.push(i)
+    }
+    return r
 }
