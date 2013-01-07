@@ -11,49 +11,8 @@ div#header {
 
 {% block extraheaders %}
 <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
+<script src="{{ STATIC_URL }}/datehandling.js"></script>
 <script>
-    // from http://trentrichardson.com/2011/09/27/better-javascript-date-add-and-diff/
-    Date.prototype.adjust = function (part, amount) {
-        part = part.toLowerCase();
-        var map = {
-            years:'FullYear',
-            months:'Month',
-            weeks:'Hours',
-            days:'Hours',
-            hours:'Hours',
-            minutes:'Minutes',
-            seconds:'Seconds',
-            milliseconds:'Milliseconds',
-            utcyears:'UTCFullYear',
-            utcmonths:'UTCMonth',
-            utcweeks:'UTCHours',
-            utcdays:'UTCHours',
-            utchours:'UTCHours',
-            utcminutes:'UTCMinutes',
-            utcseconds:'UTCSeconds',
-            utcmilliseconds:'UTCMilliseconds'
-        };
-        var mapPart = map[part];
-        if (part == 'weeks' || part == 'utcweeks') amount *= 168;
-        if (part == 'days' || part == 'utcdays') amount *= 24;
-        this['set' + mapPart](this['get' + mapPart]() + amount);
-        return this;
-    };
-
-    // from http://trentrichardson.com/2011/09/29/looping-through-dates-with-javascript/
-    Date.prototype.each = function (endDate, part, step, fn, bind) {
-        var fromDate = new Date(this.getTime()),
-                toDate = new Date(endDate.getTime()),
-                pm = fromDate <= toDate ? 1 : -1,
-                i = 0;
-        while ((pm === 1 && fromDate <= toDate) || (pm === -1 && fromDate >= toDate)) {
-            if (fn.call(bind, fromDate, i, this) === false) break;
-            i += step;
-            fromDate.adjust(part, step * pm);
-        }
-        return this;
-    };
-
     function addZero(val) {
         return (parseInt(val) < 10) ? "0" + val : val;
     }
@@ -96,7 +55,7 @@ div#header {
 
     function getvisiblehours(chosenDate) {
         var primetime = 20;
-        var showlasthours = 6;
+        var showlasthours = 9;
         var visiblehours = [];
         var startDate = new Date(chosenDate.getTime());
         var today = new Date();
@@ -120,24 +79,30 @@ div#header {
     }
 
     $(document).ready(function () {
+        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
+        var chosenDate = new Date("{{ selected_day }}");
+        var firstData = new Date("{{ first_data_day }}");
+        var ddiff = firstData.diff(new Date(), 'days');
+        var longestback = ddiff > 30 ? 30: ddiff;
         $.datepicker.setDefaults($.datepicker.regional['sv']);
         $("#datepicker").datepicker({
-            minDate:-30,
+            minDate:-longestback,
             maxDate:"0D",
+            defaultDate: chosenDate,
             showOtherMonths:true,
             selectOtherMonths:true,
             showAnim:"slideDown",
             dateFormat:"d MM",
             showWeek:true,
-            firstDay:1
-//        showOn: "button",
-//        buttonImage: "images/calendar.gif",
-//        buttonImageOnly: true
+            firstDay:1,
+            onSelect: function (dateText, inst) {
+                var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth+1) + "-" + addZero(inst.selectedDay)
+                console.log(datestr);
+                window.location = '/' + datestr;
+            }
         });
+        $('#datePicker').datepicker('setDate', chosenDate);
 
-        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
-        var chosenDate = new Date("{{ selected_day }}");
-        console.log(chosenDate);
         $('h1#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
 
         var visiblehours = getvisiblehours(chosenDate);

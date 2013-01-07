@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import os
+from django.http import HttpResponseRedirect
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 from django.shortcuts import render_to_response
@@ -26,11 +27,17 @@ def chunks(l, n):
 
 
 def home(request, pubdate=None):
+    firstdataday = datetime.datetime(2013, 1, 3)
+    today = datetime.datetime.today()
     if not pubdate:
-        d = datetime.datetime.today()
+        d = today
     else:
         y, m, d = pubdate.split('-')
         d = datetime.datetime(int(y), int(m), int(d))
+    if d < firstdataday:
+        return HttpResponseRedirect('/%s' % firstdataday.strftime("%Y-%m-%d"))
+    if d > today:
+        return HttpResponseRedirect('/%s' % today.strftime("%Y-%m-%d"))
     keyname = "sites_%s" % d.strftime("%Y-%m-%d")
     if keyname in request.session:
         sitesforday = request.session[keyname]
@@ -38,6 +45,7 @@ def home(request, pubdate=None):
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
     return render_to_response('home.html', {
+        'first_data_day': firstdataday.ctime(),
         'sitechunks': chunks(sitesforday, 7),
         'selected_day': d.ctime()
     }, context_instance=RequestContext(request))
