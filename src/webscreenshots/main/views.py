@@ -62,14 +62,14 @@ def siteday(request, pubdate):
     return HttpResponse(json.dumps(zip(*result_data), default=dthandler))#, mimetype="application/json")
 
 
-def home(request):
-#    conn = S3Connection()
-#    bucket = conn.get_bucket('svti-webscreenshots')
-#    sites = get_sites_for_day(bucket, datetime.date.today())
-    sites = [u'svt.se', u'svt.se/nyheter', u'aftonbladet.se']
+def home(request, pubdate=None):
+    if not pubdate:
+        d = datetime.datetime.today()
+    else:
+        y, m, d = pubdate.split('-')
+        d = datetime.datetime(int(y), int(m), int(d))
     return render_to_response('home.html', {
-        'sites': sites,
-        'selected_day': datetime.datetime.today()
+        'selected_day': d.ctime()
     }, context_instance=RequestContext(request))
 
 

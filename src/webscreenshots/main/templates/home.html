@@ -1,12 +1,8 @@
 {% extends "base.html" %}
 
-
 {% block extraheaders %}
-<!--<script src="{{ STATIC_URL }}/carouFredSel/jquery.carouFredSel-6.1.0-packed.js"></script>-->
 <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
 <script>
-    // see http://jsfiddle.net/captnswing/VM98S/
-
     // from http://trentrichardson.com/2011/09/27/better-javascript-date-add-and-diff/
     Date.prototype.adjust = function (part, amount) {
         part = part.toLowerCase();
@@ -61,52 +57,6 @@
         return [domain, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
     }
 
-    function getminuteurls(chosendate, chosensite, chosenext) {
-        if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
-            return [];
-        }
-        var curr_hour = chosendate.getHours();
-        if ($.inArray(curr_hour, offhours) > -1) {
-            minutes = [0];
-        } else {
-            minutes = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-        }
-        var baseurl = getbaseurl(chosendate);
-        var minuteurls = [];
-        $.each(minutes, function (i, m) {
-            minuteurls[i] = baseurl;
-            minuteurls[i] += chosensite + '/' + addZero(curr_hour) + '.' + addZero(m);
-            if (typeof chosenext !== 'undefined') {
-                minuteurls[i] += '-' + chosenext
-            }
-            minuteurls[i] += '.jpg'
-
-        });
-        return minuteurls;
-    }
-
-    function gethoururls(chosendate, chosensite, chosenext) {
-        if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
-            return [];
-        }
-        var is_today = false;
-        var today = new Date();
-        var curr_hour = new Date().getHours();
-        if (today.setHours(0, 0, 0, 0) === chosendate.setHours(0, 0, 0, 0)) is_today = true;
-        var baseurl = getbaseurl(chosendate);
-        var hoururls = [];
-        for (i = 0; i < 24; i++) {
-            if (is_today && (i > curr_hour)) break;
-            hoururls[i] = baseurl;
-            hoururls[i] += chosensite + '/' + addZero(i) + '.00';
-            if (typeof chosenext !== 'undefined') {
-                hoururls[i] += '-' + chosenext
-            }
-            hoururls[i] += '.jpg'
-        }
-        return hoururls;
-    }
-
     function gethoururl(chosendate, chosensite, chosenext) {
         if ((typeof chosendate === 'undefined') || (typeof chosensite === 'undefined')) {
             return [];
@@ -130,58 +80,60 @@
         var url = gethoururl(chosendate, chosensite, "thumb");
         var tdstring = "<td class='" + chosensite + "'>";
         tdstring += "<a href='" + url.replace('-thumb', '-top') + "'>";
-        tdstring += "<img width='250px' src='" + url + "' />";
+        tdstring += "<img width='300px' src='" + url + "' />";
         tdstring += "</a></td>";
         return tdstring;
     }
 
-    $(document).ready(function () {
-        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter"];
-        var chosenDate = new Date();
+    function getvisiblehours(chosenDate) {
+        var primetime = 20;
         var showlasthours = 6;
-        $('h1#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
-
-
         var visiblehours = [];
+        var startDate = new Date(chosenDate.getTime());
         var today = new Date();
-        var cdate = new Date(chosenDate.getTime());
-
-        if (today.setHours(0, 0, 0, 0) === cdate.setHours(0, 0, 0, 0)) {
+        var cmpdate = new Date(chosenDate.getTime());
+        if (today.setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
             // chosenDate = today
-            // clone chosendate
-            var startDate = new Date(chosenDate.getTime());
+            // set hour range to last 6 hours
             startDate.adjust('hours', -1 * showlasthours);
-            chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
-                visiblehours.push(new Date(currentDate.getTime()));
-            });
         } else {
             // chosenDate != today
-
+            // set hour range from (primetime-showlasthours) to primetime
+            startDate.setHours(primetime - showlasthours, 0, 0, 0);
+            chosenDate.setHours(primetime, 0, 0, 0);
         }
-
-        $.each(visiblehours, function (i, d) {
-            console.log(d);
+        // iterate over date interval, in 1 hour steps
+        chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+            // add new date object to array
+            visiblehours.push(new Date(currentDate.getTime()));
         });
+        return visiblehours;
+    }
 
+    $(document).ready(function () {
+        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
+        var chosenDate = new Date("{{ selected_day }}");
+        console.log(chosenDate);
+        $('h1#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
+
+        var visiblehours = getvisiblehours(chosenDate);
         var offhours = [23, 0, 1, 2, 3, 4, 5, 6];
 
-        chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+        $.each(visiblehours, function (i, currentHour) {
             myrow = "<tr>";
             myrow += "<td>";
-            var curr_hour = currentDate.getHours();
+            var curr_hour = currentHour.getHours();
             if ($.inArray(curr_hour, offhours) == -1) {
-                myrow += "<a href='" + 'test' + "'> kl " + addZero(currentDate.getHours()) + ".00</a>";
+                myrow += "<a href='" + '#not_implementet_yet' + "'>kl " + addZero(currentHour.getHours()) + ".00</a>";
             } else {
-                myrow += "kl " + addZero(currentDate.getHours()) + ".00";
+                myrow += "kl " + addZero(currentHour.getHours()) + ".00";
             }
             myrow += "</td>";
             $.each(sites, function (i, site) {
-                var imgtd = getimgtd(currentDate, site);
-                myrow += imgtd;
+                myrow += getimgtd(currentHour, site);
             });
             $("#mytable").find("> tbody:last").append(myrow);
         });
-
     });
 </script>
 
@@ -190,17 +142,20 @@
 
 {% block content %}
 
-<h1 id="date">2013-01-04</h1>
+<h1 id="date"></h1>
 <table id="mytable" border="1">
     <thead>
     <tr>
         <th>klockan</th>
         <th>aftonbladet.se</th>
+        <th>svt.se</th>
         <th>svt.se/nyheter</th>
         <th>expressen.se</th>
     </tr>
     </thead>
     <tbody></tbody>
 </table>
+
+// a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> <a href="https://bitbucket.org/captnswing/webscreenshots">production</a> ☺
 
 {% endblock %}
