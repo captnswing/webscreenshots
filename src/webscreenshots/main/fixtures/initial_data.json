@@ -1,18 +1,137 @@
 [
     {
-        "pk": 1,
-        "model": "auth.user",
+        "pk": 4,
+        "model": "contenttypes.contenttype",
         "fields": {
-            "username": "admin",
-            "first_name": "Frank",
-            "last_name": "Hoffsummer",
-            "is_active": true,
-            "is_superuser": true,
-            "is_staff": true,
-            "groups": [],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$10000$Q6Rw9YZ3T8l1$lxZhyF0viOQe6IMDkNw1JsQK2DDoE0FLmTaETsBqhBs=",
-            "email": "frank.hoffsummer@gmail.com"
+            "model": "contenttype",
+            "name": "content type",
+            "app_label": "contenttypes"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "group",
+            "name": "group",
+            "app_label": "auth"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "logentry",
+            "name": "log entry",
+            "app_label": "admin"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "permission",
+            "name": "permission",
+            "app_label": "auth"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "session",
+            "name": "session",
+            "app_label": "sessions"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "user",
+            "name": "user",
+            "app_label": "auth"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "website",
+            "name": "webbsida",
+            "app_label": "main"
+        }
+    },
+    {
+        "pk": "e1c0b3cbb5a95137bcbe1a7c143ded45",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-17T16:51:39.773",
+            "session_data": "ZDMwNjI0YTU2YTEyM2MxN2RmYjllZDEzN2M3ZDc0YjQ2ZmE4MmQwYjqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAXUu\n"
+        }
+    },
+    {
+        "pk": "f916b9e483ba47c7aaff6530f23b5c76",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-17T20:32:31.743",
+            "session_data": "ZDMwNjI0YTU2YTEyM2MxN2RmYjllZDEzN2M3ZDc0YjQ2ZmE4MmQwYjqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAXUu\n"
+        }
+    },
+    {
+        "pk": "5c6357448e489b03465f29242261e18d",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-17T20:32:37.719",
+            "session_data": "ZWFkMzU1NGM1YzI4ODg1MzcwNDNiYmE5YmEzYTA0NGRhNjdlYWE5ZTqAAn1xAVUKdGVzdGNvb2tp\nZXECVQZ3b3JrZWRxA3Mu\n"
+        }
+    },
+    {
+        "pk": "3513a948c02509cc9852526146d81b61",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-20T20:57:04.395",
+            "session_data": "ZDMwNjI0YTU2YTEyM2MxN2RmYjllZDEzN2M3ZDc0YjQ2ZmE4MmQwYjqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAXUu\n"
+        }
+    },
+    {
+        "pk": "869e5ad0762596c0b45ad084baff6bd4",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-20T20:57:08.829",
+            "session_data": "ZWFkMzU1NGM1YzI4ODg1MzcwNDNiYmE5YmEzYTA0NGRhNjdlYWE5ZTqAAn1xAVUKdGVzdGNvb2tp\nZXECVQZ3b3JrZWRxA3Mu\n"
+        }
+    },
+    {
+        "pk": "e1dd98b09a0ae7146c4eeb4ed88c1238",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-20T21:27:24.985",
+            "session_data": "ZmYyYzYzNjFkOWIzOWVjYTA0ZDYxNTIxZTRlYWU2ODJhMmRiZTVhMTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAnUu\n"
+        }
+    },
+    {
+        "pk": "60b818185ba8602991f243b249744ceb",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-21T10:56:03.572",
+            "session_data": "ZmYyYzYzNjFkOWIzOWVjYTA0ZDYxNTIxZTRlYWU2ODJhMmRiZTVhMTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAnUu\n"
+        }
+    },
+    {
+        "pk": "0b0e958caf1c42280e179eab39255952",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-21T10:58:54.227",
+            "session_data": "ZWFkMzU1NGM1YzI4ODg1MzcwNDNiYmE5YmEzYTA0NGRhNjdlYWE5ZTqAAn1xAVUKdGVzdGNvb2tp\nZXECVQZ3b3JrZWRxA3Mu\n"
+        }
+    },
+    {
+        "pk": "8043df9141f31792dacb22af467a7277",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-01-21T11:06:18.909",
+            "session_data": "ZmYyYzYzNjFkOWIzOWVjYTA0ZDYxNTIxZTRlYWU2ODJhMmRiZTVhMTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAnUu\n"
         }
     },
     {
@@ -90,6 +209,363 @@
         "model": "main.website",
         "fields": {
             "url": "http://sydsvenskan.se"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "main.website",
+        "fields": {
+            "url": "http://sverigesradio.se/nyheter"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "main.website",
+        "fields": {
+            "url": "http://nyheter24.se"
+        }
+    },
+    {
+        "pk": 15,
+        "model": "main.website",
+        "fields": {
+            "url": "http://nyheter.se.msn.com"
+        }
+    },
+    {
+        "pk": 16,
+        "model": "main.website",
+        "fields": {
+            "url": "http://di.se"
+        }
+    },
+    {
+        "pk": 16,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_logentry",
+            "name": "Can add log entry",
+            "content_type": 6
+        }
+    },
+    {
+        "pk": 17,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_logentry",
+            "name": "Can change log entry",
+            "content_type": 6
+        }
+    },
+    {
+        "pk": 18,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_logentry",
+            "name": "Can delete log entry",
+            "content_type": 6
+        }
+    },
+    {
+        "pk": 4,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_group",
+            "name": "Can add group",
+            "content_type": 2
+        }
+    },
+    {
+        "pk": 5,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_group",
+            "name": "Can change group",
+            "content_type": 2
+        }
+    },
+    {
+        "pk": 6,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_group",
+            "name": "Can delete group",
+            "content_type": 2
+        }
+    },
+    {
+        "pk": 1,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_permission",
+            "name": "Can add permission",
+            "content_type": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_permission",
+            "name": "Can change permission",
+            "content_type": 1
+        }
+    },
+    {
+        "pk": 3,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_permission",
+            "name": "Can delete permission",
+            "content_type": 1
+        }
+    },
+    {
+        "pk": 7,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_user",
+            "name": "Can add user",
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 8,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_user",
+            "name": "Can change user",
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 9,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_user",
+            "name": "Can delete user",
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 10,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_contenttype",
+            "name": "Can add content type",
+            "content_type": 4
+        }
+    },
+    {
+        "pk": 11,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_contenttype",
+            "name": "Can change content type",
+            "content_type": 4
+        }
+    },
+    {
+        "pk": 12,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_contenttype",
+            "name": "Can delete content type",
+            "content_type": 4
+        }
+    },
+    {
+        "pk": 19,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_website",
+            "name": "Can add webbsida",
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 20,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_website",
+            "name": "Can change webbsida",
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 21,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_website",
+            "name": "Can delete webbsida",
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 13,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_session",
+            "name": "Can add session",
+            "content_type": 5
+        }
+    },
+    {
+        "pk": 14,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_session",
+            "name": "Can change session",
+            "content_type": 5
+        }
+    },
+    {
+        "pk": 15,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_session",
+            "name": "Can delete session",
+            "content_type": 5
+        }
+    },
+    {
+        "pk": 1,
+        "model": "auth.user",
+        "fields": {
+            "username": "admin",
+            "first_name": "Frank",
+            "last_name": "Hoffsummer",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "last_login": "2013-01-06T20:57:04.391",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$Q6Rw9YZ3T8l1$lxZhyF0viOQe6IMDkNw1JsQK2DDoE0FLmTaETsBqhBs=",
+            "email": "frank.hoffsummer@gmail.com",
+            "date_joined": "2013-01-06T01:52:08.918"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "auth.user",
+        "fields": {
+            "username": "karin",
+            "first_name": "Karin",
+            "last_name": "Schmidt",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "last_login": "2013-01-07T11:06:18.906",
+            "groups": [],
+            "user_permissions": [19, 20, 21],
+            "password": "pbkdf2_sha256$10000$4c7CRsNxXTSv$nUfZOXlmX2TPZsdkLYIkXGMfvY/zDdGuSflrbHV9O9k=",
+            "email": "karin.schmidt@svt.se",
+            "date_joined": "2013-01-06T20:57:21"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 3,
+            "action_time": "2013-01-07T11:16:48.180",
+            "object_repr": "sverigesradio.se/nyheter",
+            "object_id": "14",
+            "change_message": "",
+            "user": 2,
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 7,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-01-07T11:16:05.673",
+            "object_repr": "di.se",
+            "object_id": "16",
+            "change_message": "",
+            "user": 2,
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 6,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-01-07T11:15:59.831",
+            "object_repr": "nyheter.se.msn.com",
+            "object_id": "15",
+            "change_message": "",
+            "user": 2,
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 5,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-01-07T11:15:39.673",
+            "object_repr": "sverigesradio.se/nyheter",
+            "object_id": "14",
+            "change_message": "",
+            "user": 2,
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 4,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-01-07T11:14:52.988",
+            "object_repr": "nyheter24.se",
+            "object_id": "13",
+            "change_message": "",
+            "user": 2,
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 3,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-01-07T11:14:23.107",
+            "object_repr": "sverigesradio.se/nyheter",
+            "object_id": "12",
+            "change_message": "",
+            "user": 2,
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 2,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-01-06T20:57:56.964",
+            "object_repr": "karin",
+            "object_id": "2",
+            "change_message": "\u00c4ndrade password, first_name, last_name, email, is_staff och user_permissions.",
+            "user": 1,
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 1,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-01-06T20:57:21.676",
+            "object_repr": "karin",
+            "object_id": "2",
+            "change_message": "",
+            "user": 1,
+            "content_type": 3
         }
     }
 ]
