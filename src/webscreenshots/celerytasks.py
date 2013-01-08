@@ -89,9 +89,11 @@ def create_filename(url):
 @celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot')
 def fetch_webscreenshot(url, dry_run=False):
     filename = create_filename(url)
+    # todo: take from localsettings
     phantomjs_bin = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs"
+    # todo: take from localsettings
     capture_script = "capture.js"
-    phantomjs_cmd = "%s %s %s %s" % (phantomjs_bin, capture_script, url, filename + ".png")
+    phantomjs_cmd = "%s %s %s %s" % (phantomjs_bin, capture_script, url, "/tmp/%s.png" % filename.replace('|', '\|'))
     if dry_run:
         logger.info(phantomjs_cmd)
         return os.path.join(IMAGE_DIR, filename + ".png")
@@ -99,8 +101,6 @@ def fetch_webscreenshot(url, dry_run=False):
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
-    # remove .js script
-    os.remove("/tmp/%s.js" % filename)
     return os.path.join(IMAGE_DIR, filename + ".png")
 
 
