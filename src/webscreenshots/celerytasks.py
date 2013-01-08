@@ -152,5 +152,3 @@ def webscreenshots():
 
 if __name__ == '__main__':
     cleanup()
-    for ws in WebSite.objects.all():
-        print fetch_webscreenshot(ws.url, dry_run=True)

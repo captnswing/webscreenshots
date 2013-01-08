@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block customcss %}
-.ui-datepicker {
+    .ui-datepicker {
     font-size: 0.85em;
-}
-div#header {
+    }
+    div#header {
     background-color: #aaaaaa;
-}
-table#mytable td {
+    }
+    table#mytable td {
     font-size: 1.2em;
-}
-body {
+    }
+    body {
     padding-top: 60px; /* When using the navbar-top-fixed */
-}
+    }
 {% endblock %}
 
 {% block extraheaders %}
@@ -129,11 +129,12 @@ body {
         }
 
         var offhours = [23, 0, 1, 2, 3, 4, 5, 6];
-        var sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"];
 
         $(document).ready(function () {
             var chosenDate = new Date("{{ selected_day }}");
             var firstData = new Date("{{ first_data_day }}");
+            var sites = $.parseJSON('{{ default_sites|safe }}');
+
             var ddiff = firstData.diff(new Date(), 'days');
             var longestback = ddiff > 30 ? 30 : ddiff;
 
@@ -153,6 +154,7 @@ body {
                     window.location = '/' + datestr;
                 }
             });
+
             $('#datePicker').datepicker('setDate', chosenDate);
 
             $('span#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
@@ -166,6 +168,11 @@ body {
                 $.each(allrows, function (i, rowhtml) {
                     $("#" + tr_id).closest("tr").before(rowhtml);
                 });
+            });
+
+            $("input[type='checkbox']").on("click", function (e) {
+                console.log($(this).attr("checked"));
+                console.log(e);
             });
 
             var visiblehours = gethourrange(chosenDate);

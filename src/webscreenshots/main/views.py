@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 import os
 from django.http import HttpResponseRedirect
-
+import json
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -47,8 +47,12 @@ def home(request, pubdate=None):
     else:
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
+
+    sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"]
+
     return render_to_response('home.html', {
+        'default_sites': json.dumps(sites),
         'first_data_day': firstdataday.ctime(),
         'sitechunks': chunks(sitesforday, 7),
-        'selected_day': d.ctime()
+        'selected_day': d.ctime(),
     }, context_instance=RequestContext(request))
