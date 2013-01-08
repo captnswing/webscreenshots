@@ -52,7 +52,7 @@ def save_progressive_jpeg(im, filepath):
     try:
         im.save(filepath, "JPEG", quality=90, optimize=True, progressive=True)
     except IOError:
-        ImageFile.MAXBLOCK = im.size[0] * im.size[1]
+        ImageFile.MAXBLOCK = im.size[0] * im.size[1] * 2
         im.save(filepath, "JPEG", quality=90, optimize=True, progressive=True)
 
 
@@ -88,34 +88,14 @@ def create_filename(url):
 
 @celery.task(name='webscreenshots.celerytasks.fetch_webscreenshot')
 def fetch_webscreenshot(url, dry_run=False):
-    js_tmpl = """
-    var pageurl = '%s';
-    var pagepng = '%s';
-    var page = require('webpage').create();
-    page.viewportSize = { width: 1280, height: 720 };
-    page.open(pageurl, function (status) {
-        if (status !== 'success') {
-            console.log('Unable to access the network!');
-        } else {
-            page.evaluate(function () {
-                var body = document.body;
-                body.style.backgroundColor = '#fff';
-            });
-            page.render(pagepng);
-        }
-        phantom.exit();
-    });
-    """
     filename = create_filename(url)
-    phantomjs_cmd = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs /tmp/%s.js" % filename.replace('|', '\|')
+    phantomjs_bin = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs"
+    capture_script = "capture.js"
+    phantomjs_cmd = "%s %s %s %s" % (phantomjs_bin, capture_script, url, filename + ".png")
     if dry_run:
-        logger.info(js_tmpl % (url, filename + ".png"))
         logger.info(phantomjs_cmd)
         return os.path.join(IMAGE_DIR, filename + ".png")
-    jsfile = open("/tmp/%s.js" % filename, 'w')
-    jsfile.write(js_tmpl % (url, IMAGE_DIR+ "/" + filename + ".png"))
-    jsfile.close()
-    logger.info('running phantomjs /tmp/%s.js' % filename)
+    logger.info('running phantomjs with url %s' % url)
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
         raise IOError("unable to fetch '{0}', failed with return code {1}.".format(url, ret))
