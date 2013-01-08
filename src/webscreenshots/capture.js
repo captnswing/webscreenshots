@@ -1,5 +1,5 @@
 var system = require('system');
-var url = system.args[1];
+var url = system.args[1] + '/';
 var filename = system.args[2];
 var page = require('webpage').create();
 page.viewportSize = { width: 1280, height: 720 };
