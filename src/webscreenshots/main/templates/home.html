@@ -2,10 +2,16 @@
 
 {% block customcss %}
 .ui-datepicker {
-font-size: 0.85em;
+    font-size: 0.85em;
 }
 div#header {
-background-color: #aaaaaa;
+    background-color: #aaaaaa;
+}
+table#mytable td a {
+    font-size: 1.2em;
+}
+body {
+    padding-top: 60px; /* When using the navbar-top-fixed */
 }
 {% endblock %}
 
@@ -69,7 +75,6 @@ background-color: #aaaaaa;
             visibleminutes.push(new Date(chosenHour.getTime()));
         });
         return visibleminutes;
-
     }
 
     function gethourrange(chosenDate) {
@@ -105,7 +110,8 @@ background-color: #aaaaaa;
         $.each(chosenMoments, function (i, currentHour) {
             var curr_hour = addZero(currentHour.getHours()) + "." + addZero(currentHour.getMinutes());
             // set tr id to epoch milliseconds
-            var myrow = "<tr id='" + currentHour.getTime() + "'>";
+            var rowid = currentHour.getTime();
+            var myrow = "<tr id='" + rowid + "'>";
             myrow += "<td>";
             var hourstring = "kl " + curr_hour;
             var isnotoffhour = ($.inArray(curr_hour, offhours) == -1);
@@ -174,7 +180,45 @@ background-color: #aaaaaa;
 {% endblock %}
 
 {% block content %}
-<div id="header" class="row">
+{##}
+{#<!-- from http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/twitter-bootstrap-101-the-navbar/ -->#}
+{#<div class="navbar navbar-fixed-top">#}
+{#    <div class="navbar-inner">#}
+{#        <div class="container">#}
+{#            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">#}
+{#                <span class="icon-bar"></span>#}
+{#                <span class="icon-bar"></span>#}
+{#                <span class="icon-bar"></span>#}
+{#            </a>#}
+{#            <a class="brand" href="#">Webscreenshots v0.3</a>#}
+{#            <div class="nav-collapse">#}
+{#                <ul class="nav">#}
+{#                    <li class="active"><a href="#"><i class="icon-calendar icon-white"></i> <span id="date"></span> </a></li>#}
+{#                    <!--<a class="btn btn-primary pull-right" href="http://twitter.github.com/bootstrap/">Twitter Bootstrap Home</a>-->#}
+{#                    <!--<li><a href="#">Link</a></li>-->#}
+{#                    <!--<li><a href="#">Link</a></li>-->#}
+{#                    <!--<li><a href="#">Link</a></li>-->#}
+{#                    <!--<li class="dropdown">-->#}
+{#                        <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>-->#}
+{#                        <!--<ul class="dropdown-menu">-->#}
+{#                            <!--<li><a href="#">Action</a></li>-->#}
+{#                            <!--<li><a href="#">Another action</a></li>-->#}
+{#                        <!--</ul>-->#}
+{#                    <!--</li>-->#}
+{#                </ul>#}
+{#                <!--<form class="navbar-search pull-right" action="">-->#}
+{#                    <!--<input type="text" class="search-query span2" placeholder="Search">-->#}
+{#                <!--</form>-->#}
+{#            </div><!-- /.nav-collapse -->#}
+{#        </div><!-- /.container -->#}
+{#    </div><!-- /.navbar-inner -->#}
+{#</div><!-- /.navbar -->#}
+
+<div class="row">
+    <h1 id="date"></h1>
+</div>
+
+    <div id="header" class="row">
     <div id="datepicker" class="span2"></div>
     {% for sc in sitechunks %}
     <div class="span2">
@@ -189,10 +233,6 @@ background-color: #aaaaaa;
         </form>
     </div>
     {% endfor %}
-</div>
-
-<div class="row">
-    <h1 id="date"></h1>
 </div>
 
 <div class="row">
