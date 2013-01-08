@@ -48,11 +48,14 @@ def home(request, pubdate=None):
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
 
-    sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se"]
+    sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "sverigesradio.se/nyheter"]
+    offhours = [23, 0, 1, 2, 3, 4, 5, 6]
 
     return render_to_response('home.html', {
-        'default_sites': json.dumps(sites),
+        'offhours': json.dumps(offhours),
         'first_data_day': firstdataday.ctime(),
-        'sitechunks': chunks(sitesforday, 7),
         'selected_day': d.ctime(),
+        'selected_sites': sites,
+        'selected_sites_json': json.dumps(sites),
+        'allsites': chunks(sitesforday, 8),
     }, context_instance=RequestContext(request))

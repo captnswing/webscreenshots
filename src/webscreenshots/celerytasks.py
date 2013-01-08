@@ -7,7 +7,6 @@ from celery.utils.log import get_task_logger
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from webscreenshots.celeryapp import celery
-
 os.environ["DJANGO_SETTINGS_MODULE"] = "webscreenshots.settings"
 from webscreenshots.main.models import WebSite
 

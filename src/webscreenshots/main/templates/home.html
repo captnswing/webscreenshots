@@ -6,6 +6,8 @@
     }
     div#header {
     background-color: #aaaaaa;
+    padding-top: 1.3em;
+    padding-bottom: 1.2em;
     }
     table#mytable td {
     font-size: 1.2em;
@@ -128,15 +130,15 @@
             return allrows;
         }
 
-        var offhours = [23, 0, 1, 2, 3, 4, 5, 6];
+        // the great django --> javascript transfer
+        var offhours = $.parseJSON('{{ offhours|safe }}');
+        var sites = $.parseJSON('{{ selected_sites_json|safe }}');
+        var chosenDate = new Date("{{ selected_day }}");
+        var firstData = new Date("{{ first_data_day }}");
+        var ddiff = firstData.diff(new Date(), 'days');
+        var longestback = ddiff > 30 ? 30 : ddiff;
 
         $(document).ready(function () {
-            var chosenDate = new Date("{{ selected_day }}");
-            var firstData = new Date("{{ first_data_day }}");
-            var sites = $.parseJSON('{{ default_sites|safe }}');
-
-            var ddiff = firstData.diff(new Date(), 'days');
-            var longestback = ddiff > 30 ? 30 : ddiff;
 
             $.datepicker.setDefaults($.datepicker.regional['sv']);
             $("#datepicker").datepicker({
@@ -170,10 +172,14 @@
                 });
             });
 
-            $("input[type='checkbox']").on("click", function (e) {
-                console.log($(this).attr("checked"));
-                console.log(e);
-            });
+{#            $("input[type='checkbox']").each(function(e, o){#}
+{#                console.log(o);#}
+{#            });#}
+{##}
+{#            $("input[type='checkbox']").on("click", function (e) {#}
+{#                console.log($(this).attr("checked"));#}
+{#                console.log(e);#}
+{#            });#}
 
             var visiblehours = gethourrange(chosenDate);
             var allrows = getrows(visiblehours, sites);
@@ -226,22 +232,20 @@
         <!-- /.navbar-inner -->
     </div><!-- /.navbar -->
 
-
     <div id="header" class="row">
-        <div id="datepicker" class="span2"></div>
-        {% for sc in sitechunks %}
+        <div id="datepicker" class="span3"></div>
+        {% for chunk in allsites %}
             <div class="span2">
                 <form class="form-horizontal">
-                    {% for s in sc %}
-                        <div class="controls">
-                            <label class="checkbox">
-                                <input type="checkbox">{{ s }}
-                            </label>
-                        </div>
+                    {% for site in chunk %}
+                        <label class="checkbox">
+                            <input type="checkbox">{{ site }}
+                        </label>
                     {% endfor %}
                 </form>
             </div>
         {% endfor %}
+        <div class="span5"></div>
     </div>
 
     <div class="row">
@@ -249,13 +253,13 @@
             <thead>
             <tr>
                 <th>klockan</th>
-                <th>aftonbladet.se</th>
-                <th>svt.se</th>
-                <th>svt.se/nyheter</th>
-                <th>expressen.se</th>
+                {% for site in selected_sites %}
+                    <th>{{ site }}</th>
+                {% endfor %}
             </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+            </tbody>
         </table>
     </div>
 
