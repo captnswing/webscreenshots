@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block customcss %}
-    .ui-datepicker {
+.ui-datepicker {
     font-size: 0.85em;
-    }
-    div#header {
+}
+div#header {
     background-color: #aaaaaa;
-    }
-    table#mytable td a {
+}
+table#mytable td {
     font-size: 1.2em;
-    }
-    body {
+}
+body {
     padding-top: 60px; /* When using the navbar-top-fixed */
-    }
+}
 {% endblock %}
 
 {% block extraheaders %}
@@ -114,7 +114,7 @@
                 var myrow = "<tr id='" + rowid + "'>";
                 myrow += "<td>";
                 var hourstring = "kl " + curr_hour;
-                var isnotoffhour = ($.inArray(curr_hour, offhours) == -1);
+                var isnotoffhour = ($.inArray(currentHour.getHours(), offhours) == -1);
                 var isfullhour = (currentHour.getMinutes() == 0);
                 if (isfullhour && isnotoffhour) {
                     hourstring = "<a class='hour'>kl " + curr_hour + "</a>";
