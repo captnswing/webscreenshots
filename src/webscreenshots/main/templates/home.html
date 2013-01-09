@@ -21,20 +21,24 @@
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
     <script src="{{ STATIC_URL }}/utils.js"></script>
     <script>
-        function getbaseurl(chosendate) {
+        function getbaseurl(chosendate, chosenWidth) {
             var domain = "http://d2np6cnk6s6ggj.cloudfront.net";
+            // 333var domain = "/wsimages";
+            if (!(typeof chosenWidth === 'undefined')) {
+                //domain += '/' + chosenWidth + 'x' + chosenWidth;
+            }
             var curr_year = chosendate.getFullYear();
             var curr_month = chosendate.getMonth() + 1; //Months are zero based
             var curr_date = chosendate.getDate();
             return [domain, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
         }
 
-        function geturl(chosenDate, chosenSite, chosenExt) {
+        function geturl(chosenDate, chosenSite, chosenExt, chosenWidth) {
             if ((typeof chosenDate === 'undefined') || (typeof chosenSite === 'undefined')) {
                 return [];
             }
             var myurl;
-            myurl = getbaseurl(chosenDate);
+            myurl = getbaseurl(chosenDate, chosenWidth);
             myurl += chosenSite.replace('/', '|') + '/' + addZero(chosenDate.getHours()) + '.' + addZero(chosenDate.getMinutes());
             if (typeof chosenExt !== 'undefined') {
                 myurl += '-' + chosenExt;
@@ -43,16 +47,20 @@
             return myurl;
         }
 
-        function getimgtd(chosenDate, chosenSite) {
+        function getimgtd(chosenDate, chosenSite, chosenWidth) {
             //  <td class="aftonbladet.se">
             //      <a href="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-top.jpg">
             //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg">
             //      </a>
             // </td>
-            var url = geturl(chosenDate, chosenSite, "thumb");
+            if ((typeof chosenWidth === 'undefined')) {
+                chosenWidth = 280;
+            }
+            var thumb_url = geturl(chosenDate, chosenSite, "thumb", chosenWidth);
+            var full_url = geturl(chosenDate, chosenSite, "top");
             var tdstring = "<td class='" + chosenSite + "'>";
-            tdstring += "<a href='" + url.replace('-thumb', '-top') + "'>";
-            tdstring += "<img width='280px' src='" + url + "' />";
+            tdstring += "<a href='" + full_url + "'>";
+            tdstring += "<img width='" + chosenWidth + "' src='" + thumb_url + "' />";
             tdstring += "</a></td>";
             return tdstring;
         }
@@ -123,7 +131,7 @@
                 }
                 myrow += hourstring + "</td>";
                 $.each(chosenSites, function (i, site) {
-                    myrow += getimgtd(currentHour, site);
+                    myrow += getimgtd(currentHour, site, 280);
                 });
                 allrows.push(myrow);
             });
