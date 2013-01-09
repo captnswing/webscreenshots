@@ -96,6 +96,7 @@ def fetch_webscreenshot(url, dry_run=False):
     if dry_run:
         logger.info(phantomjs_cmd)
         return os.path.join(IMAGE_DIR, filename + ".png")
+    logger.debug(phantomjs_cmd)
     logger.info('running phantomjs with url %s' % url)
     ret = subprocess.call(phantomjs_cmd, shell=True)
     if ret != 0:
