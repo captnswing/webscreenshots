@@ -191,13 +191,10 @@
                 var selector = "." + thissite.replace(/\./g, '\\.').replace('|', '\\|').replace('/', '\\/');
                 if (unchecked) {
                     $(selector).remove();
-                    console.log(sites);
                     // remove site from sites array
                     sites.splice(sites.indexOf(thissite), 1);
-                    console.log(sites);
                 }
                 if (checked) {
-                    console.log("add column " + selector);
                     $("#mytable tr:first").append("<th class='" + thissite + "'>" + thissite + "</th>");
                     $("#mytable tr:not(:first)").each(function () {
                         var tr_id = $(this).attr('id');
@@ -205,9 +202,7 @@
                         $(this).append(getimgtd(tr_date, thissite));
                     });
                     // add site to sites array
-                    console.log(sites);
                     sites.push(thissite);
-                    console.log(sites);
                 }
             });
 
