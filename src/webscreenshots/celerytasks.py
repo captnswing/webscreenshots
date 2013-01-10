@@ -89,10 +89,10 @@ def create_filename(url):
 def fetch_webscreenshot(url, dry_run=False):
     filename = create_filename(url)
     # todo: take from localsettings
-    phantomjs_bin = "/opt/phantomjs-1.7.0-linux-x86_64/bin/phantomjs"
+    phantomjs_bin = "/opt/phantomjs-1.8.1-linux-x86_64/bin/phantomjs"
     # todo: take from localsettings
     capture_script = "capture.js"
-    phantomjs_cmd = "%s %s %s %s" % (phantomjs_bin, capture_script, url, "/tmp/%s.png" % filename.replace('|', '\|'))
+    phantomjs_cmd = "%s %s %s %s" % (phantomjs_bin, capture_script, url, "%s/%s.png" % (IMAGE_DIR, filename.replace('|', '\|')))
     if dry_run:
         logger.info(phantomjs_cmd)
         return os.path.join(IMAGE_DIR, filename + ".png")
