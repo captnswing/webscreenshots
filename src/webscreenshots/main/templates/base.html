@@ -9,20 +9,17 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
-    <script type="text/javascript"
-            src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js"></script>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/cupertino/jquery-ui.css" rel="stylesheet"/>
 
     <script src="{{ STATIC_URL }}/bootstrap/js/bootstrap.min.js"></script>
     <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <style type="text/css">
-            /*<![CDATA[*/
-        {% block customcss %}
-        {% endblock %}
-
-            /*]]>*/
+    /*<![CDATA[*/
+    {% block customcss %}
+    {% endblock %}
+    /*]]>*/
     </style>
 
     {% block extraheaders %}
@@ -32,11 +29,10 @@
 <body>
 
 <div class="container">
-
     {% block content %}
     {% endblock %}
-
 </div>
+
 <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-37303356-2']);
@@ -52,5 +48,6 @@
         s.parentNode.insertBefore(ga, s);
     })();
 </script>
+
 </body>
 </html>

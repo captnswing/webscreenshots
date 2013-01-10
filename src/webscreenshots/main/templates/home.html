@@ -5,215 +5,239 @@
     font-size: 0.85em;
     }
     div#header {
-    background-color: #aaaaaa;
+    background-color: #E0E0E0;
     padding-top: 1.3em;
     padding-bottom: 1.2em;
     }
-    table#mytable td {
-    font-size: 1.2em;
-    }
     body {
-    padding-top: 60px; /* When using the navbar-top-fixed */
+    padding-top: 40px; /* When using the navbar-top-fixed */
     }
+    div.sitecheckboxes {
+    vertical-align: top;
+    }
+    .loupe {
+    -webkit-border-radius: 80px;
+    -moz-border-radius: 80px;
+    border-radius: 80px;
+    border: 1px solid black;
+    background-color: #E0E0E0;
+    }
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 {% endblock %}
 
 {% block extraheaders %}
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
     <script src="{{ STATIC_URL }}/utils.js"></script>
+    <script src="{{ STATIC_URL }}/jquery.loupe.min.js" type="text/javascript"></script>
     <script>
-        function getbaseurl(chosendate, chosenWidth) {
-            var base = "/wsimages";
-            if (!(typeof chosenWidth === 'undefined')) {
-                base += '/' + chosenWidth + 'x' + chosenWidth;
-            }
-            var curr_year = chosendate.getFullYear();
-            var curr_month = chosendate.getMonth() + 1; //Months are zero based
-            var curr_date = chosendate.getDate();
-            return [base, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
+    function getbaseurl(chosendate, chosenWidth) {
+        var base = "/wsimages";
+        if (!(typeof chosenWidth === 'undefined')) {
+            base += '/' + chosenWidth + 'x' + chosenWidth;
         }
+        var curr_year = chosendate.getFullYear();
+        var curr_month = chosendate.getMonth() + 1; //Months are zero based
+        var curr_date = chosendate.getDate();
+        return [base, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
+    }
 
-        function geturl(chosenDate, chosenSite, chosenExt, chosenWidth) {
-            if ((typeof chosenDate === 'undefined') || (typeof chosenSite === 'undefined')) {
-                return [];
-            }
-            var myurl;
-            myurl = getbaseurl(chosenDate, chosenWidth);
-            myurl += chosenSite.replace('/', '|') + '/' + addZero(chosenDate.getHours()) + '.' + addZero(chosenDate.getMinutes());
-            if (typeof chosenExt !== 'undefined') {
-                myurl += '-' + chosenExt;
-            }
-            myurl += '.jpg';
-            return myurl;
+    function geturl(chosenDate, chosenSite, chosenExt, chosenWidth) {
+        if ((typeof chosenDate === 'undefined') || (typeof chosenSite === 'undefined')) {
+            return [];
         }
-
-        function getimgtd(chosenDate, chosenSite) {
-            //  <td class="aftonbladet.se">
-            //      <a href="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-top.jpg">
-            //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg">
-            //      </a>
-            // </td>
-            var thumb_url = geturl(chosenDate, chosenSite, "thumb", chosenWidth);
-            var full_url = geturl(chosenDate, chosenSite, "top");
-            var tdstring = "<td class='" + chosenSite + "'>";
-            tdstring += "<a href='" + full_url + "'>";
-            tdstring += "<img width='" + chosenWidth + "' src='" + thumb_url + "' />";
-            tdstring += "</a></td>";
-            return tdstring;
+        var myurl;
+        myurl = getbaseurl(chosenDate, chosenWidth);
+        myurl += chosenSite.replace('/', '|') + '/' + addZero(chosenDate.getHours()) + '.' + addZero(chosenDate.getMinutes());
+        if (typeof chosenExt !== 'undefined') {
+            myurl += '-' + chosenExt;
         }
+        myurl += '.jpg';
+        return myurl;
+    }
 
-        function getminuterange(chosenHour) {
-            var minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-            var isoffhours = $.inArray(chosenHour.getHours(), offhours) > -1
-            if (isoffhours) {
-                minutes = [0];
-            }
-            var cmpdate = new Date(chosenHour.getTime());
-            if (new Date().setMinutes(0, 0, 0) === cmpdate.setMinutes(0, 0, 0)) {
-                // chosenHour = this hour
-                var thismin = new Date().getMinutes();
-                var factor = parseInt(thismin / 5) + 1;
-                minutes = range(5, factor * 5, 5);
-            }
-            minutes = minutes.reverse();
-            var visibleminutes = [];
-            $.each(minutes, function (i, minute) {
-                chosenHour.setMinutes(minute);
-                visibleminutes.push(new Date(chosenHour.getTime()));
-            });
-            return visibleminutes;
+    function getimgtd(chosenDate, chosenSite) {
+        //  <td class="aftonbladet.se">
+        //      <a href="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-top.jpg">
+        //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg">
+        //      </a>
+        // </td>
+        var thumb_url = geturl(chosenDate, chosenSite, "thumb", chosenWidth);
+        var full_url = geturl(chosenDate, chosenSite, "top");
+        //var full_url = geturl(chosenDate, chosenSite, "thumb");
+        var imgtitle = chosenSite + ' ' + chosenDate;
+        console.log(imgtitle);
+        var tdstring = "<td class='" + chosenSite + "'>";
+        tdstring += "<a class='wsimage' title='" + imgtitle + "' href='" + full_url + "'>";
+        tdstring += "<img width='" + chosenWidth + "' src='" + thumb_url + "' />";
+        tdstring += "</a></td>";
+        return tdstring;
+    }
+
+    function getminuterange(chosenHour) {
+        var minutes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+        var isoffhours = $.inArray(chosenHour.getHours(), offhours) > -1
+        if (isoffhours) {
+            minutes = [0];
         }
-
-        function gethourrange(chosenDate) {
-            // returns default hour range for which rows are displayd
-            var primetime = 20;
-            var showlasthours = 9;
-            var visiblehours = [];
-            var startDate = new Date(chosenDate.getTime());
-            var cmpdate = new Date(chosenDate.getTime());
-            if (new Date().setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
-                // chosenDate = today
-                // set hour range to last 9 hours
-                startDate.adjust('hours', -1 * showlasthours);
-            } else {
-                // chosenDate != today
-                // set hour range from (primetime-showlasthours) to primetime
-                startDate.setHours(primetime - showlasthours, 0, 0, 0);
-                chosenDate.setHours(primetime, 0, 0, 0);
-            }
-            // iterate over date interval, in 1 hour steps
-            chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
-                var newdate = new Date(currentDate.getTime());
-                // set minutes, seconds and milliseconds to 0
-                newdate.setMinutes(0, 0, 0);
-                // add new date object to array
-                visiblehours.push(newdate);
-            });
-            return visiblehours;
+        var cmpdate = new Date(chosenHour.getTime());
+        if (new Date().setMinutes(0, 0, 0) === cmpdate.setMinutes(0, 0, 0)) {
+            // chosenHour = this hour
+            var thismin = new Date().getMinutes();
+            var factor = parseInt(thismin / 5) + 1;
+            minutes = range(5, factor * 5, 5);
         }
-
-        function getrows(chosenMoments, chosenSites) {
-            var allrows = [];
-            $.each(chosenMoments, function (i, currentHour) {
-                var curr_hour = addZero(currentHour.getHours()) + "." + addZero(currentHour.getMinutes());
-                // set tr id to epoch milliseconds
-                var rowid = currentHour.getTime();
-                var myrow = "<tr id='" + rowid + "'>";
-                myrow += "<td>";
-                var hourstring = "kl " + curr_hour;
-                var isnotoffhour = ($.inArray(currentHour.getHours(), offhours) == -1);
-                var isfullhour = (currentHour.getMinutes() == 0);
-                if (isfullhour && isnotoffhour) {
-                    hourstring = "<a class='hour'>kl " + curr_hour + "</a>";
-                }
-                myrow += hourstring + "</td>";
-                $.each(chosenSites, function (i, site) {
-                    myrow += getimgtd(currentHour, site);
-                });
-                allrows.push(myrow);
-            });
-            return allrows;
-        }
-
-        // the great django --> javascript transfer
-        var offhours = $.parseJSON('{{ offhours|safe }}');
-        var sites = $.parseJSON('{{ selected_sites_json|safe }}');
-        var chosenDate = new Date("{{ selected_day }}");
-        var firstData = new Date("{{ first_data_day }}");
-        var ddiff = firstData.diff(new Date(), 'days');
-        var longestback = ddiff > 30 ? 30 : ddiff;
-        var chosenWidth = 280;
-
-        $(document).ready(function () {
-
-            $.datepicker.setDefaults($.datepicker.regional['sv']);
-            $("#datepicker").datepicker({
-                minDate: -longestback,
-                maxDate: "0D",
-                defaultDate: chosenDate,
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                showAnim: "slideDown",
-                dateFormat: "d MM",
-                showWeek: true,
-                firstDay: 1,
-                onSelect: function (dateText, inst) {
-                    var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth + 1) + "-" + addZero(inst.selectedDay)
-                    window.location = '/' + datestr;
-                }
-            });
-
-            $('#datePicker').datepicker('setDate', chosenDate);
-
-            $('span#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
-
-            $("#mytable tbody").on("click", "a.hour", function (event) {
-                // epoch milliseconds, eg 1357581600000
-                var tr_id = $(this).parent().parent().attr('id');
-                var rowHour = new Date(parseInt(tr_id));
-                var visibleminutes = getminuterange(rowHour);
-                var allrows = getrows(visibleminutes, sites);
-                $.each(allrows, function (i, rowhtml) {
-                    $("#" + tr_id).closest("tr").before(rowhtml);
-                });
-            });
-
-            // check all the checkboxes that are in "sites" array
-            $(":checkbox").each(function () {
-                var cbname = $(this).attr('name');
-                var cb_in_sites = $.inArray(cbname, sites) > -1;
-                $(this).attr('checked', cb_in_sites);
-            });
-
-            $(":checkbox").on("click", function () {
-                var checked = (typeof($(this).attr("checked")) !== 'undefined');
-                var unchecked = (typeof($(this).attr("checked")) === 'undefined');
-                var thissite = $(this).attr("name");
-                var selector = "." + thissite.replace(/\./g, '\\.').replace('|', '\\|').replace('/', '\\/');
-                if (unchecked) {
-                    $(selector).remove();
-                    // remove site from sites array
-                    sites.splice(sites.indexOf(thissite), 1);
-                }
-                if (checked) {
-                    $("#mytable tr:first").append("<th class='" + thissite + "'>" + thissite + "</th>");
-                    $("#mytable tr:not(:first)").each(function () {
-                        var tr_id = $(this).attr('id');
-                        var tr_date = new Date(parseInt(tr_id));
-                        $(this).append(getimgtd(tr_date, thissite));
-                    });
-                    // add site to sites array
-                    sites.push(thissite);
-                }
-            });
-
-            var visiblehours = gethourrange(chosenDate);
-            var allrows = getrows(visiblehours, sites);
-            $.each(allrows, function (i, rowhtml) {
-                $("#mytable").find("> tbody:last").append(rowhtml);
-            });
+        minutes = minutes.reverse();
+        var visibleminutes = [];
+        $.each(minutes, function (i, minute) {
+            chosenHour.setMinutes(minute);
+            visibleminutes.push(new Date(chosenHour.getTime()));
         });
-    </script>
+        return visibleminutes;
+    }
 
+    function gethourrange(chosenDate) {
+        // returns default hour range for which rows are displayd
+        var primetime = 20;
+        var showlasthours = 9;
+        var visiblehours = [];
+        var startDate = new Date(chosenDate.getTime());
+        var cmpdate = new Date(chosenDate.getTime());
+        if (new Date().setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
+            // chosenDate = today
+            // set hour range to last 9 hours
+            startDate.adjust('hours', -1 * showlasthours);
+        } else {
+            // chosenDate != today
+            // set hour range from (primetime-showlasthours) to primetime
+            startDate.setHours(primetime - showlasthours, 0, 0, 0);
+            chosenDate.setHours(primetime, 0, 0, 0);
+        }
+        // iterate over date interval, in 1 hour steps
+        chosenDate.each(startDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+            var newdate = new Date(currentDate.getTime());
+            // set minutes, seconds and milliseconds to 0
+            newdate.setMinutes(0, 0, 0);
+            // add new date object to array
+            visiblehours.push(newdate);
+        });
+        return visiblehours;
+    }
+
+    function getrows(chosenMoments, chosenSites) {
+        var allrows = [];
+        $.each(chosenMoments, function (i, currentHour) {
+            var curr_hour = addZero(currentHour.getHours()) + "." + addZero(currentHour.getMinutes());
+            // set tr id to epoch milliseconds
+            var rowid = currentHour.getTime();
+            var myrow = "<tr id='" + rowid + "'>";
+            myrow += "<td>";
+            var hourstring = "kl " + curr_hour;
+            var buttonclasses = "btn";
+            var isnotoffhour = ($.inArray(currentHour.getHours(), offhours) == -1);
+            var isfullhour = (currentHour.getMinutes() == 0);
+            {#            if (isfullhour && isnotoffhour) {#}
+            {#                buttonclasses = "btn btn-primary";#}
+            {#            }#}
+            {#            myrow += "<button class='" + buttonclasses + "' type='button'>" + hourstring + "</button>";#}
+            {#            myrow += "</td>";#}
+            if (isfullhour && isnotoffhour) {
+                hourstring = "<a class='hour'>kl " + curr_hour + "</a>";
+            }
+            myrow += hourstring + "</td>";
+            $.each(chosenSites, function (i, site) {
+                myrow += getimgtd(currentHour, site);
+            });
+            allrows.push(myrow);
+        });
+        return allrows;
+    }
+
+    // the great django --> javascript transfer
+    var offhours = $.parseJSON('{{ offhours|safe }}');
+    var sites = $.parseJSON('{{ selected_sites_json|safe }}');
+    var chosenDate = new Date("{{ selected_day }}");
+    var firstData = new Date("{{ first_data_day }}");
+    var ddiff = firstData.diff(new Date(), 'days');
+    var longestback = ddiff > 30 ? 30 : ddiff;
+    var chosenWidth = 200;
+
+    $(document).ready(function () {
+
+        $.datepicker.setDefaults($.datepicker.regional['sv']);
+        $("#datepicker").datepicker({
+            minDate: -longestback,
+            maxDate: "0D",
+            defaultDate: chosenDate,
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showAnim: "slideDown",
+            dateFormat: "d MM",
+            showWeek: true,
+            firstDay: 1,
+            onSelect: function (dateText, inst) {
+                var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth + 1) + "-" + addZero(inst.selectedDay)
+                window.location = '/' + datestr;
+            }
+        });
+
+        $('#datePicker').datepicker('setDate', chosenDate);
+
+        $('span#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
+
+        $("#mytable tbody").on("click", "a.hour", function (event) {
+            // epoch milliseconds, eg 1357581600000
+            var tr_id = $(this).parent().parent().attr('id');
+            var rowHour = new Date(parseInt(tr_id));
+            var visibleminutes = getminuterange(rowHour);
+            var allrows = getrows(visibleminutes, sites);
+            $.each(allrows, function (i, rowhtml) {
+                $("#" + tr_id).closest("tr").before(rowhtml);
+            });
+            // rebind loupe plungin. not ideal. don't know how to do it properly
+            $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+        });
+
+        // check all the checkboxes that are in "sites" array
+        $(":checkbox").each(function () {
+            var cbname = $(this).attr('name');
+            var cb_in_sites = $.inArray(cbname, sites) > -1;
+            $(this).attr('checked', cb_in_sites);
+        });
+
+        $(":checkbox").on("click", function () {
+            var checked = (typeof($(this).attr("checked")) !== 'undefined');
+            var unchecked = (typeof($(this).attr("checked")) === 'undefined');
+            var thissite = $(this).attr("name");
+            var selector = "." + thissite.replace(/\./g, '\\.').replace('|', '\\|').replace('/', '\\/');
+            if (unchecked) {
+                $(selector).remove();
+                // remove site from sites array
+                sites.splice(sites.indexOf(thissite), 1);
+            }
+            if (checked) {
+                $("#mytable tr:first").append("<th class='" + thissite + "'>" + thissite + "</th>");
+                $("#mytable tr:not(:first)").each(function () {
+                    var tr_id = $(this).attr('id');
+                    var tr_date = new Date(parseInt(tr_id));
+                    $(this).append(getimgtd(tr_date, thissite));
+                });
+                // add site to sites array
+                sites.push(thissite);
+                // rebind loupe plungin. not ideal. don't know how to do it properly
+                $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+            }
+        });
+
+        var visiblehours = gethourrange(chosenDate);
+        var allrows = getrows(visiblehours, sites);
+        $.each(allrows, function (i, rowhtml) {
+            $("#mytable").find("> tbody:last").append(rowhtml);
+        });
+
+        $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+
+    });
+    </script>
 
 {% endblock %}
 
@@ -232,10 +256,12 @@
 
                 <div class="nav-collapse">
                     <ul class="nav">
-                        <li class="active"><a href="#"><i class="icon-calendar icon-white"></i> <span id="date"></span>
+                        <li class="pull-left active"><a href="#"><i class="icon-calendar icon-white"></i> <span
+                                id="date"></span>
                         </a></li>
                         <!--<a class="btn btn-primary pull-right" href="http://twitter.github.com/bootstrap/">Twitter Bootstrap Home</a>-->
-                        <!--<li><a href="#">Link</a></li>-->
+                        <li><a href="https://bitbucket.org/captnswing/webscreenshots">About</a></li>
+                        <li><a href="https://bitbucket.org/captnswing/webscreenshots">Code</a></li>
                         <!--<li><a href="#">Link</a></li>-->
                         <!--<li><a href="#">Link</a></li>-->
                         <!--<li class="dropdown">-->
@@ -260,7 +286,7 @@
     <div id="header" class="row">
         <div id="datepicker" class="span3"></div>
         {% for chunk in allsites %}
-            <div class="span2">
+            <div class="sitecheckboxes btn-group btn-group-vertical">
                 <form class="form-horizontal">
                     {% for site in chunk %}
                         <label class="checkbox">
@@ -273,11 +299,13 @@
         <div class="span5"></div>
     </div>
 
+    {#    <button class="btn btn-large btn-block btn-primary" type="button">Block level button</button>#}
+
     <div class="row">
-        <table id="mytable" border="1">
+        <table class="table table-bordered" id="mytable">
             <thead>
             <tr>
-                <th>klockan</th>
+                <th></th>
                 {% for site in selected_sites %}
                     <th class="{{ site }}">{{ site }}</th>
                 {% endfor %}
@@ -287,6 +315,8 @@
             </tbody>
         </table>
     </div>
+
+    {#    <button class="btn btn-large btn-block btn-primary" type="button">Block level button</button>#}
 
     <div class="row">
         // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
