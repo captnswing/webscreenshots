@@ -52,7 +52,6 @@
             //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg">
             //      </a>
             // </td>
-            var chosenWidth = 280;
             var thumb_url = geturl(chosenDate, chosenSite, "thumb", chosenWidth);
             var full_url = geturl(chosenDate, chosenSite, "top");
             var tdstring = "<td class='" + chosenSite + "'>";
@@ -142,6 +141,7 @@
         var firstData = new Date("{{ first_data_day }}");
         var ddiff = firstData.diff(new Date(), 'days');
         var longestback = ddiff > 30 ? 30 : ddiff;
+        var chosenWidth = 280;
 
         $(document).ready(function () {
 
@@ -178,7 +178,7 @@
             });
 
             // check all the checkboxes that are in "sites" array
-            $(":checkbox").each(function() {
+            $(":checkbox").each(function () {
                 var cbname = $(this).attr('name');
                 var cb_in_sites = $.inArray(cbname, sites) > -1;
                 $(this).attr('checked', cb_in_sites);
@@ -187,12 +187,27 @@
             $(":checkbox").on("click", function () {
                 var checked = (typeof($(this).attr("checked")) !== 'undefined');
                 var unchecked = (typeof($(this).attr("checked")) === 'undefined');
+                var thissite = $(this).attr("name");
+                var selector = "." + thissite.replace(/\./g, '\\.').replace('|', '\\|').replace('/', '\\/');
                 if (unchecked) {
-                    var selector = "." + $(this).attr("name").replace('.', '\\.').replace('|', '\\|').replace('/', '\\/');
-                    console.log("remove column td." + selector);
-                    console.log(selector);
                     $(selector).remove();
-                    console.log("removed?!");
+                    console.log(sites);
+                    // remove site from sites array
+                    sites.splice(sites.indexOf(thissite), 1);
+                    console.log(sites);
+                }
+                if (checked) {
+                    console.log("add column " + selector);
+                    $("#mytable tr:first").append("<th class='" + thissite + "'>" + thissite + "</th>");
+                    $("#mytable tr:not(:first)").each(function () {
+                        var tr_id = $(this).attr('id');
+                        var tr_date = new Date(parseInt(tr_id));
+                        $(this).append(getimgtd(tr_date, thissite));
+                    });
+                    // add site to sites array
+                    console.log(sites);
+                    sites.push(thissite);
+                    console.log(sites);
                 }
             });
 
@@ -218,7 +233,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="#">Webscreenshots v0.3</a>
+                <a class="brand" href="#">Webscreenshots v0.4</a>
 
                 <div class="nav-collapse">
                     <ul class="nav">
