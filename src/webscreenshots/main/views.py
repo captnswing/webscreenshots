@@ -48,7 +48,7 @@ def home(request, pubdate=None):
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
 
-    sites = ["aftonbladet.se", "svt.se", "svt.se/nyheter", "expressen.se", "svd.se"]
+    sites = ["aftonbladet.se", "expressen.se", "svt.se/nyheter", "svd.se"]
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
 
     return render_to_response('home.html', {
