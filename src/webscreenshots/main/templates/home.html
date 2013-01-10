@@ -177,14 +177,24 @@
                 });
             });
 
-{#            $("input[type='checkbox']").each(function(e, o){#}
-{#                console.log(o);#}
-{#            });#}
-{##}
-{#            $("input[type='checkbox']").on("click", function (e) {#}
-{#                console.log($(this).attr("checked"));#}
-{#                console.log(e);#}
-{#            });#}
+            // check all the checkboxes that are in "sites" array
+            $(":checkbox").each(function() {
+                var cbname = $(this).attr('name');
+                var cb_in_sites = $.inArray(cbname, sites) > -1;
+                $(this).attr('checked', cb_in_sites);
+            });
+
+            $(":checkbox").on("click", function () {
+                var checked = (typeof($(this).attr("checked")) !== 'undefined');
+                var unchecked = (typeof($(this).attr("checked")) === 'undefined');
+                if (unchecked) {
+                    var selector = "." + $(this).attr("name").replace('.', '\\.');
+                    console.log("remove column td." + selector);
+                    console.log(selector);
+                    $(selector).remove();
+                    console.log("removed?!");
+                }
+            });
 
             var visiblehours = gethourrange(chosenDate);
             var allrows = getrows(visiblehours, sites);
@@ -244,7 +254,7 @@
                 <form class="form-horizontal">
                     {% for site in chunk %}
                         <label class="checkbox">
-                            <input type="checkbox">{{ site }}
+                            <input name='{{ site }}' type="checkbox">{{ site }}
                         </label>
                     {% endfor %}
                 </form>
@@ -259,7 +269,7 @@
             <tr>
                 <th>klockan</th>
                 {% for site in selected_sites %}
-                    <th>{{ site }}</th>
+                    <th class="{{ site }}">{{ site }}</th>
                 {% endfor %}
             </tr>
             </thead>
