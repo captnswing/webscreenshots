@@ -188,7 +188,7 @@
                 var checked = (typeof($(this).attr("checked")) !== 'undefined');
                 var unchecked = (typeof($(this).attr("checked")) === 'undefined');
                 if (unchecked) {
-                    var selector = "." + $(this).attr("name").replace('.', '\\.');
+                    var selector = "." + $(this).attr("name").replace('.', '\\.').replace('|', '\\|').replace('/', '\\/');
                     console.log("remove column td." + selector);
                     console.log(selector);
                     $(selector).remove();
