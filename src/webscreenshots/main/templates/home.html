@@ -22,6 +22,9 @@
     border: 1px solid black;
     background-color: #E0E0E0;
     }
+    div.alert {
+        display: none;
+    }
     <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 {% endblock %}
 
@@ -155,6 +158,7 @@
     // the great django --> javascript transfer
     var offhours = $.parseJSON('{{ offhours|safe }}');
     var sites = $.parseJSON('{{ selected_sites_json|safe }}');
+    var wrongsites = $.parseJSON('{{ wrongsites_json|safe }}')
     var chosenDate = new Date("{{ selected_day }}");
     var firstData = new Date("{{ first_data_day }}");
     var ddiff = firstData.diff(new Date(), 'days');
@@ -163,6 +167,12 @@
     var loupe = "{{ loupe }}";
 
     $(document).ready(function () {
+        if (wrongsites) {
+            var html_msg = "<button type='button' class='close' data-dismiss='alert'>&times;</button>";
+            html_msg += "<strong>be advised:</strong>: '" + wrongsites.join("', ") + "' not available";
+            $('div.alert').html(html_msg);
+            $('div.alert').show();
+        }
         $.datepicker.setDefaults($.datepicker.regional['sv']);
         $("#datepicker").datepicker({
             minDate: -longestback,
@@ -279,7 +289,7 @@
                             <li>
                         <!--<a href="https://bitbucket.org/captnswing/webscreenshots">About</a>-->
                         </li>
-                        <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                        <!--<a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>-->
                     </ul>
                 </div>
             </div>
@@ -303,6 +313,8 @@
     </div>
 
     <div class="row">
+        <div class="alert alert-info">
+        </div>
 {#        <ul class="pager">#}
 {#            <li class="previous">#}
 {#                <a href="#">&uarr; newer &uarr;</a>#}
