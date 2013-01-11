@@ -27,6 +27,8 @@ def chunks(l, n):
 
 
 def home(request, pubdate=None):
+    thumbwidth = request.GET.get("thumbwidth", 220)
+    lens = request.GET.get("lens", "on")
     firstdataday = datetime.datetime(2013, 1, 3)
     today = datetime.datetime.today()
     if not pubdate:
@@ -52,6 +54,8 @@ def home(request, pubdate=None):
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
 
     return render_to_response('home.html', {
+        'thumbwidth': thumbwidth,
+        'loupe': lens,
         'offhours': json.dumps(offhours),
         'first_data_day': firstdataday.ctime(),
         'selected_day': d.ctime(),
