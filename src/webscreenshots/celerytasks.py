@@ -7,6 +7,7 @@ from celery.utils.log import get_task_logger
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from webscreenshots.celeryapp import celery
+
 os.environ["DJANGO_SETTINGS_MODULE"] = "webscreenshots.settings"
 from webscreenshots.main.models import WebSite
 
@@ -74,6 +75,11 @@ def crop_and_scale_file(filename):
     return thumbfilename, croppedfilename, origfilename
 
 
+def get_nearest_5min(dt):
+    roundint = lambda n, p: (n + p / 2) / p * p
+    return "{0:02d}.{1:02d}".format(dt.hour, roundint(dt.minute, 5))
+
+
 def create_filename(url):
     parsed = urlsplit(url)
     canonicalurl = parsed.netloc.lstrip('www.')
@@ -81,7 +87,7 @@ def create_filename(url):
     if urlpath:
         canonicalurl += "|" + urlpath.replace('/', '|')
     now = datetime.datetime.now()
-    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + now.strftime("%H.%M")
+    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + get_nearest_5min(now)
     return filename
 
 
