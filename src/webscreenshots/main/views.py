@@ -27,9 +27,8 @@ def chunks(l, n):
 
 
 def home(request, pubdate=None):
-    thumbwidth = request.GET.get("thumbwidth", 220)
-    lens = request.GET.get("lens", "on")
-
+    thumbwidth = request.REQUEST.get("thumbwidth", 220)
+    lens = request.REQUEST.get("lens", "on")
     firstdataday = datetime.datetime(2013, 1, 3)
     today = datetime.datetime.today()
     if not pubdate:
@@ -52,14 +51,9 @@ def home(request, pubdate=None):
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
 
-    sites = request.GET.get("sites", [])
+    sites = [ r[0] for r in request.REQUEST.items() if r[1] == 'on' ]
     if not sites:
         sites = ["aftonbladet.se", "expressen.se", "svt.se/nyheter", "svd.se", "dn.se"]
-    else:
-        sites = sites.split(',')
-
-    wrongsites = [ s for s in sites if s not in sitesforday ] or None
-    sites = [ s for s in sites if s in sitesforday ]
 
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
 
@@ -71,6 +65,5 @@ def home(request, pubdate=None):
         'selected_day': d.ctime(),
         'selected_sites': sites,
         'selected_sites_json': json.dumps(sites),
-        'wrongsites_json': json.dumps(wrongsites),
         'allsites': chunks(sitesforday, 8),
     }, context_instance=RequestContext(request))
