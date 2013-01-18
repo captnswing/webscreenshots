@@ -1,5 +1,7 @@
 # Take regular screenshots of preconfigured websites
 
+**Note:** This is the code behind [webscreenshots.captnswing.net](http://webscreenshots.captnswing.net).
+
 In order to get started with this project, you need Virtualbox, Berkshelf and Vagrant. Once installed, you can simply
 
     hg clone https://bitbucket.org/captnswing/webscreenshots
@@ -38,6 +40,6 @@ If you're not a ruby developer, and you don't have any special ruby requirements
 
 Now you can easily install the required gems - without `sudo`:
 
-    gem install berkshelf    
+    gem install berkshelf
     gem install vagrant
     vagrant box add precise64 http://files.vagrantup.com/precise64.box
