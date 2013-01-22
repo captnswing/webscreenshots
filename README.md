@@ -14,9 +14,9 @@ After that, you can simply surf into [localhost:8080](http://localhost:8080) to 
 
 ![image](https://bitbucket.org/captnswing/webscreenshots/raw/default/webscreenshots.png)
 
-The `Vagrantfile` included in this project will - together with Berkshelf - with take care of downloading all the required cookbooks and provide them to the VM before chef-solo is run there.
+The `Vagrantfile` included in this project will - together with Berkshelf - take care of downloading all the required cookbooks and provide them to the VM before chef-solo is run there.
 
-Yes, I [wrote a cookbook](https://github.com/captnswing/chef-webscreenshots) for this project.
+(Oh yes, I [wrote a chef cookbook](https://github.com/captnswing/chef-webscreenshots) for this project.)
 
 ### Ok, so how do I install the prerequisites for this project then?
 
@@ -43,3 +43,11 @@ Now you can easily install the required gems - without `sudo`:
     gem install berkshelf
     gem install vagrant
     vagrant box add precise64 http://files.vagrantup.com/precise64.box
+
+### And now what?
+
+Just do
+
+    vagrant up
+    
+in the project root, and watch chef-solo magic in progress. Once the chef-solo run is finished, surf in to [localhost:8080](http://localhost:8080) to see the working, running website.
