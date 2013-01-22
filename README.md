@@ -40,8 +40,7 @@ If you're not a ruby developer, and you don't have any special ruby requirements
 
 Now you can easily install the required gems - without `sudo`:
 
-    gem install berkshelf
-    gem install vagrant
+    bundle install
     vagrant box add precise64 http://files.vagrantup.com/precise64.box
 
 ### And now what?
