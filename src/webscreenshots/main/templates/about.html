@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block customcss %}
+    div#header {
+    background-color: #E0E0E0;
+    padding-top: 1.3em;
+    padding-bottom: 1.1em;
+    }
+    body {
+    padding-top: 40px; /* When using the navbar-top-fixed */
+    }
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+{% endblock %}
+
+{% block extraheaders %}
+    <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('span#date').text($.datepicker.formatDate('D d MM yy', new Date()));
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <!-- from http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/twitter-bootstrap-101-the-navbar/ -->
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="pull-left">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Webscreenshots v0.5<em>beta</em></a>
+                    <ul class="nav">
+                        <li>
+                            <a href="/"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
+                        </li>
+                        <li class="active">
+                            <a href="/about">About</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <ul class="nav">
+                        <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span7">
+            <h2>Changelog</h2>
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td>2013-01-23</td>
+                    <td>v0.6</td>
+                    <td>
+                        <ul>
+                            <li>loupe off</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100">2013-01-11</td>
+                    <td>v0.5</td>
+                    <td>
+                        <ul>
+                            <li>first public release</li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
