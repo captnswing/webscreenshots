@@ -29,7 +29,7 @@ def chunks(l, n):
 def home(request, pubdate=None):
     thumbwidth = request.REQUEST.get("thumbwidth", 220)
     lens = request.REQUEST.get("lens", "on")
-    firstdataday = datetime.datetime(2013, 1, 3)
+    firstdataday = datetime.datetime(2013, 1, 4)
     today = datetime.datetime.today()
     if not pubdate:
         d = today
@@ -53,7 +53,7 @@ def home(request, pubdate=None):
 
     sites = [ r[0] for r in request.REQUEST.items() if r[1] == 'on' ]
     if not sites:
-        sites = ["aftonbladet.se", "expressen.se", "svt.se/nyheter", "svd.se", "dn.se"]
+        sites = ["aftonbladet.se", "dn.se", "svt.se/nyheter"]
 
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
 
