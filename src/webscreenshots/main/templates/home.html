@@ -144,7 +144,7 @@
             }
         });
 
-        $("li.previous a").click(function() {
+        $("li.previous a, li.next a").click(function() {
             // TODO: fragile selector.
             var newer = $(this).text().indexOf("nyare") > -1;
             if (newer) {
@@ -152,6 +152,7 @@
                 var selectedtime = firstrow.attr("id");
                 var morehours = getmorehours(selectedtime, 3);
                 var newrows = getrows(morehours, sites);
+                newrows.reverse();
                 $.each(newrows, function (i, rowhtml) {
                     firstrow.before(rowhtml);
                 });
@@ -176,6 +177,10 @@
 
         if (loupe === "on") {
             $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+        }
+
+        if (isCurrentDay(chosenDate)) {
+            $("li.next").addClass("disabled");
         }
     });
     </script>
@@ -233,8 +238,8 @@
     </div>
 
     <div class="row">
-        <ul class="pager">
-            <li class="previous">
+        <ul class="pager pull-left">
+            <li class="next">
                 <a>&larr; hämta nyare</a>
             </li>
         </ul>
