@@ -46,11 +46,9 @@ function getminuterange(chosenHour) {
     if (isoffhours) {
         minutes = [0];
     }
-    var cmpdate = new Date(chosenHour.getTime());
-    if (new Date().setMinutes(0, 0, 0) === cmpdate.setMinutes(0, 0, 0)) {
+    if (isCurrentHour(chosenHour)) {
         // chosenHour is current hour
-        // give us a 1min break
-        var thismin = parseInt(new Date().getMinutes()) - 1;
+        var thismin = parseInt(new Date().getMinutes()) - 1; // give us a 1min break
         var factor = parseInt(thismin / 5) + 1;
         minutes = range(5, factor * 5, 5);
     }
@@ -63,20 +61,37 @@ function getminuterange(chosenHour) {
     return visibleminutes;
 }
 
+function getmorehours(timestamp, numberofhours) {
+    // create startDate object from timestamp
+    var startDate = new Date(parseInt(timestamp));
+    startDate.setHours(startDate.getHours(), 0, 0, 0);
+    // create targetDate from startDate
+    var targetDate = new Date(startDate.getTime());
+    targetDate.adjust('hours', numberofhours);
+    var visiblehours = [];
+    startDate.each(targetDate, 'hours', 1, function (currentDate, currentStep, thisDate) {
+        var newdate = new Date(currentDate.getTime());
+        // set minutes, seconds and milliseconds to 0
+        newdate.setMinutes(0, 0, 0);
+        // add new date object to array
+        visiblehours.push(newdate);
+    });
+    // skip first element in array and return
+    return visiblehours.slice(1, visiblehours.length);
+}
+
 function gethourrange(chosenDate) {
     // returns default hour range for which rows are displayd
     var primetime = 20;
     var showlasthours = 9;
     var visiblehours = [];
     var startDate = new Date(chosenDate.getTime());
-    var cmpdate = new Date(chosenDate.getTime());
-    if (new Date().setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0)) {
+    if (isCurrentDay(chosenDate)) {
         // chosenDate is today
         // set hour range to last 9 hours
         startDate.adjust('hours', -1 * showlasthours);
-        // give us a 1min break
         var currentHour = new Date(chosenDate.getTime());
-        currentHour.adjust('minutes', -1);
+        currentHour.adjust('minutes', -1); // give us a 1min break
         chosenDate.setHours(currentHour.getHours(), 0, 0, 0);
     } else {
         // chosenDate is not today
