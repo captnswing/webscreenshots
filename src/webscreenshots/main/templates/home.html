@@ -32,11 +32,11 @@
 {% endblock %}
 
 {% block beforebodyend %}
+    <script src="https://apis.google.com/js/plusone.js"></script>
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
+    <script src="{{ STATIC_URL }}/jquery.loupe.min.js"></script>
     <script src="{{ STATIC_URL }}/utils.js"></script>
     <script src="{{ STATIC_URL }}/webscreenshots.js"></script>
-    <script src="{{ STATIC_URL }}/jquery.loupe.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
     <script>
 
     // the great django --> javascript transfer
@@ -145,13 +145,26 @@
         });
 
         $("li.previous a").click(function() {
+            // TODO: fragile selector.
             var newer = $(this).text().indexOf("nyare") > -1;
             if (newer) {
-                console.log("newer");
-                console.log(visiblehours);
+                var firstrow = $("#mytable").find("tr").eq(1)
+                var selectedtime = firstrow.attr("id");
+                var morehours = getmorehours(selectedtime, 3);
+                var newrows = getrows(morehours, sites);
+                $.each(newrows, function (i, rowhtml) {
+                    firstrow.before(rowhtml);
+                });
             } else {
-                console.log("older");
-                console.log(visiblehours);
+                var lastrow = $("#mytable").find("tr:last");
+                var selectedtime = lastrow.attr("id");
+                var morehours = getmorehours(selectedtime, -3);
+                var newrows = getrows(morehours, sites);
+                newrows.reverse();
+                $.each(newrows, function (i, rowhtml) {
+                    lastrow.after(rowhtml);
+                });
+
             }
         });
 
