@@ -144,7 +144,10 @@
             }
         });
 
-        $("li.previous a, li.next a").click(function() {
+        $("li.previous, li.next").click(function() {
+            if ($(this).attr("class").indexOf("disabled") > -1) {
+                return;
+            }
             // TODO: fragile selector.
             var newer = $(this).text().indexOf("nyare") > -1;
             if (newer) {
@@ -199,7 +202,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="#">Webscreenshots v0.6<em>beta</em></a>
+                    <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
                     <ul class="nav">
                         <li class="active">
                             <a href="#"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
@@ -230,10 +233,10 @@
                 {% endfor %}
             </div>
         {% endfor %}
-        <div class="span3">
-            <p>Thumbwidth:&nbsp;<span id="amount"></span></p>
-            <p id="slider-range-max"></p>
-        </div>
+{#        <div class="span3">#}
+{#            <p>Thumbwidth:&nbsp;<span id="amount"></span></p>#}
+{#            <p id="slider-range-max"></p>#}
+{#        </div>#}
     </form>
     </div>
 
