@@ -82,9 +82,22 @@ Date.prototype.diff = function (date2, parts) {
     return result;
 };
 
+
 function addZero(val) {
     return (parseInt(val) < 10) ? "0" + val : val;
 }
+
+
+function isCurrentHour(chosenHour) {
+    var cmpdate = new Date(chosenHour.getTime());
+    return (new Date().setMinutes(0, 0, 0) === cmpdate.setMinutes(0, 0, 0));
+}
+
+function isCurrentDay(chosenDay) {
+    var cmpdate = new Date(chosenDay.getTime());
+    return (new Date().setHours(0, 0, 0, 0) === cmpdate.setHours(0, 0, 0, 0));
+}
+
 
 // from a comment under http://yesudeep.wordpress.com/2009/07/25/implementing-a-pythonic-range-function-in-javascript-2/
 function range() {
