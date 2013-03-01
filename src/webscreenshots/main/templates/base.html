@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +29,17 @@
 <div class="container">
     {% block content %}
     {% endblock %}
+
+    <div class="row">
+        <div class="span12">
+        {% if debug %}
+            <p>google+ widget</p>
+        {% else %}
+            // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
+            <div class="g-plusone" data-size="tall"></div>
+        {% endif %}
+        </div>
+    </div>
 </div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
@@ -37,6 +48,8 @@
 <script src="{{ STATIC_URL }}/bootstrap/js/bootstrap.min.js"></script>
 {% block beforebodyend %}
 {% endblock %}
+
+{% if not debug %}
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -50,5 +63,6 @@
   })();
 
 </script>
+{% endif %}
 </body>
 </html>
