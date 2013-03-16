@@ -1,9 +1,12 @@
 # settings/local.py
 from .base import *
-DEBUG = True
-TEMPLATE_DEBUG = True
-# from http://djangosnippets.org/snippets/1380/
 from fnmatch import fnmatch
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+WEBSCREENSHOTS_IMAGES_PATH = '/wsimages_dev'
+CELERYD_LOGPATH = ''
+
+# from http://djangosnippets.org/snippets/1380/
 class glob_list(list):
     def __contains__(self, key):
         for elt in self:

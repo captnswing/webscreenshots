@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block customcss %}
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+{% endblock %}
+
+{% block beforebodyend %}
+    <script>
+    // the great django --> javascript transfer
+    var offhours = $.parseJSON('{{ offhours|safe }}');
+    var sites = $.parseJSON('{{ selected_sites_json|safe }}');
+
+    $(document).ready(function () {
+
+    });
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="pull-left">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
+                    <ul class="nav">
+                        <li class="active">
+                            <a href="#"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
+                        </li>
+                        <li>
+                            <a href="/about">About</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <ul class="nav">
+                        <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <ul class="pager pull-left">
+            <li class="next">
+                <a>&larr; hämta nyare</a>
+            </li>
+        </ul>
+        <ul class="pager">
+            <li class="previous">
+                <a>hämta äldre &rarr;</a>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}
