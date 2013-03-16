@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
+    url(r'^statistics/histdata/', 'statistics.views.histdata', name="statistics-histdata"),
     url(r'^statistics/', 'statistics.views.main', name="statistics-main"),
 )
 
