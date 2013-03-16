@@ -9,10 +9,10 @@
     body {
     padding-top: 40px; /* When using the navbar-top-fixed */
     }
-    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 {% endblock %}
 
 {% block beforebodyend %}
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
     <script>
         $(document).ready(function () {
@@ -23,34 +23,25 @@
 
 {% block content %}
 
-    <!-- from http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/twitter-bootstrap-101-the-navbar/ -->
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
-                <div class="pull-left">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
-                    <ul class="nav">
-                        <li>
-                            <a href="/"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
-                        </li>
-                        <li class="active">
-                            <a href="/about">About</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="pull-right">
-                    <ul class="nav">
-                        <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
-                    </ul>
-                </div>
+                <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
+                <ul class="nav pull-left">
+                    <li>
+                        <a href="/statistics">Statistics</a>
+                    </li>
+                    <li class="active">
+                        <a href="/about">About</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                </ul>
             </div>
         </div>
     </div>
+
 
     <div class="row">
         <div class="span12">
@@ -65,7 +56,9 @@
                             <li>selected sites survive a datechange</li>
                             <li>default sites shown now are: Aftonbladet, DN, SVT</li>
                             <li>updated bootstrap to 2.3.0</li>
-                            <li>only show last 9 hours on current day, or kl14.00 - 20.00 on any other day, to reduce number of images required to load</li>
+                            <li>only show last 9 hours on current day, or kl14.00 - 20.00 on any other day, to reduce
+                                number of images required to load
+                            </li>
                             <li>working previous and next buttons that allow for fetching of newer / older hours</li>
                         </ul>
                     </td>
