@@ -2,8 +2,7 @@
 # Django settings for webscreenshots project.
 from os.path import join, abspath, dirname
 here = lambda *x: join(abspath(dirname(__file__)), *x)
-PROJECT_ROOT = here("..")
-root = lambda *x: join(abspath(PROJECT_ROOT), *x)
+root = lambda *x: join(abspath(here("..")), *x)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -69,9 +68,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-# Put strings here, like "/home/html/static" or "C:/www/django/static".
-# Always use forward slashes, even on Windows.
-# Don't forget to use absolute paths, not relative paths.
+    root('static-media'),
 )
 
 # List of finder classes that know how to find static files in
@@ -89,7 +86,6 @@ SECRET_KEY = 'vesoi=n3qf@-ni(5#3)gj(8bz!s8yq_g*0myjn@#6wybi^(8x5'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    #     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,9 +103,6 @@ ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'main.wsgi.application'
 
 TEMPLATE_DIRS = (
-# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-# Always use forward slashes, even on Windows.
-# Don't forget to use absolute paths, not relative paths.
     root('templates'),
 )
 
