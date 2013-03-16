@@ -2,19 +2,136 @@
 
 {% block customcss %}
     body {
-    padding-top: 40px; /* When using the navbar-top-fixed */
+    padding-top: 40px; /* When using the navbar-fixed-top */
     }
 {% endblock %}
 
 {% block beforebodyend %}
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}/jquery.flot.js"></script>
     <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <script>
         // the great django --> javascript transfer
         var offhours = $.parseJSON('{{ offhours|safe }}');
         var sites = $.parseJSON('{{ selected_sites_json|safe }}');
-
         $(document).ready(function () {
+            var hist = [
+                [1, 387],
+                [2, 1012],
+                [3, 142],
+                [4, 529],
+                [5, 1116],
+                [6, 1265],
+                [7, 1264],
+                [8, 1395],
+                [9, 826],
+                [10, 711],
+                [11, 596],
+                [12, 563],
+                [13, 691],
+                [14, 749],
+                [15, 731],
+                [16, 508],
+                [17, 418],
+                [18, 472],
+                [19, 282],
+                [20, 257],
+                [21, 261],
+                [22, 298],
+                [23, 343],
+                [24, 336],
+                [25, 258],
+                [26, 177],
+                [27, 175],
+                [28, 139],
+                [29, 125],
+                [30, 107],
+                [31, 71],
+                [32, 66],
+                [33, 51],
+                [34, 56],
+                [35, 58],
+                [36, 77],
+                [37, 112],
+                [38, 123],
+                [39, 104],
+                [40, 83],
+                [41, 86],
+                [42, 60],
+                [43, 48],
+                [44, 34],
+                [45, 36],
+                [46, 22],
+                [47, 31],
+                [48, 23],
+                [49, 24],
+                [50, 17],
+                [51, 16],
+                [52, 15],
+                [53, 10],
+                [54, 7],
+                [55, 9],
+                [56, 7],
+                [57, 10],
+                [58, 16],
+                [59, 11],
+                [60, 5],
+                [61, 6],
+                [62, 9],
+                [63, 6],
+                [64, 12],
+                [65, 9],
+                [66, 4],
+                [67, 6],
+                [68, 7],
+                [69, 6],
+                [70, 8],
+                [71, 5],
+                [72, 6],
+                [73, 9],
+                [74, 7],
+                [75, 2],
+                [76, 3],
+                [77, 1],
+                [78, 1],
+                [79, 2],
+                [80, 1],
+                [81, 1],
+                [82, 1],
+                [84, 1],
+                [88, 1],
+                [92, 1],
+                [96, 2],
+                [98, 1],
+                [99, 2],
+                [100, 2],
+                [101, 2],
+                [106, 3],
+                [111, 1],
+                [112, 1],
+                [119, 2],
+                [121, 1],
+                [126, 1],
+                [127, 1],
+                [128, 1],
+                [129, 1],
+                [130, 1],
+                [132, 2],
+                [133, 1],
+                [141, 1],
+                [142, 1]
+            ];
 
+            //var hist = $.parseJSON('{"1": 387, "2": 1012, "3": 142}');
+            //var hist = {1: 387, 2: 1012, 3: 142};
+
+            $.plot("#placeholder", [ hist ], {
+                series: {
+                    bars: {
+                        show: true,
+                        align: "center"
+                    }
+                }
+            });
         });
     </script>
 {% endblock %}
@@ -51,6 +168,7 @@
                 <a>hämta äldre &rarr;</a>
             </li>
         </ul>
+        <div style="width:1100px;height:500px" id="placeholder"></div>
     </div>
 
 {% endblock %}
