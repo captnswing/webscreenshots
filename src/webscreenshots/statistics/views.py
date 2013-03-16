@@ -1,8 +1,69 @@
 #-*- coding: utf-8 -*-
 from django.http import HttpResponse
-import json
+from collections import defaultdict, Counter
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
+import json
+import re
+import gzip
+import bz2
+import datetime
+from django.conf import settings
+
+# http://www.dabeaz.com/generators/Generators.pdf
+def gen_find(filepat, top):
+    import os, fnmatch
+    for path, dirlist, filelist in os.walk(top):
+        for name in fnmatch.filter(filelist, filepat):
+            yield os.path.join(path, name)
+
+
+# http://www.dabeaz.com/generators/Generators.pdf
+def gen_open(filenames):
+    for name in filenames:
+        if name.endswith(".gz"):
+            yield gzip.open(name)
+        elif name.endswith(".bz2"):
+            yield bz2.BZ2File(name)
+        else:
+            yield open(name)
+
+
+# http://www.dabeaz.com/generators/Generators.pdf
+def gen_cat(sources):
+    for s in sources:
+        for item in s:
+            yield item
+
+
+# http://www.dabeaz.com/generators/Generators.pdf
+def gen_grep(pat, lines):
+    patc = re.compile(pat)
+    for line in lines:
+        if patc.search(line):
+            yield line
+
+
+def get_starts(logfilematch, logdir):
+    start_pattern = re.compile(r".*\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*Got task from broker: webscreenshots.celerytasks.fetch_webscreenshot.*\[(.*?)\]")
+    lognames = gen_find(logfilematch, logdir)
+    logfiles = gen_open(lognames)
+    loglines = gen_cat(logfiles)
+    groups = (start_pattern.match(line) for line in loglines)
+    tuples = (g.groups() for g in groups if g)
+    parsed_tuples = ((b, datetime.datetime.strptime(a, "%Y-%m-%d %H:%M:%S")) for a, b in tuples)
+    return parsed_tuples
+
+
+def get_ends(logfilematch, logdir):
+    end_pattern = re.compile(r".*\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*Task webscreenshots.celerytasks.fetch_webscreenshot\[(.*?)\] succeeded in (\d+.\d+)?.*/tmp/\d{4}__\d{2}__\d{2}__(.*)")
+    lognames = gen_find(logfilematch, logdir)
+    logfiles = gen_open(lognames)
+    loglines = gen_cat(logfiles)
+    groups = (end_pattern.match(line) for line in loglines)
+    tuples = (g.groups() for g in groups if g)
+    parsed_tuples = ((b, datetime.datetime.strptime(a, "%Y-%m-%d %H:%M:%S"), c, d.replace('|', '/')) for a, b, c, d in tuples)
+    return parsed_tuples
 
 
 def main(request):
@@ -11,110 +72,32 @@ def main(request):
 
 
 def histdata(request):
-    data = (
-        [1, 387],
-        [2, 1012],
-        [3, 142],
-        [4, 529],
-        [5, 1116],
-        [6, 1265],
-        [7, 1264],
-        [8, 1395],
-        [9, 826],
-        [10, 711],
-        [11, 596],
-        [12, 563],
-        [13, 691],
-        [14, 749],
-        [15, 731],
-        [16, 508],
-        [17, 418],
-        [18, 472],
-        [19, 282],
-        [20, 257],
-        [21, 261],
-        [22, 298],
-        [23, 343],
-        [24, 336],
-        [25, 258],
-        [26, 177],
-        [27, 175],
-        [28, 139],
-        [29, 125],
-        [30, 107],
-        [31, 71],
-        [32, 66],
-        [33, 51],
-        [34, 56],
-        [35, 58],
-        [36, 77],
-        [37, 112],
-        [38, 123],
-        [39, 104],
-        [40, 83],
-        [41, 86],
-        [42, 60],
-        [43, 48],
-        [44, 34],
-        [45, 36],
-        [46, 22],
-        [47, 31],
-        [48, 23],
-        [49, 24],
-        [50, 17],
-        [51, 16],
-        [52, 15],
-        [53, 10],
-        [54, 7],
-        [55, 9],
-        [56, 7],
-        [57, 10],
-        [58, 16],
-        [59, 11],
-        [60, 5],
-        [61, 6],
-        [62, 9],
-        [63, 6],
-        [64, 12],
-        [65, 9],
-        [66, 4],
-        [67, 6],
-        [68, 7],
-        [69, 6],
-        [70, 8],
-        [71, 5],
-        [72, 6],
-        [73, 9],
-        [74, 7],
-        [75, 2],
-        [76, 3],
-        [77, 1],
-        [78, 1],
-        [79, 2],
-        [80, 1],
-        [81, 1],
-        [82, 1],
-        [84, 1],
-        [88, 1],
-        [92, 1],
-        [96, 2],
-        [98, 1],
-        [99, 2],
-        [100, 2],
-        [101, 2],
-        [106, 3],
-        [111, 1],
-        [112, 1],
-        [119, 2],
-        [121, 1],
-        [126, 1],
-        [127, 1],
-        [128, 1],
-        [129, 1],
-        [130, 1],
-        [132, 2],
-        [133, 1],
-        [141, 1],
-        [142, 1]
-    )
-    return HttpResponse(json.dumps(data), mimetype="application/json")
+    logfilematch = "celeryd.log"
+    screenshots = defaultdict(dict)
+
+    parsed_tuples = get_starts(logfilematch, settings.CELERYD_LOGPATH)
+    for sid, start in parsed_tuples:
+        screenshots[sid].update({
+            'start': start
+        })
+
+    parsed_tuples = get_ends(logfilematch, settings.CELERYD_LOGPATH)
+    for sid, end, duration, site in parsed_tuples:
+        screenshots[sid].update({
+            'end': end,
+            'duration': duration,
+            'site': site
+        })
+
+    complete = list()
+    for sc in screenshots:
+        if set(screenshots[sc].keys()).issuperset({'start', 'end', 'duration', 'site'}):
+            complete.append(screenshots[sc])
+    print "Number of jobs: %s" % len(complete)
+    durations = [round(float(l['duration']), 0) for l in complete]
+    print "Average duration: %.2fsec" % (sum(durations)/len(durations))
+    cnt = Counter(durations)
+    histogram = list()
+    for k in sorted(cnt.keys()):
+        histogram.append([int(k), cnt[k]])
+    return HttpResponse(json.dumps(histogram[:100]), mimetype="application/json")
