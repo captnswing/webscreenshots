@@ -1,5 +1,9 @@
 #-*- coding: utf-8 -*-
 # Django settings for webscreenshots project.
+from os.path import join, abspath, dirname
+here = lambda *x: join(abspath(dirname(__file__)), *x)
+PROJECT_ROOT = here("..")
+root = lambda *x: join(abspath(PROJECT_ROOT), *x)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -106,6 +110,7 @@ TEMPLATE_DIRS = (
 # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
+    root('templates'),
 )
 
 INSTALLED_APPS = (
