@@ -4,7 +4,7 @@ from fnmatch import fnmatch
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages_dev'
-CELERYD_LOGPATH = ''
+CELERYD_LOGPATH = root('../../celerylogs')
 
 # from http://djangosnippets.org/snippets/1380/
 class glob_list(list):

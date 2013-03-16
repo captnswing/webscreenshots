@@ -120,6 +120,7 @@ INSTALLED_APPS = (
 )
 
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages'
+CELERYD_LOGPATH = '/opt/webscreenshots/var/log/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
