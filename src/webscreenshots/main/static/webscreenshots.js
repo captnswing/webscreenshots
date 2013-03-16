@@ -1,12 +1,12 @@
 function getbaseurl(chosendate, chosenWidth) {
-    var base = "/wsimages";
+    var wsimages_url = wsimages_path;
     if (!(typeof chosenWidth === 'undefined')) {
-        base += '/' + chosenWidth + 'x' + chosenWidth;
+        wsimages_url += '/' + chosenWidth + 'x' + chosenWidth;
     }
     var curr_year = chosendate.getFullYear();
     var curr_month = chosendate.getMonth() + 1; //Months are zero based
     var curr_date = chosendate.getDate();
-    return [base, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
+    return [wsimages_url, curr_year, addZero(curr_month), addZero(curr_date), ''].join('/');
 }
 
 function geturl(chosenDate, chosenSite, chosenExt, chosenWidth) {
@@ -23,7 +23,7 @@ function geturl(chosenDate, chosenSite, chosenExt, chosenWidth) {
     return myurl;
 }
 
-function getimgtd(chosenTime, chosenSite) {
+function getimgtd(chosenTime, chosenSite, chosenWidth) {
     //  <td class="aftonbladet.se">
     //      <a href="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-top.jpg">
     //          <img width="250px" src="http://d2np6cnk6s6ggj.cloudfront.net/2013/01/06/aftonbladet.se/17.00-thumb.jpg" />
@@ -110,7 +110,7 @@ function gethourrange(chosenDate) {
     return visiblehours;
 }
 
-function getrows(chosenMoments, chosenSites) {
+function getrows(chosenMoments, chosenSites, chosenWidth) {
     var allrows = [];
     $.each(chosenMoments, function (i, currentHour) {
         var curr_hour = addZero(currentHour.getHours()) + "." + addZero(currentHour.getMinutes());
@@ -129,7 +129,7 @@ function getrows(chosenMoments, chosenSites) {
         myrow += "<button class='" + buttonclasses + "' type='button'>" + hourstring + "</button>";
         myrow += "</td>";
         $.each(chosenSites, function (i, site) {
-            myrow += getimgtd(currentHour, site);
+            myrow += getimgtd(currentHour, site, chosenWidth);
         });
         allrows.push(myrow);
     });

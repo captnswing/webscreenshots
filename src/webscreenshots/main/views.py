@@ -1,12 +1,12 @@
 #-*- coding: utf-8 -*-
-import os
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 import json
-os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from boto.s3.connection import S3Connection
 import datetime
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 
 def get_sites_for_day(selected_day):
@@ -16,6 +16,20 @@ def get_sites_for_day(selected_day):
     keys = bucket.get_all_keys(prefix=selected_day + "/", delimiter="/")
     sites = [key.name.lstrip(selected_day).rstrip("/").replace('|', '/') for key in keys]
     return sites
+
+
+@cache_page(60 * 15)
+def fake_wsimages(request):
+    from PIL import Image, ImageDraw, ImageFont
+    site = request.path_info.split('/')[-2].replace('|', '/')
+    im = Image.new('RGBA', (220,220), (100, 100, 100, 100))
+    draw = ImageDraw.Draw(im)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/msttcorefonts/arial.ttf", 20)
+    text_pos = (30,100)
+    draw.text(text_pos, site, fill=(255,255,255), font=font)
+    response = HttpResponse(mimetype="image/png")
+    im.save(response, 'PNG')
+    return response
 
 
 # from http://stackoverflow.com/a/312464/41404
@@ -65,5 +79,6 @@ def home(request, pubdate=None):
         'selected_day': d.ctime(),
         'selected_sites': sites,
         'selected_sites_json': json.dumps(sites),
+        'wsimages_path': settings.WEBSCREENSHOTS_IMAGES_PATH,
         'allsites': chunks(sitesforday, 8),
     }, context_instance=RequestContext(request))
