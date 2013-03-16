@@ -23,15 +23,16 @@
     background-color: #E0E0E0;
     }
     div.alert {
-        display: none;
+    display: none;
     }
     p#slider-range-max {
-        width: 200px;
+    width: 200px;
     }
-    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    body { padding: 40px }
 {% endblock %}
 
 {% block beforebodyend %}
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <script src="https://apis.google.com/js/plusone.js"></script>
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
     <script src="{{ STATIC_URL }}/jquery.loupe.min.js"></script>
@@ -39,164 +40,155 @@
     <script src="{{ STATIC_URL }}/webscreenshots.js"></script>
     <script>
 
-    // the great django --> javascript transfer
-    var offhours = $.parseJSON('{{ offhours|safe }}');
-    var sites = $.parseJSON('{{ selected_sites_json|safe }}');
-    var chosenDate = new Date("{{ selected_day }}");
-    var firstData = new Date("{{ first_data_day }}");
-    var ddiff = firstData.diff(new Date(), 'days');
-    var longestback = ddiff > 90 ? 90 : ddiff;
-    var chosenWidth = parseInt({{ thumbwidth }});
-    var loupe = "{{ loupe }}";
+        // the great django --> javascript transfer
+        var offhours = $.parseJSON('{{ offhours|safe }}');
+        var sites = $.parseJSON('{{ selected_sites_json|safe }}');
+        var chosenDate = new Date("{{ selected_day }}");
+        var firstData = new Date("{{ first_data_day }}");
+        var ddiff = firstData.diff(new Date(), 'days');
+        var longestback = ddiff > 90 ? 90 : ddiff;
+        var chosenWidth = parseInt({{ thumbwidth }});
+        var loupe = "{{ loupe }}";
+        var wsimages_path = "{{ wsimages_path }}";
 
-    $(document).ready(function () {
-        $.datepicker.setDefaults($.datepicker.regional['sv']);
+        $(document).ready(function () {
+            $.datepicker.setDefaults($.datepicker.regional['sv']);
 
-        $("#datepicker").datepicker({
-            minDate: -longestback,
-            maxDate: "0D",
-            defaultDate: chosenDate,
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            showAnim: "slideDown",
-            dateFormat: "d MM",
-            showWeek: true,
-            firstDay: 1,
-            onSelect: function (dateText, inst) {
-                var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth + 1) + "-" + addZero(inst.selectedDay)
-                var dateurl = '/' + datestr + '/';
-                $("#configform").attr("action", dateurl);
-                $("#configform").submit();
-            }
-        });
-
-        $('#datePicker').datepicker('setDate', chosenDate);
-
-        $("#amount").text(chosenWidth);
-
-        $('span#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
-
-        $("#mytable tbody").on("click", "button.hour", function () {
-            var primary = $(this).attr('class').indexOf("btn-success") > -1;
-            // epoch milliseconds, eg 1357581600000
-            var tr_id = $(this).parent().parent().attr('id');
-            var rowHour = new Date(parseInt(tr_id));
-            var visibleminutes = getminuterange(rowHour);
-            if (primary) {
-                var allrows = getrows(visibleminutes, sites);
-                $.each(allrows, function (i, rowhtml) {
-                    $("#" + tr_id).closest("tr").before(rowhtml);
-                });
-                $(this).removeClass("btn-success");
-                // rebind loupe plungin. not ideal. don't know how to do it properly
-                if (loupe === "on") {
-                    $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+            $("#datepicker").datepicker({
+                minDate: -longestback,
+                maxDate: "0D",
+                defaultDate: chosenDate,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                showAnim: "slideDown",
+                dateFormat: "d MM",
+                showWeek: true,
+                firstDay: 1,
+                onSelect: function (dateText, inst) {
+                    var datestr = inst.selectedYear + "-" + addZero(inst.selectedMonth + 1) + "-" + addZero(inst.selectedDay)
+                    var dateurl = '/' + datestr + '/';
+                    $("#configform").attr("action", dateurl);
+                    $("#configform").submit();
                 }
-            } else {
-                $.each(visibleminutes, function(i, d) {
-                    $("#" + d.getTime()).remove();
-                });
-                $(this).addClass("btn-success");
-            }
-        });
+            });
 
-        // check all the checkboxes that are in "sites" array
-        $(":checkbox").each(function () {
-            var cbname = $(this).attr('name');
-            var cb_in_sites = $.inArray(cbname, sites) > -1;
-            $(this).attr('checked', cb_in_sites);
-        });
+            $('#datePicker').datepicker('setDate', chosenDate);
 
-        $(":checkbox").on("click", function () {
-            var checked = (typeof($(this).attr("checked")) !== 'undefined');
-            var unchecked = (typeof($(this).attr("checked")) === 'undefined');
-            var thissite = $(this).attr("name");
-            var selector = "." + thissite.replace(/\./g, '\\.').replace('|', '\\|').replace('/', '\\/');
-            if (unchecked) {
-                $(selector).remove();
-                // remove site from sites array
-                sites.splice(sites.indexOf(thissite), 1);
-            }
-            if (checked) {
-                $("#mytable tr:first").append("<th class='" + thissite + "'>" + thissite + "</th>");
-                $("#mytable tr:not(:first)").each(function () {
-                    var tr_id = $(this).attr('id');
-                    var tr_date = new Date(parseInt(tr_id));
-                    $(this).append(getimgtd(tr_date, thissite));
-                });
-                // add site to sites array
-                sites.push(thissite);
-                // rebind loupe plungin. not ideal. don't know how to do it properly
-                if (loupe === "on") {
-                    $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+            $('span#date').text($.datepicker.formatDate('D d MM yy', chosenDate));
+
+            $("#mytable tbody").on("click", "button.hour", function () {
+                var primary = $(this).attr('class').indexOf("btn-success") > -1;
+                // epoch milliseconds, eg 1357581600000
+                var tr_id = $(this).parent().parent().attr('id');
+                var rowHour = new Date(parseInt(tr_id));
+                var visibleminutes = getminuterange(rowHour);
+                if (primary) {
+                    var allrows = getrows(visibleminutes, sites);
+                    $.each(allrows, function (i, rowhtml) {
+                        $("#" + tr_id).closest("tr").before(rowhtml);
+                    });
+                    $(this).removeClass("btn-success");
+                    // rebind loupe plungin. not ideal. don't know how to do it properly
+                    if (loupe === "on") {
+                        $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+                    }
+                } else {
+                    $.each(visibleminutes, function (i, d) {
+                        $("#" + d.getTime()).remove();
+                    });
+                    $(this).addClass("btn-success");
                 }
+            });
+
+            // check all the checkboxes that are in "sites" array
+            $(":checkbox").each(function () {
+                var cbname = $(this).attr('name');
+                var cb_in_sites = $.inArray(cbname, sites) > -1;
+                $(this).attr('checked', cb_in_sites);
+            });
+
+            $(":checkbox").on("click", function () {
+                var checked = (typeof($(this).attr("checked")) !== 'undefined');
+                var unchecked = (typeof($(this).attr("checked")) === 'undefined');
+                var thissite = $(this).attr("name");
+                var selector = "." + thissite.replace(/\./g, '\\.').replace('|', '\\|').replace('/', '\\/');
+                if (unchecked) {
+                    $(selector).remove();
+                    // remove site from sites array
+                    sites.splice(sites.indexOf(thissite), 1);
+                }
+                if (checked) {
+                    $("#mytable tr:first").append("<th class='" + thissite + "'>" + thissite + "</th>");
+                    $("#mytable tr:not(:first)").each(function () {
+                        var tr_id = $(this).attr('id');
+                        var tr_date = new Date(parseInt(tr_id));
+                        $(this).append(getimgtd(tr_date, thissite, chosenWidth));
+                    });
+                    // add site to sites array
+                    sites.push(thissite);
+                    // rebind loupe plungin. not ideal. don't know how to do it properly
+                    if (loupe === "on") {
+                        $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+                    }
+                }
+            });
+
+            $("li.previous, li.next").click(function () {
+                if ($(this).attr("class").indexOf("disabled") > -1) {
+                    return;
+                }
+                // TODO: fragile selector.
+                var newer = $(this).text().indexOf("nyare") > -1;
+                if (newer) {
+                    var firstrow = $("#mytable").find("tr").eq(1)
+                    var selectedtime = firstrow.attr("id");
+                    var morehours = getmorehours(selectedtime, 3);
+                    var newrows = getrows(morehours, sites, chosenWidth);
+                    newrows.reverse();
+                    $.each(newrows, function (i, rowhtml) {
+                        firstrow.before(rowhtml);
+                    });
+                } else {
+                    var lastrow = $("#mytable").find("tr:last");
+                    var selectedtime = lastrow.attr("id");
+                    var morehours = getmorehours(selectedtime, -3);
+                    var newrows = getrows(morehours, sites, chosenWidth);
+                    newrows.reverse();
+                    $.each(newrows, function (i, rowhtml) {
+                        lastrow.after(rowhtml);
+                    });
+
+                }
+            });
+
+            var visiblehours = gethourrange(chosenDate);
+            var allrows = getrows(visiblehours, sites, chosenWidth);
+            $.each(allrows, function (i, rowhtml) {
+                $("#mytable").find("> tbody:last").append(rowhtml);
+            });
+
+            if (loupe === "on") {
+                $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
+            }
+
+            if (isCurrentDay(chosenDate)) {
+                $("li.next").addClass("disabled");
             }
         });
-
-        $("#slider-range-max").slider({
-            range: "max",
-            min: 100,
-            max: 600,
-            step: 20,
-            value: 220,
-            slide: function (event, ui) {
-                $("#amount").text(ui.value);
-            }
-        });
-
-        $("li.previous, li.next").click(function() {
-            if ($(this).attr("class").indexOf("disabled") > -1) {
-                return;
-            }
-            // TODO: fragile selector.
-            var newer = $(this).text().indexOf("nyare") > -1;
-            if (newer) {
-                var firstrow = $("#mytable").find("tr").eq(1)
-                var selectedtime = firstrow.attr("id");
-                var morehours = getmorehours(selectedtime, 3);
-                var newrows = getrows(morehours, sites);
-                newrows.reverse();
-                $.each(newrows, function (i, rowhtml) {
-                    firstrow.before(rowhtml);
-                });
-            } else {
-                var lastrow = $("#mytable").find("tr:last");
-                var selectedtime = lastrow.attr("id");
-                var morehours = getmorehours(selectedtime, -3);
-                var newrows = getrows(morehours, sites);
-                newrows.reverse();
-                $.each(newrows, function (i, rowhtml) {
-                    lastrow.after(rowhtml);
-                });
-
-            }
-        });
-
-        var visiblehours = gethourrange(chosenDate);
-        var allrows = getrows(visiblehours, sites);
-        $.each(allrows, function (i, rowhtml) {
-            $("#mytable").find("> tbody:last").append(rowhtml);
-        });
-
-        if (loupe === "on") {
-            $('.wsimage').loupe({width: 500, height: 500, loupe: 'loupe'});
-        }
-
-        if (isCurrentDay(chosenDate)) {
-            $("li.next").addClass("disabled");
-        }
-    });
     </script>
 
     {% if not debug %}
-    <script type="text/javascript">
-      var uvOptions = {};
-      (function() {
-        var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
-        uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/wxVJbsdqYgYGAqFuvWUhg.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
-      })();
-    </script>
+        <script type="text/javascript">
+            var uvOptions = {};
+            (function () {
+                var uv = document.createElement('script');
+                uv.type = 'text/javascript';
+                uv.async = true;
+                uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/wxVJbsdqYgYGAqFuvWUhg.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(uv, s);
+            })();
+        </script>
     {% endif %}
 
 {% endblock %}
@@ -207,48 +199,40 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
-                <div class="pull-left">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
-                    <ul class="nav">
-                        <li class="active">
-                            <a href="#"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
-                        </li>
-                        <li>
-                            <a href="/about">About</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="pull-right">
-                    <ul class="nav">
-                        <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
-                    </ul>
-                </div>
+                <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
+                <ul class="nav pull-left">
+                    <li class="active">
+                        <a href="#"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
+                    </li>
+                    <li>
+                        <a href="/about">About</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <a class="btn btn-primary"
+                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                </ul>
             </div>
         </div>
     </div>
 
     <div id="header" class="row">
-    <form method="POST" action="" id="configform">{% csrf_token %}
-        <div id="datepicker" class="span3"></div>
-        {% for chunk in allsites %}
-            <div class="span3 sitecheckboxes btn-group btn-group-vertical">
-                {% for site in chunk %}
-                    <label class="checkbox">
-                        <input name='{{ site }}' type="checkbox">{{ site }}
-                    </label>
-                {% endfor %}
-            </div>
-        {% endfor %}
-{#        <div class="span3">#}
-{#            <p>Thumbwidth:&nbsp;<span id="amount"></span></p>#}
-{#            <p id="slider-range-max"></p>#}
-{#        </div>#}
-    </form>
+        <form method="POST" action="" id="configform">{% csrf_token %}
+            <div id="datepicker" class="span3"></div>
+            {% for chunk in allsites %}
+                <div class="span3 sitecheckboxes btn-group btn-group-vertical">
+                    {% for site in chunk %}
+                        <label class="checkbox">
+                            <input name='{{ site }}' type="checkbox">{{ site }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {#        <div class="span3">#}
+            {#            <p>Thumbwidth:&nbsp;<span id="amount"></span></p>#}
+            {#            <p id="slider-range-max"></p>#}
+            {#        </div>#}
+        </form>
     </div>
 
     <div class="row">
