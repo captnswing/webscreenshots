@@ -32,6 +32,7 @@ setup(
         "psycopg2",
         "python-dateutil < 2",
         "pytz",
-        "supervisor"
+        "supervisor",
+        "fabric"
     ],
 )
