@@ -169,15 +169,12 @@
 
             $('#header').slideUp('slow', function() {
                 // Animation complete.
-                //$('li#calendar').removeClass('active');
                 $('i#topdown').toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
             });
 
             $('li#calendar').click(function() {
-                $('#header').slideToggle('slow', function() {
-                    // Animation complete.
-                    $('i#topdown').toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
-                });
+                $('i#topdown').toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
+                $('#header').slideToggle('slow');
             });
         });
 
