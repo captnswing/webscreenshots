@@ -34,7 +34,6 @@
 {% endblock %}
 
 {% block beforebodyend %}
-    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <script src="https://apis.google.com/js/plusone.js"></script>
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
     <script src="{{ STATIC_URL }}/jquery.loupe.min.js"></script>
@@ -216,7 +215,7 @@
         </div>
     </div>
 
-    <div id="header" class="row">
+    <div id="header">
         <form method="POST" action="" id="configform">{% csrf_token %}
             <div id="datepicker" class="span3"></div>
             {% for chunk in allsites %}
@@ -229,9 +228,7 @@
                 </div>
             {% endfor %}
         </form>
-    </div>
 
-    <div class="row">
         <ul class="pager pull-left">
             <li class="next">
                 <a>&larr; hämta nyare</a>
@@ -256,7 +253,7 @@
         </ul>
     </div>
 
-    <div class="row">
+    <div>
         <div class="span12">
         {% if debug %}
             <p>google+ widget</p>
