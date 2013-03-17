@@ -93,4 +93,5 @@ def home(request, pubdate=None):
         'selected_sites_json': json.dumps(sites),
         'wsimages_path': settings.WEBSCREENSHOTS_IMAGES_PATH,
         'allsites': chunks(sitesforday, 8),
+        'currentday': d
     }, context_instance=RequestContext(request))
