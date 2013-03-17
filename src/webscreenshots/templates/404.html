@@ -1,17 +1,40 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block customcss %}
+    body {
+    padding-top: 40px; /* When using the navbar-top-fixed */
+    }
+{% endblock %}
 {% block extraheaders %}
-<title>{% trans 'Page not found' %}: {{ request_path }}</title>
+    <title>{% trans 'Page not found' %}: {{ request_path }}</title>
 {% endblock %}
 
-{% block heading %}
-<h2>{% trans 'Page not found' %}: {{ request_path }}</h2>
+{% block beforebodyend %}
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="span-24 last">
-<h3>404 fel</h3>
-<p>{% trans "We're sorry, but the requested page could not be found." %}: <strong>{{ request_path }}</strong></p>
-</div>
+
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="/">Webscreenshots v0.6<em>beta</em></a>
+                <ul class="nav pull-left">
+                    <li class="active">
+                        <a href="#"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
+                    </li>
+                    <li>
+                        <a href="/about">About</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <h2>{% trans 'Page not found' %}: {{ request_path }}</h2>
+
+    <p>{% trans "We're sorry, but the requested page could not be found." %}: <strong>{{ request_path }}</strong></p>
 {% endblock %}
