@@ -75,7 +75,7 @@
                 var rowHour = new Date(parseInt(tr_id));
                 var visibleminutes = getminuterange(rowHour);
                 if (primary) {
-                    var allrows = getrows(visibleminutes, sites);
+                    var allrows = getrows(visibleminutes, sites, chosenWidth);
                     $.each(allrows, function (i, rowhtml) {
                         $("#" + tr_id).closest("tr").before(rowhtml);
                     });
