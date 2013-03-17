@@ -11,7 +11,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -25,12 +24,20 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    <a class="btn btn-primary"
+                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
                 </ul>
             </div>
         </div>
     </div>
-    <h2>{% trans 'Server error (500)' %}</h2>
 
-    <p>{% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}</p>
+    <div class="container">
+        <h2>
+            {% trans 'Server error (500)' %}
+        </h2>
+
+        <p>
+            {% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}
+        </p>
+    </div>
 {% endblock %}

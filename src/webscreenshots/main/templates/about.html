@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 
 {% block customcss %}
-    div#header {
-    background-color: #E0E0E0;
-    padding-top: 1.3em;
-    padding-bottom: 1.1em;
-    }
     body {
     padding-top: 40px; /* When using the navbar-fixed-top */
     }
@@ -21,7 +16,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -35,56 +29,54 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    <a class="btn btn-primary"
+                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
                 </ul>
             </div>
         </div>
     </div>
 
-
-    <div class="row">
-        <div class="span12">
-            <h2>Changelog</h2>
-            <table class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td>2013-02-18</td>
-                    <td>v0.6<br>"improved&nbsp;functionality"</td>
-                    <td>
-                        <ul>
-                            <li>selected sites survive a datechange</li>
-                            <li>default sites shown now are: Aftonbladet, DN, SVT</li>
-                            <li>updated bootstrap to 2.3.0</li>
-                            <li>only show last 9 hours on current day, or kl14.00 - 20.00 on any other day, to reduce
-                                number of images required to load
-                            </li>
-                            <li>working previous and next buttons that allow for fetching of newer / older hours</li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="100">2013-01-11</td>
-                    <td>v0.5<br>"minimal&nbsp;viable&nbsp;product"</td>
-                    <td>
-                        <ul>
-                            <li>first public release</li>
-                            <li>some bugs & many missing features</li>
-                        </ul>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="container">
+        <h2>Changelog</h2>
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td>2013-02-18</td>
+                <td>v0.6<br>"improved&nbsp;functionality"</td>
+                <td>
+                    <ul>
+                        <li>selected sites survive a datechange</li>
+                        <li>default sites shown now are: Aftonbladet, DN, SVT</li>
+                        <li>updated bootstrap to 2.3.0</li>
+                        <li>only show last 9 hours on current day, or kl14.00 - 20.00 on any other day, to
+                            reduce
+                            number of images required to load
+                        </li>
+                        <li>working previous and next buttons that allow for fetching of newer / older hours
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td width="100">2013-01-11</td>
+                <td>v0.5<br>"minimal&nbsp;viable&nbsp;product"</td>
+                <td>
+                    <ul>
+                        <li>first public release</li>
+                        <li>some bugs & many missing features</li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="row">
-        <div class="span12">
+    <div class="container">
         {% if debug %}
             <p>google+ widget</p>
         {% else %}
             // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
             <div class="g-plusone" data-size="tall"></div>
         {% endif %}
-        </div>
     </div>
 {% endblock %}

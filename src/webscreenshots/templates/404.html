@@ -11,7 +11,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -25,12 +24,19 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    <a class="btn btn-primary"
+                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
                 </ul>
             </div>
         </div>
     </div>
-    <h2>{% trans 'Page not found' %}: {{ request_path }}</h2>
+    <div class="container">
+        <h2>
+            {% trans 'Page not found' %}: {{ request_path }}
+        </h2>
 
-    <p>{% trans "We're sorry, but the requested page could not be found." %}: <strong>{{ request_path }}</strong></p>
+        <p>
+            {% trans "We're sorry, but the requested page could not be found." %}: <strong>{{ request_path }}</strong>
+        </p>
+    </div>
 {% endblock %}

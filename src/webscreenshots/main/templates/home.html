@@ -195,7 +195,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -209,13 +208,14 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    <a class="btn btn-primary"
+                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div id="header">
+    <div id="header" class="container">
         <form method="POST" action="" id="configform">{% csrf_token %}
             <div id="datepicker" class="span3"></div>
             {% for chunk in allsites %}
@@ -228,7 +228,9 @@
                 </div>
             {% endfor %}
         </form>
+    </div>
 
+    <div class="container">
         <ul class="pager pull-left">
             <li class="next">
                 <a>&larr; hämta nyare</a>
@@ -253,14 +255,12 @@
         </ul>
     </div>
 
-    <div>
-        <div class="span12">
+    <div class="container">
         {% if debug %}
             <p>google+ widget</p>
         {% else %}
             // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
             <div class="g-plusone" data-size="tall"></div>
         {% endif %}
-        </div>
     </div>
 {% endblock %}
