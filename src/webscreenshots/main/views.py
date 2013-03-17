@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 import json
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -7,6 +7,7 @@ from boto.s3.connection import S3Connection
 import datetime
 from django.conf import settings
 from django.views.decorators.cache import cache_page
+from django.template import Context, loader
 
 
 def get_sites_for_day(selected_day):
@@ -18,15 +19,26 @@ def get_sites_for_day(selected_day):
     return sites
 
 
+def server_error(request):
+    """
+    custom 500 error handler, that includes STATIC_URL in context
+    """
+    t = loader.get_template('500.html')
+    return HttpResponseServerError(t.render(Context({
+        'STATIC_URL': settings.STATIC_URL
+    })))
+
+
 @cache_page(60 * 15)
 def fake_wsimages(request):
     from PIL import Image, ImageDraw, ImageFont
+
     site = request.path_info.split('/')[-2].replace('|', '/')
-    im = Image.new('RGBA', (220,220), (100, 100, 100, 100))
+    im = Image.new('RGBA', (220, 220), (100, 100, 100, 100))
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("/usr/share/fonts/truetype/msttcorefonts/arial.ttf", 20)
-    text_pos = (30,100)
-    draw.text(text_pos, site, fill=(255,255,255), font=font)
+    text_pos = (30, 100)
+    draw.text(text_pos, site, fill=(255, 255, 255), font=font)
     response = HttpResponse(mimetype="image/png")
     im.save(response, 'PNG')
     return response
@@ -65,7 +77,7 @@ def home(request, pubdate=None):
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
 
-    sites = [ r[0] for r in request.REQUEST.items() if r[1] == 'on' ]
+    sites = [r[0] for r in request.REQUEST.items() if r[1] == 'on']
     if not sites:
         sites = ["aftonbladet.se", "dn.se", "svt.se/nyheter"]
 
