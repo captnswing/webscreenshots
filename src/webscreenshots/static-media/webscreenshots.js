@@ -120,13 +120,14 @@ function getrows(chosenMoments, chosenSites, chosenWidth) {
         myrow += "<td>";
         var cmpdate = new Date(currentHour.getTime());
         var hourstring = "kl&nbsp;" + curr_hour;
+        var hourdatestring = $.datepicker.formatDate('D d MM', currentHour);
         var buttonclasses = "btn btn-small disabled";
         var isnotoffhour = ($.inArray(currentHour.getHours(), offhours) == -1);
         var isfullhour = (currentHour.getMinutes() == 0);
         if (isfullhour && isnotoffhour) {
             buttonclasses = "hour btn btn-small btn-success";
         }
-        myrow += "<button class='" + buttonclasses + "' type='button'>" + hourstring + "</button>";
+        myrow += "<button title='" + hourdatestring + "' class='" + buttonclasses + "' type='button'>" + hourstring + "</button>";
         myrow += "</td>";
         $.each(chosenSites, function (i, site) {
             myrow += getimgtd(currentHour, site, chosenWidth);

@@ -1,8 +1,7 @@
 #-*- coding: utf-8 -*-
 # Django settings for webscreenshots project.
 from os.path import join, abspath, dirname
-here = lambda *x: join(abspath(dirname(__file__)), *x)
-root = lambda *x: join(abspath(here("..")), *x)
+root = lambda *x: join(abspath(dirname(__file__)), '..', *x)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
