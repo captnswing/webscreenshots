@@ -471,19 +471,6 @@
         }
     },
     {
-        "pk": 7,
-        "model": "admin.logentry",
-        "fields": {
-            "action_flag": 1,
-            "action_time": "2013-01-07T11:16:05.673",
-            "object_repr": "di.se",
-            "object_id": "16",
-            "change_message": "",
-            "user": 2,
-            "content_type": 7
-        }
-    },
-    {
         "pk": 6,
         "model": "admin.logentry",
         "fields": {
