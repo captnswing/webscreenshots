@@ -234,13 +234,6 @@
     },
     {
         "pk": 16,
-        "model": "main.website",
-        "fields": {
-            "url": "http://di.se"
-        }
-    },
-    {
-        "pk": 16,
         "model": "auth.permission",
         "fields": {
             "codename": "add_logentry",
