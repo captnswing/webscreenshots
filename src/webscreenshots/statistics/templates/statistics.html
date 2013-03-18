@@ -4,23 +4,21 @@
     body {
     padding-top: 40px; /* When using the navbar-fixed-top */
     }
+    table#kpi {
+    width: 300px;
+    }
 {% endblock %}
 
 {% block beforebodyend %}
     <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}/jquery.flot.js"></script>
     <script>
         $(document).ready(function () {
-            $.plot("#placeholder", []);
-            $.getJSON('{% url statistics-histdata %}', function (histdata, textStatus, jqXHR) {
-                $.plot("#placeholder", [ histdata ], {
-                    series: {
-                        bars: {
-                            show: true,
-                            align: "center"
-                        }
-                    }
-                });
-            });
+            $.plot("#placeholder", [
+                {
+                    data: $.parseJSON('{{ histdata|safe }}'),
+                    bars: { show: true }
+                }
+            ]);
         });
     </script>
 {% endblock %}
@@ -39,24 +37,49 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <a class="btn btn-primary"
-                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
                 </ul>
             </div>
         </div>
     </div>
 
     <div class="container">
+        <h2>{{ statdate|date:"D j M Y" }}</h2>
+
         <ul class="pager pull-left">
             <li class="next">
-                <a>&larr; hämta nyare</a>
+                <a>&larr; hämta äldre</a>
             </li>
         </ul>
-        <ul class="pager">
+        <ul class="pager pull-left">
             <li class="previous">
-                <a>hämta äldre &rarr;</a>
+                <a>hämta nyare &rarr;</a>
             </li>
         </ul>
+    </div>
+
+    <div class="container">
+        <div class="span4">
+            <table id="kpi" class="table table-condensed">
+                <tbody>
+                <tr>
+                    <td>number of jobs</td>
+                    <td>{{ number_of_jobs }}</td>
+                </tr>
+                <tr>
+                    <td>average duration</td>
+                    <td>{{ average_duration|floatformat:2 }} sec</td>
+                </tr>
+                <tr>
+                    <td>long jobs</td>
+                    <td>{{ longjobs }} ({{ longjobs_percent|floatformat:1 }}%)</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container">
         <div style="width:1100px;height:500px" id="placeholder"></div>
     </div>
 {% endblock %}

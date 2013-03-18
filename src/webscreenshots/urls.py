@@ -14,8 +14,9 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
+    url(r'^statistics/(?P<statdate>\d{4}-\d{2}-\d{2})/$', 'statistics.views.main', name="statistics-main-date"),
     url(r'^statistics/histdata/', 'statistics.views.histdata', name="statistics-histdata"),
-    url(r'^statistics/', 'statistics.views.main', name="statistics-main"),
+    url(r'^statistics/$', 'statistics.views.main', name="statistics-main"),
 )
 
 urlpatterns += patterns('',
