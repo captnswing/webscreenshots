@@ -8,6 +8,7 @@
     background-color: #E0E0E0;
     padding-top: 1.3em;
     padding-bottom: 1.3em;
+    display: none;
     }
     div.sitecheckboxes {
     vertical-align: top;
@@ -166,11 +167,6 @@
             if (isCurrentDay(chosenDate)) {
                 $("li.next").addClass("disabled");
             }
-
-            $('#header').slideUp('slow', function() {
-                // Animation complete.
-                $('i#topdown').toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
-            });
 
             $('li#calendar').click(function() {
                 $('i#topdown').toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
