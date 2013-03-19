@@ -32,7 +32,6 @@ def server_error(request):
 @cache_page(60 * 15)
 def fake_wsimages(request):
     from PIL import Image, ImageDraw, ImageFont
-
     site = request.path_info.split('/')[-2].replace('|', '/')
     im = Image.new('RGBA', (220, 220), (100, 100, 100, 100))
     draw = ImageDraw.Draw(im)
@@ -60,8 +59,7 @@ def home(request, pubdate=None):
     if not pubdate:
         d = today
     else:
-        y, m, d = pubdate.split('-')
-        d = datetime.datetime(int(y), int(m), int(d))
+        d = datetime.datetime.strptime(pubdate, "%Y-%m-%d")
         # if specified date is todays'
         if d.timetuple()[:3] == today.timetuple()[:3]:
             d = today
