@@ -108,7 +108,11 @@ def main(request, statdate=None):
         histogram.append([int(k), cnt[k]])
 
     histdata = [ (i,j) for i,j in histogram if i <= 300]
-    longjobs = [ (i,j) for i,j in histogram if i  > 300]
+    longjobs = [ (i,j) for i,j in histogram if i  > 60]
+
+    longjobs_percent = 0
+    if len(complete):
+        longjobs_percent = float(len(longjobs))/len(complete)*100
 
     return render_to_response('statistics.html', {
         'statdate': statdate,
@@ -116,7 +120,7 @@ def main(request, statdate=None):
         'number_of_jobs': len(complete),
         'average_duration': average,
         'longjobs': len(longjobs),
-        'longjobs_percent': float(len(longjobs))/len(complete)*100
+        'longjobs_percent': longjobs_percent
     }, context_instance=RequestContext(request))
 
 
