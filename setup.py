@@ -28,11 +28,12 @@ setup(
         "flower",
         "gunicorn",
         "ipython",
-        "pillow",
+        "pillow", # PIL
         "psycopg2",
         "python-dateutil < 2",
         "pytz",
         "supervisor",
-        "fabric"
+        "fabric",
+        "south",
     ],
 )
