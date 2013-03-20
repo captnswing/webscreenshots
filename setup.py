@@ -26,7 +26,7 @@ setup(
         "distribute",
         "django",
         "flower",
-        "gunicorn",
+        "uwsgi",
         "ipython",
         "pillow", # PIL
         "psycopg2",
