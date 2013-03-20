@@ -12,7 +12,7 @@ from django.template import Context, loader
 
 def get_sites_for_day(selected_day):
     conn = S3Connection()
-    bucket = conn.get_bucket('svti-webscreenshots')
+    bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
     selected_day = selected_day.strftime("%Y/%m/%d")
     keys = bucket.get_all_keys(prefix=selected_day + "/", delimiter="/")
     sites = [key.name.lstrip(selected_day).rstrip("/").replace('|', '/') for key in keys]

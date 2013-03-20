@@ -8,9 +8,9 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from webscreenshots.celeryapp import celery
 from webscreenshots.main.models import WebSite
+from django.conf import settings
 
 logger = get_task_logger(__name__)
-BUCKET_NAME = "svti-webscreenshots"
 IMAGE_DIR = "/tmp"
 
 
@@ -35,9 +35,9 @@ def upload_files(filenames, boto_cfg=True):
             AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
             AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
             conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
-        bucket = conn.get_bucket(BUCKET_NAME)
+        bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
         k = Key(bucket)
-        logger.info('Uploading %s to Amazon S3 bucket %s' % (fn, BUCKET_NAME))
+        logger.info('Uploading %s to Amazon S3 bucket %s' % (fn, settings.S3_BUCKET_NAME))
         k.key = fn.replace(IMAGE_DIR + '/', '').replace('__', '/')
         k.set_contents_from_filename(fn)
     return filenames
