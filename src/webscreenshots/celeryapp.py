@@ -23,8 +23,7 @@ celery.conf.update(
            },
         'runs-every-hour': {
             'task': 'webscreenshots.celerytasks.webscreenshots',
-            # https://github.com/celery/celery/issues/1114
-            'schedule': crontab(minute='0', hour='23,0,1,2,3,4,5,6'),
+            'schedule': crontab(minute='0', hour='23-6'),
         }
     }
 )
