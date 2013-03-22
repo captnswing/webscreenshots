@@ -113,14 +113,17 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'south',
     'main',
     'statistics',
+    'south',
 )
 
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages'
 CELERYD_LOGPATH = '/opt/webscreenshots/var/log/'
+
 S3_BUCKET_NAME = "svti-webscreenshots"
+AWS_ACCESS_KEY = "AKIAJGUNM2DBSJAZ777Q"
+AWS_SECRET_KEY = "vl8aKkZPHGYomW/KLFoUdyy55pCiS/q+CmXA6U9K"
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

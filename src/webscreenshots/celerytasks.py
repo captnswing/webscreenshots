@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import datetime
 import subprocess
 from urlparse import urlsplit
 import os
 from PIL import Image, ImageFile
 from celery.utils.log import get_task_logger
-from boto.s3.connection import S3Connection
+from boto import connect_s3
 from boto.s3.key import Key
 from webscreenshots.celeryapp import celery
 from webscreenshots.main.models import WebSite
@@ -23,18 +24,11 @@ def remove_files(filenames):
 
 
 @celery.task(name='webscreenshots.celerytasks.upload_files')
-def upload_files(filenames, boto_cfg=True):
+def upload_files(filenames):
     if isinstance(filenames, basestring):
         filenames = [filenames]
     for fn in filenames:
-        if boto_cfg:
-            # keys defined in /etc/boto.cfg
-            conn = S3Connection()
-        else:
-            # keys defined in environment
-            AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
-            AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
-            conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+        conn = connect_s3(settings.AWS_ACCESS_KEY, settings.AWS_SECRET_KEY)
         bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
         k = Key(bucket)
         logger.info('Uploading %s to Amazon S3 bucket %s' % (fn, settings.S3_BUCKET_NAME))
