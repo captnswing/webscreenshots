@@ -1,14 +1,10 @@
-require 'berkshelf/vagrant'
-
 Vagrant::Config.run do |config|
-  config.vm.box = "precise64"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-  #config.vm.box = "sl63-chefclient"
-  #config.vm.box_url = "http://svt-box.s3.amazonaws.com/sl63-chefclient-10.16.2.box"
+  config.vm.box = "opscode-ubuntu-1204"
+  config.vm.box_url = "https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_chef-11.2.0.box"
 
   config.vm.host_name = "webscreenshots.vagrant"
   config.vm.customize ["modifyvm", :id, "--memory", 1024]
-  config.vm.customize ["modifyvm", :id, "--cpus", 2 ]
+  config.vm.customize ["modifyvm", :id, "--cpus", 2]
 
   # make postgres server accessible from host environment
   config.vm.forward_port 5432, 5432
@@ -21,6 +17,11 @@ Vagrant::Config.run do |config|
 
   # http://vagrantup.com/v1/docs/nfs.html
   #config.vm.share_folder "v-root", "/vagrant", ".", :nfs => true
+
+  #config.vm.provision :chef_solo do |chef|
+  #  # this provision block upgrades the Chef Client before the real chef run starts
+  #  chef.add_recipe "chef-client::upgrade"
+  #end
 
   config.vm.provision :chef_solo do |chef|
     chef.log_level = :info
