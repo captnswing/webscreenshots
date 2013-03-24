@@ -29,19 +29,38 @@ Using a terminal on a Mac:
     sudo installer -target '/' -pkg /Volumes/VirtualBox/VirtualBox.pkg
     diskutil eject /Volumes/VirtualBox; rm VirtualBox-4.2.6-82870-OSX.dmg
 
+##### install vagrant & berkshelf
+
+curl -O http://files.vagrantup.com/packages/67bd4d30f7dbefa7c0abc643599f0244986c38c8/Vagrant.dmg
+hdid Vagrant.dmg
+sudo installer -target '/' -pkg /Volumes/Vagrant/Vagrant.pkg
+diskutil eject /Volumes/Vagrant
+vagrant plugin install berkshelf-vagrant
+
 ##### install rvm & ruby 1.9.3
 
 If you're not a ruby developer, and you don't have any special ruby requirements, trust me: just go with the following
 
+###### Pre OS X 10.8.2
+
     curl -L https://get.rvm.io | bash -s stable --ruby
+    rvm install 1.9.3 --enable-shared --without-tk --without-tcl
     rvm --default use 1.9.3
 
-##### install vagrant & berkshelf & ubuntu 12.04 box
+###### 10.8.2 and later
+
+Reason: gcc 4.2 removed by Apple, trouble with openssl
+
+    curl -L https://get.rvm.io | bash -s stable --ruby
+    sudo port install apple-gcc42 openssl
+    CC=/opt/local/bin/gcc-apple-4.2 rvm install 1.9.3 --with-openssl-dir=/opt/local
+    rvm --default use 1.9.3
+
+##### install chef-client, knife, knife-ec2 and knife-solo
 
 Now you can easily install the required gems - without `sudo`:
 
     bundle install
-    vagrant box add precise64 http://files.vagrantup.com/precise64.box
 
 ### And now what?
 
@@ -50,3 +69,12 @@ Just do
     vagrant up
 
 in the project root, and watch chef-solo magic in progress. Once the chef-solo run is finished, surf in to [localhost:8080](http://localhost:8080) to see the working, running website.
+
+### create new EC2 workstation
+
+knife ec2 server create -S svti-frank -I ami-3a0f034e -G default,webscreenshots --flavor=m1.large -x ubuntu -d chef-full
+cd webscreenshots_kitchen
+berks install -b ../Berksfile -p cookbooks
+knife solo prepare ec2-54-246-50-92.eu-west-1.compute.amazonaws.com
+echo '{ "run_list": ["recipe[runit]", "recipe[chef-base]", "recipe[chef-msttcorefonts]", "recipe[webscreenshots]"] }' > nodes/ec2-54-246-50-92.eu-west-1.compute.amazonaws.com.json
+knife solo cook ec2-54-246-50-92.eu-west-1.compute.amazonaws.com

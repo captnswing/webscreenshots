@@ -1,11 +1,6 @@
-source :rubygems
+source 'https://rubygems.org'
 ruby "1.9.3"
-gem "net-ssh"
-gem "net-ssh-multi"
-gem "fog"
-gem "highline"
 gem "chef"
 gem "knife-ec2"
 gem "knife-solo"
-gem "vagrant"
 gem "berkshelf"
