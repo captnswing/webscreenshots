@@ -26,5 +26,6 @@ images/
 screenshotadmin.sqlite
 celerybeat-schedule
 Berksfile.lock
+Gemfile.lock
 webscreenshots_kitchen
 celerylogs
