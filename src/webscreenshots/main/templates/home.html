@@ -25,6 +25,10 @@
     }
 {% endblock %}
 
+{% block extraheaders %}
+    <title>Webscreenshots v0.61 beta</title>
+{% endblock %}
+
 {% block beforebodyend %}
     <script src="https://apis.google.com/js/plusone.js"></script>
     <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
@@ -168,7 +172,7 @@
                 $("li.next").addClass("disabled");
             }
 
-            $('li#calendar').click(function() {
+            $('li#calendar').click(function () {
                 $('i#topdown').toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
                 $('#header').slideToggle('slow');
             });
@@ -206,15 +210,18 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right hidden-phone">
-                    <a class="btn btn-primary"
-                       href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                    <li>
+                        <span>
+                            <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                        </span>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 
     <div id="header" class="container">
-        <form method="POST" action="" id="configform">{% csrf_token %}
+        <form method="POST" id="configform">{% csrf_token %}
             <div id="datepicker" class="span3"></div>
             {% for chunk in allsites %}
                 <div class="span3 sitecheckboxes btn-group btn-group-vertical">
