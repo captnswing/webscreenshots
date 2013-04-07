@@ -72,9 +72,27 @@ in the project root, and watch chef-solo magic in progress. Once the chef-solo r
 
 ### create new EC2 workstation
 
-knife ec2 server create -S svti-frank -I ami-3a0f034e -G default,webscreenshots --flavor=m1.large -x ubuntu -d chef-full
+AMI id from
+
+* http://cloud-images.ubuntu.com/releases/precise/release/
+  (eu-west-1, 64-bit, ebs = ami-da1810ae)
+* http://cloud-images.ubuntu.com/releases/precise/release-20121218/
+  (eu-west-1, 64-bit, instance = ami-3a0f034e)
+
+http://docs.opscode.com/plugin_knife_ec2.html
+
+--ebs-no-delete-on-term
+
+#### with knife-solo
+
+knife ec2 server create -S svti-frank -I ami-3a0f034e -G default,webscreenshots --flavor=m1.large -x ubuntu
 cd webscreenshots_kitchen
 berks install -b ../Berksfile -p cookbooks
-knife solo prepare ec2-54-246-50-92.eu-west-1.compute.amazonaws.com
+# knife solo prepare ec2-54-246-50-92.eu-west-1.compute.amazonaws.com
 echo '{ "run_list": ["recipe[runit]", "recipe[chef-base]", "recipe[chef-msttcorefonts]", "recipe[webscreenshots]"] }' > nodes/ec2-54-246-50-92.eu-west-1.compute.amazonaws.com.json
 knife solo cook ec2-54-246-50-92.eu-west-1.compute.amazonaws.com
+
+#### with chef server
+
+berks upload
+knife ec2 server create -S svti-frank -I ami-da1810ae -G default,webscreenshots --flavor=m1.large -x ubuntu --tag Name='Frank webscreenshots (dev)' --node-name webscreenshots_dev --run-list "role[webscreenshots_master]"
