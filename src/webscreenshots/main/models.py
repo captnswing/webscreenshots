@@ -18,11 +18,11 @@ class WebSite(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.url = self.url.replace('http://', '').rstrip('/')
+        self.url = self.url.replace('http://', '').replace('www.', '').rstrip('/')
         self.url = "http://" + self.url.strip()
         super(WebSite, self).save(*args, **kwargs) # Call the "real" save() method.
 
     class Meta:
-        ordering = ["title"]
+        ordering = ["category", "title"]
         verbose_name = "webbsida"
         verbose_name_plural = "webbsidor"

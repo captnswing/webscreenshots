@@ -5,9 +5,9 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages_dev'
 CELERYD_LOGPATH = root('../../celerylogs')
-S3_BUCKET_NAME = "svti-webscreenshots.test"
-AWS_ACCESS_KEY = "AKIAISDWNLO33JF3NIRA"
-AWS_SECRET_KEY = "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"
+S3_BUCKET_NAME = "svti-webscreenshots-test"
+AWS_ACCESS_KEY = "AKIAJFHPRRM3PUMAEATQ"
+AWS_SECRET_KEY = "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"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
