@@ -1,6 +1,7 @@
-# settings/local.py
+# settings/frank.py
 from .base import *
 from fnmatch import fnmatch
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages_dev'

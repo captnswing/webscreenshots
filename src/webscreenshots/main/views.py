@@ -1,17 +1,22 @@
 #-*- coding: utf-8 -*-
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 import json
+import datetime
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
-from boto.s3.connection import S3Connection
-import datetime
+from boto import connect_s3
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.template import Context, loader
+from models import WebSite, CATEGORY_CHOICES
+
+
+def permalink(request, pubdate=None, pubtime=None):
+    return HttpResponse('')
 
 
 def get_sites_for_day(selected_day):
-    conn = S3Connection()
+    conn = connect_s3(settings.AWS_ACCESS_KEY, settings.AWS_SECRET_KEY)
     bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
     selected_day = selected_day.strftime("%Y/%m/%d")
     keys = bucket.get_all_keys(prefix=selected_day + "/", delimiter="/")
@@ -51,6 +56,19 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
+def get_sitechunks(allsites):
+    sitesforday = [e.values() for e in allsites]
+    categories = dict(CATEGORY_CHOICES)
+    sitesforday = [(categories[a], b) for a, b in sitesforday]
+    international = [s for s in sitesforday if s[0] == categories['1']]
+    riks = [s for s in sitesforday if s[0] == categories['2']]
+    regionala = [s for s in sitesforday if s[0] == categories['3']]
+    allchunks = [ international, riks ]
+    for rc in chunks(regionala, 25):
+        allchunks.append(rc)
+    return allchunks
+
+
 def home(request, pubdate=None):
     thumbwidth = request.REQUEST.get("thumbwidth", 220)
     lens = request.REQUEST.get("lens", "on")
@@ -75,11 +93,12 @@ def home(request, pubdate=None):
         sitesforday = get_sites_for_day(d)
         request.session[keyname] = sitesforday
 
-    sites = [r[0] for r in request.REQUEST.items() if r[1] == 'on']
-    if not sites:
+    selected_sites = [r[0] for r in request.REQUEST.items() if r[1] == 'on']
+    if not selected_sites:
         sites = ["aftonbladet.se", "dn.se", "svt.se/nyheter"]
 
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
+    sitechunks = get_sitechunks(WebSite.objects.values('title', 'category'))
 
     return render_to_response('home.html', {
         'thumbwidth': thumbwidth,
@@ -87,9 +106,14 @@ def home(request, pubdate=None):
         'offhours': json.dumps(offhours),
         'first_data_day': firstdataday.ctime(),
         'selected_day': d.ctime(),
-        'selected_sites': sites,
+        'selected_sites': selected_sites,
         'selected_sites_json': json.dumps(sites),
         'wsimages_path': settings.WEBSCREENSHOTS_IMAGES_PATH,
-        'allsites': chunks(sitesforday, 8),
+        'allsites': sitechunks,
         'currentday': d
     }, context_instance=RequestContext(request))
+
+
+if __name__ == '__main__':
+    sitesforday = WebSite.objects.values('title', 'category')
+    print sitesforday
