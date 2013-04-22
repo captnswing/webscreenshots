@@ -24,7 +24,7 @@ setup(
         "boto",
         "celery-with-redis",
         "distribute",
-        "django < 1.5",
+        "django",
         "flower",
         "uwsgi",
         "ipython",
