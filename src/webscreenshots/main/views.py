@@ -9,6 +9,20 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.template import Context, loader
 from models import WebSite, CATEGORY_CHOICES
+from utils import calculate_expexted_times, roundTime, get_slice_from_list
+
+
+def get_adjacent_times(datetime):
+    et = calculate_expexted_times()
+    kl = datetime.strftime("%H.%M")
+    if kl not in et:
+        rounded_to_5min = roundTime(datetime)
+        kl = rounded_to_5min.strftime("%H.%M")
+    if kl not in et:
+        rounded_to_60min = roundTime(datetime, roundTo=60*60)
+        kl = rounded_to_60min.strftime("%H.%M")
+    idx = et.index(kl)
+    return get_slice_from_list(et, idx, 4)
 
 
 def permalink(request, pubdate=None, pubtime=None):
@@ -37,6 +51,7 @@ def server_error(request):
 @cache_page(60 * 15)
 def fake_wsimages(request):
     from PIL import Image, ImageDraw, ImageFont
+
     site = request.path_info.split('/')[-2].replace('|', '/')
     im = Image.new('RGBA', (220, 220), (100, 100, 100, 100))
     draw = ImageDraw.Draw(im)
@@ -63,7 +78,7 @@ def get_sitechunks(allsites):
     international = [s for s in sitesforday if s[0] == categories['1']]
     riks = [s for s in sitesforday if s[0] == categories['2']]
     regionala = [s for s in sitesforday if s[0] == categories['3']]
-    allchunks = [ international, riks ]
+    allchunks = [international, riks]
     for rc in chunks(regionala, 25):
         allchunks.append(rc)
     return allchunks

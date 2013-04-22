@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 from celeryapp import celery
 import collections
+import datetime
 
 
 def calculate_expexted_times():
@@ -14,9 +15,16 @@ def calculate_expexted_times():
     return expected_times
 
 
-def get_nearest_5min(dt):
-    roundint = lambda n, p: (n + p / 2) / p * p
-    return "{0:02d}.{1:02d}".format(dt.hour, roundint(dt.minute, 5))
+# from http://stackoverflow.com/a/10854034/41404
+def roundTime(dt, roundTo=5 * 60):
+    """Round a datetime object to any time laps in seconds
+    dt : datetime.datetime object, default now.
+    roundTo : Closest number of seconds to round to, default 5 minutes.
+    """
+    seconds = (dt - dt.min).seconds
+    # '//' is a floor division, not a comment on following line:
+    rounding = (seconds + roundTo / 2) // roundTo * roundTo
+    return dt + datetime.timedelta(0, rounding - seconds, -dt.microsecond)
 
 
 def get_slice_from_list(mylist, idx, siblings=2):
