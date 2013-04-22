@@ -10,13 +10,14 @@ from django.views.decorators.cache import cache_page
 from django.template import Context, loader
 from models import WebSite, CATEGORY_CHOICES
 from utils import calculate_expexted_times, roundTime, get_slice_from_list
+from PIL import Image, ImageDraw, ImageFont
 
 
 def get_adjacent_times(datetime):
     et = calculate_expexted_times()
     kl = datetime.strftime("%H.%M")
     if kl not in et:
-        rounded_to_5min = roundTime(datetime)
+        rounded_to_5min = roundTime(datetime, roundTo=5*60)
         kl = rounded_to_5min.strftime("%H.%M")
     if kl not in et:
         rounded_to_60min = roundTime(datetime, roundTo=60*60)
@@ -26,6 +27,8 @@ def get_adjacent_times(datetime):
 
 
 def permalink(request, pubdate=None, pubtime=None):
+    dt = datetime.datetime.strptime("/".join((pubdate, pubtime)), '%Y-%m-%d/%H.%M')
+    print get_adjacent_times(dt)
     return HttpResponse('')
 
 
@@ -50,8 +53,6 @@ def server_error(request):
 
 @cache_page(60 * 15)
 def fake_wsimages(request):
-    from PIL import Image, ImageDraw, ImageFont
-
     site = request.path_info.split('/')[-2].replace('|', '/')
     im = Image.new('RGBA', (220, 220), (100, 100, 100, 100))
     draw = ImageDraw.Draw(im)

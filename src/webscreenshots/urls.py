@@ -8,6 +8,7 @@ admin.autodiscover()
 handler500 = 'main.views.server_error'
 
 urlpatterns = patterns('',
+    url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/(?P<pubtime>\d{2}.\d{2})/$', 'main.views.permalink', name="home-datetime"),
     url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/$', 'main.views.home', name="home-date"),
     url(r'^about/', TemplateView.as_view(template_name="about.html")),
     url(r'^$', 'main.views.home', name='home'),
@@ -15,7 +16,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('',
     url(r'^statistics/(?P<statdate>\d{4}-\d{2}-\d{2})/$', 'statistics.views.main', name="statistics-main-date"),
-    url(r'^statistics/histdata/', 'statistics.views.histdata', name="statistics-histdata"),
+    #url(r'^statistics/histdata/', 'statistics.views.histdata', name="statistics-histdata"),
     url(r'^statistics/$', 'statistics.views.main', name="statistics-main"),
 )
 

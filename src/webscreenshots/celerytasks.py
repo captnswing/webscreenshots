@@ -1,15 +1,17 @@
-from __future__ import absolute_import
 import datetime
 import subprocess
 from urlparse import urlsplit
 import os
+
 from PIL import Image, ImageFile
 from celery.utils.log import get_task_logger
 from boto import connect_s3
 from boto.s3.key import Key
+from django.conf import settings
+from main.utils import roundTime
 from webscreenshots.celeryapp import celery
 from webscreenshots.main.models import WebSite
-from django.conf import settings
+
 
 logger = get_task_logger(__name__)
 IMAGE_DIR = "/tmp"
@@ -67,11 +69,6 @@ def crop_and_scale_file(filename):
     return thumbfilename, croppedfilename, origfilename
 
 
-def get_nearest_5min(dt):
-    roundint = lambda n, p: (n + p / 2) / p * p
-    return "{0:02d}.{1:02d}".format(dt.hour, roundint(dt.minute, 5))
-
-
 def create_filename(url):
     parsed = urlsplit(url)
     canonicalurl = parsed.netloc.lstrip('www.')
@@ -79,7 +76,7 @@ def create_filename(url):
     if urlpath:
         canonicalurl += "|" + urlpath.replace('/', '|')
     now = datetime.datetime.now()
-    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + get_nearest_5min(now)
+    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + roundTime(now)
     return filename
 
 
