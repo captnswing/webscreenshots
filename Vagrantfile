@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :chef_solo do |chef|
     # strange bug
-    chef.cookbooks_path = "/Users/frank/.berkshelf/vagrant/berkshelf-20130415-20845-1x3ggbc"
+    chef.cookbooks_path = "/Users/frank/.berkshelf/vagrant/berkshelf-20130415-22760-1hntml6"
     chef.log_level = :info
     chef.add_recipe "chef-base"
     chef.add_recipe "chef-msttcorefonts"
@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
             "user" => "vagrant",
             "group" => "vagrant",
             "project_root" => "/vagrant",
-            "django_settings_module" => "webscreenshots.settings.local"
+            "django_settings_module" => "webscreenshots.settings.test"
         },
         "postgresql" => {
             # from https://github.com/opscode-cookbooks/postgresql#chef-solo-note
