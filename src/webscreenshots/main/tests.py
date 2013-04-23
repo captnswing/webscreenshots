@@ -26,6 +26,12 @@ class TestViewsModule(TestCase):
         response = self.c.get(testurl)
         self.assertEqual(response.status_code, 200)
 
+    def test_home(self):
+        testurl = reverse('home-date', args=('2013-01-14',))
+        response = self.c.get(testurl)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+
     def test_real_slice(self):
         print get_adjacent_times(datetime.datetime(2013, 04, 22, 23, 33))
 
@@ -71,11 +77,11 @@ class TestUtilsModule(unittest.TestCase):
             '22.00', '22.05', '22.10', '22.15', '22.20', '22.25', '22.30', '22.35', '22.40', '22.45', '22.50',
             '22.55', '23.00']
 
-    def test_slice_list(self):
+    def test_get_slice_from_list(self):
         self.assertListEqual([0, 1, 2, 3, 4], get_slice_from_list(self.testlist, 2, 2))
         self.assertListEqual([3, 4, 5, 6, 7], get_slice_from_list(self.testlist, 5, 2))
-        self.assertListEqual([8, 9, 0, 1, 2], get_slice_from_list(self.testlist, 0, 2))
         self.assertListEqual([9, 0, 1, 2, 3], get_slice_from_list(self.testlist, 1, 2))
+        self.assertListEqual([8, 9, 0, 1, 2], get_slice_from_list(self.testlist, 0, 2))
         self.assertListEqual([8, 9, 0, 1, 2, 3, 4], get_slice_from_list(self.testlist, 1, 3))
         self.assertListEqual([7, 8, 9, 0, 1], get_slice_from_list(self.testlist, 9, 2))
         self.assertListEqual([4, 5, 6, 7, 8, 9, 0], get_slice_from_list(self.testlist, 7, 3))
