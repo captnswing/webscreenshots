@@ -29,7 +29,8 @@ def get_adjacent_times(datetime):
 def permalink(request, pubdate=None, pubtime=None):
     dt = datetime.datetime.strptime("/".join((pubdate, pubtime)), '%Y-%m-%d/%H.%M')
     print get_adjacent_times(dt)
-    return HttpResponse('')
+    return render_to_response('index.html', {
+    }, context_instance=RequestContext(request))
 
 
 def get_sites_for_day(selected_day):
@@ -116,7 +117,7 @@ def home(request, pubdate=None):
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
     sitechunks = get_sitechunks(WebSite.objects.values('title', 'category'))
 
-    return render_to_response('home.html', {
+    return render_to_response('index.html', {
         'thumbwidth': thumbwidth,
         'loupe': lens,
         'offhours': json.dumps(offhours),

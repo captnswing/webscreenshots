@@ -1,44 +1,7 @@
-{% extends "base.html" %}
-
-{% block customcss %}
-    body {
-    padding-top: 40px; /* When using the navbar-fixed-top */
-    }
-{% endblock %}
-
-{% block beforebodyend %}
-    <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('span#date').text($.datepicker.formatDate('D d MM yy', new Date()));
-        });
-    </script>
-{% endblock %}
+{% extends "ws_base.html" %}
 
 {% block content %}
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="brand" href="/">Webscreenshots v0.61<em>beta</em></a>
-                <ul class="nav pull-left">
-                    <li>
-                        <a href="/"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span id="date"></span></a>
-                    </li>
-                    <li class="active">
-                        <a href="/about">About</a>
-                    </li>
-                </ul>
-                <ul class="nav pull-right hidden-phone">
-                    <li>
-                        <span>
-                            <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+    {{ block.super }}
     <div class="container">
         <h2>Changelog</h2>
         <table class="table table-bordered">
@@ -86,14 +49,5 @@
             </tr>
             </tbody>
         </table>
-    </div>
-
-    <div class="container">
-        {% if debug %}
-            <p>google+ widget</p>
-        {% else %}
-            // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
-            <div class="g-plusone" data-size="tall"></div>
-        {% endif %}
     </div>
 {% endblock %}

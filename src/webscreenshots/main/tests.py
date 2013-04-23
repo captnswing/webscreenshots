@@ -30,7 +30,7 @@ class TestViewsModule(TestCase):
         testurl = reverse('home-date', args=('2013-01-14',))
         response = self.c.get(testurl)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home.html')
+        self.assertTemplateUsed(response, 'index.html')
 
     def test_real_slice(self):
         print get_adjacent_times(datetime.datetime(2013, 04, 22, 23, 33))

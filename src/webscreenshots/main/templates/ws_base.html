@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block customcss %}
+    .ui-datepicker {
+    font-size: 0.85em;
+    }
+    div#header {
+    background-color: #E0E0E0;
+    padding-top: 1.3em;
+    padding-bottom: 1.3em;
+    display: none;
+    }
+    div.sitecheckboxes {
+    vertical-align: top;
+    }
+    .loupe {
+    -webkit-border-radius: 80px;
+    -moz-border-radius: 80px;
+    border-radius: 80px;
+    border: 1px solid black;
+    background-color: #E0E0E0;
+    }
+    body {
+    padding-top: 40px; /* When using the navbar-top-fixed */
+    }
+{% endblock %}
+
+{% block extraheaders %}
+    <title>Webscreenshots v0.61 beta</title>
+{% endblock %}
+
+{% block beforebodyend %}
+    <div class="container">
+        {% if debug %}
+            <p>google+ widget</p>
+        {% else %}
+            // a <a href="https://plus.google.com/114801313734706315605/posts">Frank Hoffsümmer</a> production ☺
+            <div class="g-plusone" data-size="tall"></div>
+        {% endif %}
+    </div>
+    <script src="https://apis.google.com/js/plusone.js"></script>
+    <script src="{{ STATIC_URL }}/jquery.ui.datepicker-sv.js"></script>
+    <script src="{{ STATIC_URL }}/jquery.loupe.min.js"></script>
+    <script src="{{ STATIC_URL }}/utils.js"></script>
+    <script src="{{ STATIC_URL }}/webscreenshots.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('span#date').text($.datepicker.formatDate('D d MM yy', new Date()));
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="/">Webscreenshots v0.61<em>beta</em></a>
+                <ul class="nav pull-left">
+                    <li id="calendar" class="active">
+                        <a href="#"><i class="icon-calendar icon-white"></i>&nbsp;&nbsp;<span
+                                id="date">{{ currentday|date:"D j M Y" }}</span>&nbsp;<i id="topdown"
+                                                                                         style="display: inline-block"
+                                                                                         class="ui-icon ui-icon-triangle-1-s"></i></a>
+                    </li>
+                    <li>
+                        <a href="/about">About</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right hidden-phone">
+                    <li>
+                        <span>
+                            <a class="btn btn-primary" href="https://bitbucket.org/captnswing/webscreenshots">code@bitbucket</a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
