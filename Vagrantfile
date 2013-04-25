@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
   # supervisor gui
   config.vm.network :forwarded_port, guest: 9001, host: 9001
   # django gui
-  config.vm.network :forwarded_port, guest: 8000, host: 8000
+  config.vm.network :forwarded_port, guest: 80, host: 8000
 
   config.vm.provision :chef_solo do |chef|
     # strange bug
@@ -35,7 +35,8 @@ Vagrant.configure("2") do |config|
             "user" => "vagrant",
             "group" => "vagrant",
             "project_root" => "/vagrant",
-            "django_settings_module" => "webscreenshots.settings.test"
+            "django_settings_module" => "webscreenshots.settings.vagrant",
+            "cloudfront_server" => "http://d2np6cnk6s6ggj.cloudfront.net"
         },
         "postgresql" => {
             # from https://github.com/opscode-cookbooks/postgresql#chef-solo-note
@@ -47,15 +48,11 @@ Vagrant.configure("2") do |config|
             "config" => {
                 "listen_addresses" => "0.0.0.0"
             },
-            # I dont't know how to add values to an existing attribute yet. chef.json overrides... :(
             "pg_hba" => [
-                # ...hence all the entries from postgresql cookbook, attributes/default.rb file
-                {:type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'ident'},
-                {:type => 'local', :db => 'all', :user => 'all', :addr => nil, :method => 'ident'},
+                {:type => 'local', :db => 'all', :user => 'all', :addr => nil, :method => 'trust'},
                 {:type => 'host', :db => 'all', :user => 'all', :addr => '127.0.0.1/32', :method => 'md5'},
                 {:type => 'host', :db => 'all', :user => 'all', :addr => '::1/128', :method => 'md5'},
-                # ...plus my own little entry that allows connections from anywhere
-                {:type => 'host', :db => 'postgres', :user => 'postgres', :addr => '0.0.0.0/0', :method => 'md5'}
+                {:type => 'host', :db => 'postgres', :user => 'all', :addr => '0.0.0.0/0', :method => 'trust'}
             ]
         },
     }
