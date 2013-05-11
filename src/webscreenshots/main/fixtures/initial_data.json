@@ -3,414 +3,171 @@
         "pk": 1,
         "model": "main.website",
         "fields": {
-            "url": "http://aftonbladet.se"
+            "url": "http://svt.se",
+            "category": "2",
+            "title": "SVT första sida"
         }
     },
     {
         "pk": 2,
         "model": "main.website",
         "fields": {
-            "url": "http://svt.se"
+            "url": "http://svt.se/nyheter",
+            "category": "2",
+            "title": "SVT Nyheter"
         }
     },
     {
         "pk": 3,
         "model": "main.website",
         "fields": {
-            "url": "http://svd.se"
+            "url": "http://www.svt.se/sport",
+            "category": "2",
+            "title": "SVT Sport"
         }
     },
     {
         "pk": 4,
         "model": "main.website",
         "fields": {
-            "url": "http://svt.se/nyheter"
+            "url": "http://www.svt.se/kultur",
+            "category": "2",
+            "title": "SVT Kultur"
         }
     },
     {
         "pk": 5,
         "model": "main.website",
         "fields": {
-            "url": "http://expressen.se"
+            "url": "http://svt.se/svttext",
+            "category": "2",
+            "title": "SVT TextTV sida 100"
         }
     },
     {
         "pk": 6,
         "model": "main.website",
         "fields": {
-            "url": "http://tv4.se/nyheterna"
+            "url": "http://aftonbladet.se",
+            "category": "2",
+            "title": "Aftonbladet"
         }
     },
     {
         "pk": 7,
         "model": "main.website",
         "fields": {
-            "url": "http://tv4.se"
+            "url": "http://svd.se",
+            "category": "2",
+            "title": "Svenska Dagbladet"
         }
     },
     {
         "pk": 8,
         "model": "main.website",
         "fields": {
-            "url": "http://dn.se"
+            "url": "http://expressen.se",
+            "category": "2",
+            "title": "Expressen"
         }
     },
     {
         "pk": 9,
         "model": "main.website",
         "fields": {
-            "url": "http://svt.se/svttext"
+            "url": "http://tv4.se/nyheterna",
+            "category": "2",
+            "title": "TV4 Nyheterna"
         }
     },
     {
         "pk": 10,
         "model": "main.website",
         "fields": {
-            "url": "http://bbc.co.uk/news"
+            "url": "http://tv4.se",
+            "category": "2",
+            "title": "TV4 första sida"
         }
     },
     {
         "pk": 11,
         "model": "main.website",
         "fields": {
-            "url": "http://sydsvenskan.se"
+            "url": "http://dn.se",
+            "category": "2",
+            "title": "Dagens Nyheter"
         }
     },
     {
         "pk": 12,
         "model": "main.website",
         "fields": {
-            "url": "http://sverigesradio.se/nyheter"
+            "url": "http://sydsvenskan.se",
+            "category": "2",
+            "title": "Sydsvenskan"
         }
     },
     {
         "pk": 13,
         "model": "main.website",
         "fields": {
-            "url": "http://nyheter24.se"
-        }
-    },
-    {
-        "pk": 15,
-        "model": "main.website",
-        "fields": {
-            "url": "http://nyheter.se.msn.com"
-        }
-    },
-    {
-        "pk": 16,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_logentry",
-            "name": "Can add log entry",
-            "content_type": 6
-        }
-    },
-    {
-        "pk": 17,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "change_logentry",
-            "name": "Can change log entry",
-            "content_type": 6
-        }
-    },
-    {
-        "pk": 18,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "delete_logentry",
-            "name": "Can delete log entry",
-            "content_type": 6
-        }
-    },
-    {
-        "pk": 4,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_group",
-            "name": "Can add group",
-            "content_type": 2
-        }
-    },
-    {
-        "pk": 5,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "change_group",
-            "name": "Can change group",
-            "content_type": 2
-        }
-    },
-    {
-        "pk": 6,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "delete_group",
-            "name": "Can delete group",
-            "content_type": 2
-        }
-    },
-    {
-        "pk": 1,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_permission",
-            "name": "Can add permission",
-            "content_type": 1
-        }
-    },
-    {
-        "pk": 2,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "change_permission",
-            "name": "Can change permission",
-            "content_type": 1
-        }
-    },
-    {
-        "pk": 3,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "delete_permission",
-            "name": "Can delete permission",
-            "content_type": 1
-        }
-    },
-    {
-        "pk": 7,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_user",
-            "name": "Can add user",
-            "content_type": 3
-        }
-    },
-    {
-        "pk": 8,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "change_user",
-            "name": "Can change user",
-            "content_type": 3
-        }
-    },
-    {
-        "pk": 9,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "delete_user",
-            "name": "Can delete user",
-            "content_type": 3
-        }
-    },
-    {
-        "pk": 10,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_contenttype",
-            "name": "Can add content type",
-            "content_type": 4
-        }
-    },
-    {
-        "pk": 11,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "change_contenttype",
-            "name": "Can change content type",
-            "content_type": 4
-        }
-    },
-    {
-        "pk": 12,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "delete_contenttype",
-            "name": "Can delete content type",
-            "content_type": 4
-        }
-    },
-    {
-        "pk": 19,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_website",
-            "name": "Can add webbsida",
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 20,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "change_website",
-            "name": "Can change webbsida",
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 21,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "delete_website",
-            "name": "Can delete webbsida",
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 13,
-        "model": "auth.permission",
-        "fields": {
-            "codename": "add_session",
-            "name": "Can add session",
-            "content_type": 5
+            "url": "http://sverigesradio.se/nyheter",
+            "category": "2",
+            "title": "SR Nyheter"
         }
     },
     {
         "pk": 14,
-        "model": "auth.permission",
+        "model": "main.website",
         "fields": {
-            "codename": "change_session",
-            "name": "Can change session",
-            "content_type": 5
+            "url": "http://nyheter24.se",
+            "category": "2",
+            "title": "Nyheter24"
         }
     },
     {
         "pk": 15,
-        "model": "auth.permission",
+        "model": "main.website",
         "fields": {
-            "codename": "delete_session",
-            "name": "Can delete session",
-            "content_type": 5
+            "url": "http://di.se",
+            "category": "2",
+            "title": "Dagens Industri"
         }
     },
     {
-        "pk": 1,
-        "model": "auth.user",
+        "pk": 16,
+        "model": "main.website",
         "fields": {
-            "username": "admin",
-            "first_name": "Frank",
-            "last_name": "Hoffsummer",
-            "is_active": true,
-            "is_superuser": true,
-            "is_staff": true,
-            "last_login": "2013-01-06T20:57:04.391",
-            "groups": [],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$10000$Q6Rw9YZ3T8l1$lxZhyF0viOQe6IMDkNw1JsQK2DDoE0FLmTaETsBqhBs=",
-            "email": "frank.hoffsummer@gmail.com",
-            "date_joined": "2013-01-06T01:52:08.918"
+            "url": "http://nyheter.se.msn.com",
+            "category": "2",
+            "title": "MSN Nyheter"
         }
     },
     {
-        "pk": 2,
-        "model": "auth.user",
+        "pk": 17,
+        "model": "main.website",
         "fields": {
-            "username": "karin",
-            "first_name": "Karin",
-            "last_name": "Schmidt",
-            "is_active": true,
-            "is_superuser": false,
-            "is_staff": true,
-            "last_login": "2013-01-07T11:06:18.906",
-            "groups": [],
-            "user_permissions": [19, 20, 21],
-            "password": "pbkdf2_sha256$10000$4c7CRsNxXTSv$nUfZOXlmX2TPZsdkLYIkXGMfvY/zDdGuSflrbHV9O9k=",
-            "email": "karin.schmidt@svt.se",
-            "date_joined": "2013-01-06T20:57:21"
+            "url": "http://edition.cnn.com",
+            "category": "1",
+            "title": "CNN"
         }
     },
     {
-        "pk": 8,
-        "model": "admin.logentry",
+        "pk": 18,
+        "model": "main.website",
         "fields": {
-            "action_flag": 3,
-            "action_time": "2013-01-07T11:16:48.180",
-            "object_repr": "sverigesradio.se/nyheter",
-            "object_id": "14",
-            "change_message": "",
-            "user": 2,
-            "content_type": 7
+            "url": "http://www.nrk.no",
+            "category": "1",
+            "title": "NRK"
         }
     },
     {
-        "pk": 6,
-        "model": "admin.logentry",
+        "pk": 19,
+        "model": "main.website",
         "fields": {
-            "action_flag": 1,
-            "action_time": "2013-01-07T11:15:59.831",
-            "object_repr": "nyheter.se.msn.com",
-            "object_id": "15",
-            "change_message": "",
-            "user": 2,
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 5,
-        "model": "admin.logentry",
-        "fields": {
-            "action_flag": 1,
-            "action_time": "2013-01-07T11:15:39.673",
-            "object_repr": "sverigesradio.se/nyheter",
-            "object_id": "14",
-            "change_message": "",
-            "user": 2,
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 4,
-        "model": "admin.logentry",
-        "fields": {
-            "action_flag": 1,
-            "action_time": "2013-01-07T11:14:52.988",
-            "object_repr": "nyheter24.se",
-            "object_id": "13",
-            "change_message": "",
-            "user": 2,
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 3,
-        "model": "admin.logentry",
-        "fields": {
-            "action_flag": 1,
-            "action_time": "2013-01-07T11:14:23.107",
-            "object_repr": "sverigesradio.se/nyheter",
-            "object_id": "12",
-            "change_message": "",
-            "user": 2,
-            "content_type": 7
-        }
-    },
-    {
-        "pk": 2,
-        "model": "admin.logentry",
-        "fields": {
-            "action_flag": 2,
-            "action_time": "2013-01-06T20:57:56.964",
-            "object_repr": "karin",
-            "object_id": "2",
-            "change_message": "\u00c4ndrade password, first_name, last_name, email, is_staff och user_permissions.",
-            "user": 1,
-            "content_type": 3
-        }
-    },
-    {
-        "pk": 1,
-        "model": "admin.logentry",
-        "fields": {
-            "action_flag": 1,
-            "action_time": "2013-01-06T20:57:21.676",
-            "object_repr": "karin",
-            "object_id": "2",
-            "change_message": "",
-            "user": 1,
-            "content_type": 3
+            "url": "http://bbc.co.uk/news",
+            "category": "1",
+            "title": "BBC News"
         }
     }
 ]
