@@ -70,13 +70,10 @@ def crop_and_scale_file(filename):
 
 
 def create_filename(url):
-    parsed = urlsplit(url)
-    canonicalurl = parsed.netloc.lstrip('www.')
-    urlpath = parsed.path.strip('/')
-    if urlpath:
-        canonicalurl += "|" + urlpath.replace('/', '|')
+    ws = WebSite.objects.get(url=url)
     now = datetime.datetime.now()
-    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + roundTime(now).strftime("%H.%M")
+    filename = "{0}__{1}__{2}".format(now.strftime("%Y__%m__%d"), ws.canonicalurl, roundTime(now).strftime("%H.%M"))
+    logger.info(filename)
     return filename
 
 

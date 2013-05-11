@@ -167,18 +167,13 @@
     <div id="header" class="container">
         <form method="POST" id="configform">{% csrf_token %}
             <div id="datepicker" class="span3"></div>
-            {% for chunk in allsites %}
-                {% if chunk.0.0 == 'Riks' %}
-                    <div class="span2 sitecheckboxes btn-group btn-group-vertical">
-                    <h6>{{ chunk.0.0 }}</h6>
-                    {% for site in chunk %}
-                        <label class="checkbox">
-                            <input name='{{ site.1 }}' type="checkbox">{{ site.1 }}
-                        </label>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-            {% endfor %}
+            <div class="span2 sitecheckboxes btn-group btn-group-vertical">
+                {% for site in availablesites %}
+                    <label class="checkbox">
+                        <input name='{{ site.canonicalurl }}' type="checkbox" checked>{{ site.title }}
+                    </label>
+                {% endfor %}
+            </div>
         </form>
     </div>
 
@@ -193,7 +188,7 @@
             <tr>
                 <th></th>
                 {% for site in selected_sites %}
-                    <th class="{{ site }}">{{ site }}</th>
+                    <th>{{ site }}</th>
                 {% endfor %}
             </tr>
             </thead>

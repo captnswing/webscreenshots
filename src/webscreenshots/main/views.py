@@ -23,14 +23,7 @@ def get_adjacent_times(datetime):
         rounded_to_60min = roundTime(datetime, roundTo=60*60)
         kl = rounded_to_60min.strftime("%H.%M")
     idx = et.index(kl)
-    return get_slice_from_list(et, idx, 4)
-
-
-def permalink(request, pubdate=None, pubtime=None):
-    dt = datetime.datetime.strptime("/".join((pubdate, pubtime)), '%Y-%m-%d/%H.%M')
-    print get_adjacent_times(dt)
-    return render_to_response('index.html', {
-    }, context_instance=RequestContext(request))
+    return get_slice_from_list(et, idx, 5)
 
 
 def get_sites_for_day(selected_day):
@@ -73,28 +66,17 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
-def get_sitechunks(allsites):
-    sitesforday = [e.values() for e in allsites]
-    categories = dict(CATEGORY_CHOICES)
-    sitesforday = [(categories[a], b) for a, b in sitesforday]
-    international = [s for s in sitesforday if s[0] == categories['1']]
-    riks = [s for s in sitesforday if s[0] == categories['2']]
-    regionala = [s for s in sitesforday if s[0] == categories['3']]
-    allchunks = [international, riks]
-    for rc in chunks(regionala, 25):
-        allchunks.append(rc)
-    return allchunks
-
-
-def home(request, pubdate=None):
+def home(request, pubdate=None, pubtime=None):
     thumbwidth = request.REQUEST.get("thumbwidth", 220)
     lens = request.REQUEST.get("lens", "on")
     firstdataday = datetime.datetime(2013, 1, 4)
     today = datetime.datetime.today()
+    if not pubtime:
+        pubtime = '00.00'
     if not pubdate:
         d = today
     else:
-        d = datetime.datetime.strptime(pubdate, "%Y-%m-%d")
+        d = datetime.datetime.strptime(pubdate+pubtime, "%Y-%m-%d/%H.%M")
         # if specified date is todays'
         if d.timetuple()[:3] == today.timetuple()[:3]:
             d = today
@@ -112,10 +94,9 @@ def home(request, pubdate=None):
 
     selected_sites = [r[0] for r in request.REQUEST.items() if r[1] == 'on']
     if not selected_sites:
-        sites = ["aftonbladet.se", "dn.se", "svt.se/nyheter"]
+        selected_sites = ["aftonbladet.se", "dn.se", "svt.se|nyheter"]
 
     offhours = [23, 0, 1, 2, 3, 4, 5, 6]
-    sitechunks = get_sitechunks(WebSite.objects.values('title', 'category'))
 
     return render_to_response('index.html', {
         'thumbwidth': thumbwidth,
@@ -124,9 +105,9 @@ def home(request, pubdate=None):
         'first_data_day': firstdataday.ctime(),
         'selected_day': d.ctime(),
         'selected_sites': selected_sites,
-        'selected_sites_json': json.dumps(sites),
+        'selected_sites_json': json.dumps(selected_sites),
         'wsimages_path': settings.WEBSCREENSHOTS_IMAGES_PATH,
-        'allsites': sitechunks,
+        'availablesites': WebSite.objects.all(),
         'currentday': d
     }, context_instance=RequestContext(request))
 

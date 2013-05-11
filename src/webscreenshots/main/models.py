@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from urlparse import urlsplit
 from django.db import models
 
 CATEGORY_CHOICES = (
@@ -16,6 +17,15 @@ class WebSite(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    @property
+    def canonicalurl(self):
+        parsed = urlsplit(self.url)
+        canonicalurl = parsed.netloc.lstrip('www.')
+        urlpath = parsed.path.strip('/')
+        if urlpath:
+            canonicalurl += "|" + urlpath.replace('/', '|')
+        return canonicalurl
 
     def save(self, *args, **kwargs):
         self.url = self.url.replace('http://', '').replace('www.', '').rstrip('/')
