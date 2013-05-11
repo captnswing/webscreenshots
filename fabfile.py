@@ -45,11 +45,12 @@ def deploy():
 
 @task
 def dbdump():
-    DUMPAPPS = 'auth contenttypes admin main statistics'
+    DUMPAPPS = 'auth admin main statistics'
     with cd(env.directory), shell_env(**env.shell_env), prefix(env.activate):
         run("./manage.py dumpdata --indent=4 %s >/tmp/dbbackup_%s.json" % (DUMPAPPS, datetime.datetime.today().strftime("%Y-%m-%d")))
         run("gzip /tmp/dbbackup_%s.json" % datetime.datetime.today().strftime("%Y-%m-%d"))
         get("/tmp/dbbackup_%s.json.gz" % datetime.datetime.today().strftime("%Y-%m-%d"), local_path="src/webscreenshots/main/fixtures")
+        print "downloaded dbbackup_%s.json.gz to 'src/webscreenshots/main/fixtures'" % datetime.datetime.today().strftime("%Y-%m-%d")
 
 @task
 def fetch_celeryd_logs():
@@ -67,7 +68,7 @@ def rsync_code():
     run("touch %s/wsgi.py" % env.directory)
 
 @task
-def remove_site_from_se(sitetoremove=None):
+def remove_site_from_s3(sitetoremove=None):
     AWS_ACCESS_KEY = get_env_variable("AWS_ACCESS_KEY")
     AWS_SECRET_KEY = get_env_variable("AWS_SECRET_KEY")
     if not sitetoremove:

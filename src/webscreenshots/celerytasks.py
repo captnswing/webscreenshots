@@ -76,7 +76,7 @@ def create_filename(url):
     if urlpath:
         canonicalurl += "|" + urlpath.replace('/', '|')
     now = datetime.datetime.now()
-    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + roundTime(now)
+    filename = now.strftime("%Y__%m__%d") + "__" + canonicalurl + "__" + roundTime(now).strftime("%H.%M")
     return filename
 
 

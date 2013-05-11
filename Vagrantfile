@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
         "webscreenshots" => {
             "user" => "vagrant",
             "group" => "vagrant",
-            "project_root" => "/vagrant",
+            "project_root" => "/vagrant/src/webscreenshots",
             "django_settings_module" => "webscreenshots.settings.vagrant",
             "cloudfront_server" => "http://d2np6cnk6s6ggj.cloudfront.net"
         },
