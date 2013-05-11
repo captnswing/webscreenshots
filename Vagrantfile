@@ -23,8 +23,6 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 80, host: 8000
 
   config.vm.provision :chef_solo do |chef|
-    # strange bug
-    chef.cookbooks_path = "/Users/frank/.berkshelf/vagrant/berkshelf-20130415-22760-1hntml6"
     chef.log_level = :info
     chef.add_recipe "chef-base"
     chef.add_recipe "chef-msttcorefonts"
