@@ -1,4 +1,4 @@
-# settings/prod.py
+# settings/test.py
 from .base import *
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

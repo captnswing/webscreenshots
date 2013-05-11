@@ -1,5 +1,13 @@
 {% extends "ws_base.html" %}
 
+{% block extraheaders %}
+    <script>
+        $(document).ready(function () {
+            $('span#date').text($.datepicker.formatDate('D d MM yy', new Date()));
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
     <div class="container">

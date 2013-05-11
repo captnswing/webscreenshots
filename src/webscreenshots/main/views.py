@@ -8,7 +8,7 @@ from boto import connect_s3
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.template import Context, loader
-from models import WebSite, CATEGORY_CHOICES
+from models import WebSite
 from utils import calculate_expexted_times, roundTime, get_slice_from_list
 from PIL import Image, ImageDraw, ImageFont
 
@@ -31,8 +31,9 @@ def get_sites_for_day(selected_day):
     bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
     selected_day = selected_day.strftime("%Y/%m/%d")
     keys = bucket.get_all_keys(prefix=selected_day + "/", delimiter="/")
-    sites = [key.name.lstrip(selected_day).rstrip("/").replace('|', '/') for key in keys]
-    return sites
+    sites = [key.name.lstrip(selected_day).rstrip("/") for key in keys]
+    ws = [ws for ws in WebSite.objects.all() if ws.canonicalurl in sites]
+    return ws
 
 
 def server_error(request):
@@ -60,7 +61,7 @@ def fake_wsimages(request):
 
 # from http://stackoverflow.com/a/312464/41404
 def chunks(l, n):
-    """ Yield successive n-sized chunks from l.
+    """ yield successive n-sized chunks from l.
     """
     for i in xrange(0, len(l), n):
         yield l[i:i + n]
@@ -76,7 +77,10 @@ def home(request, pubdate=None, pubtime=None):
     if not pubdate:
         d = today
     else:
-        d = datetime.datetime.strptime(pubdate+pubtime, "%Y-%m-%d/%H.%M")
+        try:
+            d = datetime.datetime.strptime(pubdate+pubtime, "%Y-%m-%d/%H.%M")
+        except ValueError:
+            d = datetime.datetime.strptime(pubdate, "%Y-%m-%d")
         # if specified date is todays'
         if d.timetuple()[:3] == today.timetuple()[:3]:
             d = today
@@ -85,12 +89,16 @@ def home(request, pubdate=None, pubtime=None):
     if d > today:
         return HttpResponseRedirect('/%s' % today.strftime("%Y-%m-%d"))
 
-    keyname = "sites_%s" % d.strftime("%Y-%m-%d")
-    if keyname in request.session:
-        sitesforday = request.session[keyname]
-    else:
-        sitesforday = get_sites_for_day(d)
-        request.session[keyname] = sitesforday
+    sitesforday = get_sites_for_day(d)
+
+    # keyname = "sites_%s" % d.strftime("%Y-%m-%d")
+    # print request.session
+    # if keyname in request.session:
+    #     sitesforday = request.session[keyname]
+    #     print sitesforday
+    # else:
+    #     sitesforday = get_sites_for_day(d)
+    #     request.session[keyname] = sitesforday
 
     selected_sites = [r[0] for r in request.REQUEST.items() if r[1] == 'on']
     if not selected_sites:
@@ -107,7 +115,7 @@ def home(request, pubdate=None, pubtime=None):
         'selected_sites': selected_sites,
         'selected_sites_json': json.dumps(selected_sites),
         'wsimages_path': settings.WEBSCREENSHOTS_IMAGES_PATH,
-        'availablesites': WebSite.objects.all(),
+        'availablesites': chunks(sitesforday, 10),
         'currentday': d
     }, context_instance=RequestContext(request))
 

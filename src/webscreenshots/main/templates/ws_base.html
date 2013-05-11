@@ -43,11 +43,6 @@
     <script src="{{ STATIC_URL }}/jquery.loupe.min.js"></script>
     <script src="{{ STATIC_URL }}/utils.js"></script>
     <script src="{{ STATIC_URL }}/webscreenshots.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('span#date').text($.datepicker.formatDate('D d MM yy', new Date()));
-        });
-    </script>
 {% endblock %}
 
 {% block content %}

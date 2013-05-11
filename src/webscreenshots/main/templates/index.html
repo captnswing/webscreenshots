@@ -167,13 +167,15 @@
     <div id="header" class="container">
         <form method="POST" id="configform">{% csrf_token %}
             <div id="datepicker" class="span3"></div>
-            <div class="span2 sitecheckboxes btn-group btn-group-vertical">
-                {% for site in availablesites %}
-                    <label class="checkbox">
-                        <input name='{{ site.canonicalurl }}' type="checkbox" checked>{{ site.title }}
-                    </label>
+                {% for sitechunk in availablesites %}
+                <div class="span2 sitecheckboxes btn-group btn-group-vertical">
+                    {% for site in sitechunk %}
+                        <label class="checkbox">
+                            <input name='{{ site.canonicalurl }}' type="checkbox" checked>{{ site.title }}
+                        </label>
+                    {% endfor %}
+                </div>
                 {% endfor %}
-            </div>
         </form>
     </div>
 
