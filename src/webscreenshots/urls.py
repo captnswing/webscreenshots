@@ -23,12 +23,11 @@ urlpatterns += patterns('',
 urlpatterns += patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^admin/', include(admin.site.urls)),
 )
 
 if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^%s/' % settings.WEBSCREENSHOTS_IMAGES_PATH.replace('/', ''), 'main.views.fake_wsimages', name='fake-wsimages'),
-        url(r'^500/$', 'django.views.generic.simple.direct_to_template', {'template': '500.html'}),
-        url(r'^404/$', 'django.views.generic.simple.direct_to_template', {'template': '404.html'}),
+        url(r'^500/$', TemplateView.as_view(template_name='500.html')),
+        url(r'^404/$', TemplateView.as_view(template_name='404.html')),
     )
