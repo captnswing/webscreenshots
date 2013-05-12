@@ -20,10 +20,10 @@ def get_env_variable(var_name):
 @task
 def aws():
     # prod
-    env.hosts = ['ec2-54-228-34-186.eu-west-1.compute.amazonaws.com']
+    env.hosts = ['webscreenshots.captnswing.net']
     env.activate = 'source /opt/webscreenshots/bin/activate'
     env.directory = '/opt/webscreenshots/src/webscreenshots/src/webscreenshots'
-    env.shell_env = {'DJANGO_SETTINGS_MODULE': 'webscreenshots.settings.test'}
+    env.shell_env = {'DJANGO_SETTINGS_MODULE': 'webscreenshots.settings.prod'}
 
 @task
 def deploy():
