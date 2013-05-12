@@ -18,21 +18,8 @@ def get_env_variable(var_name):
         raise ValueError("Set the %s env variable" % var_name)
 
 @task
-def prod():
-    env.hosts = ['webscreenshots.captnswing.net']
-    env.activate = 'source /opt/webscreenshots/bin/activate'
-    env.directory = '/opt/webscreenshots/src/webscreenshots/src/webscreenshots'
-    env.shell_env = {'DJANGO_SETTINGS_MODULE': 'webscreenshots.settings.prod'}
-
-@task
-def test():
-    env.hosts = ['test.webscreenshots.captnswing.net']
-    env.activate = 'source /opt/webscreenshots/bin/activate'
-    env.directory = '/opt/webscreenshots/src/webscreenshots/src/webscreenshots'
-    env.shell_env = {'DJANGO_SETTINGS_MODULE': 'webscreenshots.settings.test'}
-
-@task
-def dev():
+def aws():
+    # prod
     env.hosts = ['ec2-54-228-34-186.eu-west-1.compute.amazonaws.com']
     env.activate = 'source /opt/webscreenshots/bin/activate'
     env.directory = '/opt/webscreenshots/src/webscreenshots/src/webscreenshots'
