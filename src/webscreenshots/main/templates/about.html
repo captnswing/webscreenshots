@@ -1,8 +1,15 @@
 {% extends "ws_base.html" %}
 
 {% block extraheaders %}
+    <title>Webscreenshots v0.62 beta - About</title>
+{% endblock %}
+
+{% block beforebodyend %}
+    {{ block.super }}
     <script>
         $(document).ready(function () {
+            $('li#calendar').toggleClass("active", false);
+            $('li#about').toggleClass("active", true);
             $('span#date').text($.datepicker.formatDate('D d MM yy', new Date()));
         });
     </script>
