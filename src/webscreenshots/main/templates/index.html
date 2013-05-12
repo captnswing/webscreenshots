@@ -9,7 +9,7 @@
         var chosenDate = new Date("{{ selected_day }}");
         var firstData = new Date("{{ first_data_day }}");
         var ddiff = firstData.diff(new Date(), 'days');
-        var longestback = ddiff > 90 ? 90 : ddiff;
+        var longestback = ddiff > 365 ? 365 : ddiff;
         var chosenWidth = parseInt({{ thumbwidth }});
         var loupe = "{{ loupe }}";
         var wsimages_path = "{{ wsimages_path }}";
