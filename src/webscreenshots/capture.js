@@ -1,6 +1,7 @@
 var casper = require('casper').create({
     verbose: true,
-    logLevel: "info"
+    logLevel: "info",
+    viewportSize: {width: 1280, height: 800}
 });
 
 var url = casper.cli.args[0];
