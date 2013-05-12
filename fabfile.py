@@ -33,7 +33,7 @@ def test():
 
 @task
 def dev():
-    env.hosts = ['ec2-54-228-147-208.eu-west-1.compute.amazonaws.com']
+    env.hosts = ['ec2-54-228-34-186.eu-west-1.compute.amazonaws.com']
     env.activate = 'source /opt/webscreenshots/bin/activate'
     env.directory = '/opt/webscreenshots/src/webscreenshots/src/webscreenshots'
     env.shell_env = {'DJANGO_SETTINGS_MODULE': 'webscreenshots.settings.test'}
