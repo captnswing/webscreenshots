@@ -1,8 +1,7 @@
 import datetime
 import subprocess
-from urlparse import urlsplit
+import time
 import os
-
 from PIL import Image, ImageFile
 from celery.utils.log import get_task_logger
 from boto import connect_s3
@@ -52,6 +51,8 @@ def save_progressive_jpeg(im, filepath):
 
 @celery.task(name='webscreenshots.celerytasks.crop_and_scale_file')
 def crop_and_scale_file(filename):
+    if not os.path.exists(filename):
+        time.sleep(5)
     origIm = Image.open(filename)
     # crop Image from the top
     croppedIm = origIm.crop((0, 0, 1280, 1280))
