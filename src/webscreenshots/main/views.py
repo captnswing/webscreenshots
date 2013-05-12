@@ -70,7 +70,7 @@ def chunks(l, n):
 def home(request, pubdate=None, pubtime=None):
     thumbwidth = request.REQUEST.get("thumbwidth", 220)
     lens = request.REQUEST.get("lens", "on")
-    firstdataday = datetime.datetime(2013, 1, 4)
+    firstdataday = datetime.datetime(2013, 1, 11)
     today = datetime.datetime.today()
     if not pubtime:
         pubtime = '00.00'
