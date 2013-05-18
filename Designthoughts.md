@@ -1,18 +1,4 @@
-##### Design ideas:
-
-* save screenshots of configured websites in regular intervals as PNG or JPEG.
-* allow for configuration of websites through easy web interface
-* allow the easy comparison and exploration of the save screenshots for arbitrary times and time ranges
-    - surfa på url http://appserver/svt.se/nyheter ger tillbaka senaste snapshot
-    - surfa på url http://appserver/svt.se/nyheter/2012-11-27/12.23/ mappar mot snapshot som tagits närmast i tid
-
-##### Implementation ideas:
-
-* använd celerybeat för att varje 5:e minut gå igenom en lista av förkonfigurerade url:er
-* för varje url, spara ned hela sidan som hel PNG och tumnagel.
-* ladda upp PNG och tumnagel till S3
-
-### research for screenshot solutions
+### evaluation of screenshot tools
 
 ##### requirements:
 
@@ -46,21 +32,31 @@
 
 ##### webservices:
 
+not really relevant for this project
+
 * [node-urlshot](http://node-urlshot.herokuapp.com), example with [svt.se](http://node-urlshot.herokuapp.com/?url=http://svt.se/&viewport=1280x900&format=jpg)
 * [thumbalizr](http://www.thumbalizr.com/)
 * [thumbalizr alternatives](http://www.moreofit.com/similar-to/www.thumbalizr.com/Top_10_Sites_Like_Thumbalizr/)
 * loads of others
 
-### S3 Bucket
+### S3 Bucket setup
 
-    - world readable
-    - 1825 days expiration for files
-    - cloudfront enabled
-    - custom IAM user with custom policy
+* world readable
+* writeable only by custom IAM user with custom policy 
+* 1825 days expiration for files, files will be deleted afterwards
+* cloudfront enabled
+* nginx as proxy 
 
-### nicer select boxes
+### idea: nicer select boxes
+
+use django forms? 
 
 * http://ivaynberg.github.io/select2/select2-latest.html
+* https://github.com/applegrew/django-select2
 * http://www.samsung.com/se/support/main/supportMain.do?supportIaCode=10003#
 * http://codereview.stackexchange.com/questions/824/looking-for-improvements-on-my-jquery-ui-tagging-widget
 
+### idea: mashup / integration with other projects
+
+* [pageonex.com](http://pageonex.com/)
+* [newsdiffs](https://github.com/ecprice/newsdiffs)
