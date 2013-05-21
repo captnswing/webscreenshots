@@ -14,9 +14,9 @@ After that, you can simply surf into [localhost:8080](http://localhost:8080) to 
 
 ![image](https://bitbucket.org/captnswing/webscreenshots/raw/default/webscreenshots.png)
 
-The `Vagrantfile` included in this project will - together with Berkshelf - takes care of downloading all the required cookbooks and provide them to the VM before chef-solo is run there.
+The `Vagrantfile` included in this project will - together with Berkshelf - download all the required cookbooks and provide them to the VM before chef-solo is run there.
 
-And yes: there [is a chef cookbook](https://github.com/captnswing/chef-webscreenshots) for this project.
+And yes: I wrote a [chef cookbook](https://github.com/captnswing/chef-webscreenshots) for this project.
 
 ### Ok, so how do I install the prerequisites for this project then?
 
@@ -62,7 +62,7 @@ Now you can easily install the required gems - without `sudo`:
 
     bundle install
 
-### And now what?
+### Puh. And now what?
 
 Just do
 

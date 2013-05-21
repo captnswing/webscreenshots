@@ -22,6 +22,7 @@
 * [phantom.js](http://phantomjs.org/)
 * [casper.js](http://casperjs.org/)
 * [ghost.py](http://jeanphix.me/Ghost.py/)
+* [phantompy](https://github.com/niwibe/phantompy)
 * [python-webkit2png](https://github.com/AdamN/python-webkit2png)
 * [webkit2png](http://www.paulhammond.org/webkit2png)
 * [khtml2png](http://khtml2png.sourceforge.net)
@@ -42,14 +43,14 @@ not really relevant for this project
 ### S3 Bucket setup
 
 * world readable
-* writeable only by custom IAM user with custom policy 
+* writeable only by custom IAM user with custom policy
 * 1825 days expiration for files, files will be deleted afterwards
 * cloudfront enabled
-* nginx as proxy 
+* nginx as proxy
 
 ### idea: nicer select boxes
 
-use django forms? 
+use django forms?
 
 * http://ivaynberg.github.io/select2/select2-latest.html
 * https://github.com/applegrew/django-select2
