@@ -12,7 +12,7 @@ This will start the virtual machine, and run chef-solo on it, to install all the
 
 After that, you can simply surf into [localhost:8080](http://localhost:8080) to see the working, running website.
 
-![image](https://bitbucket.org/captnswing/webscreenshots/raw/default/webscreenshots.png)
+![image](https://raw.github.com/captnswing/webscreenshots/master/webscreenshots.png)
 
 The `Vagrantfile` included in this project will - together with Berkshelf - download all the required cookbooks and provide them to the VM before chef-solo is run there.
 
