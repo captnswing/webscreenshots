@@ -2,7 +2,7 @@ Vagrant.configure("2") do |config|
   config.berkshelf.enabled = true
   config.berkshelf.berksfile_path = './Berksfile'
   config.vm.box = "opscode-ubuntu-1204"
-  config.vm.box_url = "https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_chef-11.2.0.box"
+  config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_chef-11.2.0.box"
 
   config.vm.hostname = "webscreenshots.vagrant"
 
