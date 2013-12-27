@@ -24,36 +24,25 @@ And yes: I wrote a [chef cookbook](https://github.com/captnswing/chef-webscreens
 
 Using a terminal on a Mac:
 
-    curl -O http://dlc.sun.com.edgesuite.net/virtualbox/4.2.6/VirtualBox-4.2.6-82870-OSX.dmg
-    hdid VirtualBox-4.2.6-82870-OSX.dmg
+    curl -O http://download.virtualbox.org/virtualbox/4.3.6/VirtualBox-4.3.6-91406-OSX.dmg
+    hdid VirtualBox-4.3.6-91406-OSX.dmg
     sudo installer -target '/' -pkg /Volumes/VirtualBox/VirtualBox.pkg
-    diskutil eject /Volumes/VirtualBox; rm VirtualBox-4.2.6-82870-OSX.dmg
+    diskutil eject /Volumes/VirtualBox; rm VirtualBox-4.3.6-91406-OSX.dmg
 
 ##### install vagrant & berkshelf
 
-curl -O http://files.vagrantup.com/packages/67bd4d30f7dbefa7c0abc643599f0244986c38c8/Vagrant.dmg
-hdid Vagrant.dmg
-sudo installer -target '/' -pkg /Volumes/Vagrant/Vagrant.pkg
-diskutil eject /Volumes/Vagrant
-vagrant plugin install berkshelf-vagrant
+    curl -O https://dl.bintray.com/mitchellh/vagrant/Vagrant-1.4.1.dmg
+    hdid Vagrant-1.4.1.dmg
+    sudo installer -target '/' -pkg /Volumes/Vagrant/Vagrant.pkg
+    diskutil eject /Volumes/Vagrant; rm Vagrant-1.4.1.dmg
+    vagrant plugin install berkshelf-vagrant
 
 ##### install rvm & ruby 1.9.3
 
 If you're not a ruby developer, and you don't have any special ruby requirements, trust me: just go with the following
 
-###### Pre OS X 10.8.2
-
     curl -L https://get.rvm.io | bash -s stable --ruby
-    rvm install 1.9.3 --enable-shared --without-tk --without-tcl
-    rvm --default use 1.9.3
-
-###### 10.8.2 and later
-
-Reason: gcc 4.2 removed by Apple, trouble with openssl
-
-    curl -L https://get.rvm.io | bash -s stable --ruby
-    sudo port install apple-gcc42 openssl
-    CC=/opt/local/bin/gcc-apple-4.2 rvm install 1.9.3 --with-openssl-dir=/opt/local
+    rvm install 1.9.3
     rvm --default use 1.9.3
 
 ##### install chef-client, knife, knife-ec2 and knife-solo
