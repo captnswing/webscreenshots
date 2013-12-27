@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     chef.log_level = :info
     chef.add_recipe "chef-base"
     chef.add_recipe "chef-msttcorefonts"
-    chef.add_recipe "webscreenshots"
+    chef.add_recipe "chef-webscreenshots"
 
     chef.json = {
         "webscreenshots" => {
