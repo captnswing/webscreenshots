@@ -35,7 +35,7 @@ Using a terminal on a Mac:
     hdid Vagrant-1.4.1.dmg
     sudo installer -target '/' -pkg /Volumes/Vagrant/Vagrant.pkg
     diskutil eject /Volumes/Vagrant; rm Vagrant-1.4.1.dmg
-    vagrant plugin install berkshelf-vagrant
+    vagrant plugin install vagrant-berkshelf
 
 ##### install rvm & ruby 1.9.3
 
