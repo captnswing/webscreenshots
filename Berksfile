@@ -1,11 +1,14 @@
-cookbook 'postgresql'#,  git: 'https://github.com/opscode-cookbooks/postgresql.git'
-cookbook 'python'#,  git: 'https://github.com/opscode-cookbooks/python.git'
-cookbook 'nginx',                 git: 'https://github.com/opscode-cookbooks/nginx.git'
-#cookbook 'chef-base',            git: 'https://github.com/captnswing/chef-base.git'
-#cookbook 'chef-msttcorefonts',   git: 'https://github.com/captnswing/chef-msttcorefonts'
-#cookbook 'chef-webscreenshots',  git: 'https://github.com/captnswing/chef-webscreenshots'
-cookbook 'chef-base',             path: '/Users/frank/Development/chef-cookbooks/chef-base'
-cookbook 'chef-msttcorefonts',    path: '/Users/frank/Development/chef-cookbooks/chef-msttcorefonts'
-cookbook 'chef-webscreenshots',   path: '/Users/frank/Development/chef-cookbooks/chef-webscreenshots'
 cookbook 'redisio'
 cookbook 'apt'
+cookbook 'postgresql'
+cookbook 'python'
+cookbook 'nginx'
+
+#cookbook 'chef-base',             git: 'https://github.com/captnswing/chef-base.git'
+cookbook 'chef-base',             path: '~/Development/chef-cookbooks/chef-base'
+
+#cookbook 'chef-msttcorefonts',    git: 'https://github.com/captnswing/chef-msttcorefonts'
+cookbook 'chef-msttcorefonts',    path: '~/Development/chef-cookbooks/chef-msttcorefonts'
+
+#cookbook 'chef-webscreenshots',   git: 'https://github.com/captnswing/chef-webscreenshots'
+cookbook 'chef-webscreenshots',   path: '~/Development/chef-cookbooks/chef-webscreenshots'
