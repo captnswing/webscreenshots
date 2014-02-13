@@ -11,9 +11,9 @@ AWS_ACCESS_KEY = "AKIAJFHPRRM3PUMAEATQ"
 AWS_SECRET_KEY = "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"
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'webscreenshots',
-        'USER': 'root',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'hoffsummer',
         'PASSWORD': 'mp109',
         'HOST': 'localhost',
         'PORT': '',
