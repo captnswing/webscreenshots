@@ -117,25 +117,7 @@
         }
     },
     {
-        "pk": 14,
-        "model": "main.website",
-        "fields": {
-            "url": "http://nyheter24.se",
-            "category": "2",
-            "title": "Nyheter24"
-        }
-    },
-    {
         "pk": 15,
-        "model": "main.website",
-        "fields": {
-            "url": "http://nyheter.se.msn.com",
-            "category": "2",
-            "title": "MSN Nyheter"
-        }
-    },
-    {
-        "pk": 16,
         "model": "main.website",
         "fields": {
             "url": "http://nyheter.se.msn.com",
@@ -159,15 +141,6 @@
             "url": "http://www.nrk.no",
             "category": "1",
             "title": "NRK"
-        }
-    },
-    {
-        "pk": 19,
-        "model": "main.website",
-        "fields": {
-            "url": "http://bbc.co.uk/news",
-            "category": "1",
-            "title": "BBC News"
         }
     },
     {
@@ -798,24 +771,6 @@
             "url": "http://www.unt.se",
             "category": "3",
             "title": "Unt"
-        }
-    },
-    {
-        "pk": 226,
-        "model": "main.website",
-        "fields": {
-            "url": "http://edition.cnn.com",
-            "category": "1",
-            "title": "CNN"
-        }
-    },
-    {
-        "pk": 227,
-        "model": "main.website",
-        "fields": {
-            "url": "http://www.nrk.no",
-            "category": "1",
-            "title": "NRK"
         }
     },
     {
