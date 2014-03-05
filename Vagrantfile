@@ -3,7 +3,6 @@ Vagrant.configure("2") do |config|
   config.berkshelf.berksfile_path = './Berksfile'
   config.vm.box = "opscode-ubuntu-1204"
   config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_chef-11.2.0.box"
-
   config.vm.hostname = "webscreenshots.vagrant"
 
   config.vm.provider :virtualbox do |vb|
@@ -13,6 +12,8 @@ Vagrant.configure("2") do |config|
     #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
   end
 
+  # add private IP
+  config.vm.network :private_network, ip: "192.168.33.199"
   # make postgres server accessible from host environment
   config.vm.network :forwarded_port, guest: 5432, host: 5432
   # flower gui
