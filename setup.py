@@ -32,6 +32,8 @@ setup(
         "psycopg2",
         "python-dateutil < 2",
         "pytz",
+        "requests",
+        "pyquery",
         "supervisor",
         "fabric",
         "south",
