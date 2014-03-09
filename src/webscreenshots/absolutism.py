@@ -1,9 +1,61 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import unittest
-from pyquery import PyQuery as pq
-from fetch_html import *
 from urlparse import urlsplit
+from pyquery import PyQuery as pq
+
+
+def add_base_tag(d, base_url):
+    # add (or update) base tag!
+    if d('base'):
+        d('base').attr['href'] = base_url
+    else:
+        d('head').append('<base href="{}"'.format(base_url))
+    return d
+
+
+def make_absolute_script(d, base_url):
+    for fix_script in d('script[src^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_script).attr['src'].lstrip('/')
+        pq(fix_script).attr['src'] = absolutepath
+    return d
+
+
+def make_absolute_img(d, base_url):
+    for fix_img in d('img[src^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_img).attr['src'].lstrip('/')
+        pq(fix_img).attr['src'] = absolutepath
+    return d
+
+
+def make_absolute_link(d, base_url):
+    for fix_link in d('link[href^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_link).attr['href'].lstrip('/')
+        pq(fix_link).attr['href'] = absolutepath
+    return d
+
+
+def make_absolute_a(d, base_url):
+    # from http://pythonhosted.org/pyquery/tips.html
+    # doesn't seem to work
+    # d.make_links_absolute(base_url=base_url)
+    for fix_a in d('a[href^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_a).attr['href'].lstrip('/')
+        pq(fix_a).attr['href'] = absolutepath
+    return d
+
+
+def make_absolute(d, base_url):
+    d = add_base_tag(d, base_url)
+    d = make_absolute_script(d, base_url)
+    d = make_absolute_link(d, base_url)
+    d = make_absolute_a(d, base_url)
+    d = make_absolute_img(d, base_url)
+    return d
 
 
 class TestAbsolute(unittest.TestCase):
@@ -98,15 +150,9 @@ class TestHtmlConversion(unittest.TestCase):
         #print self.testcss
 
     def test_relative_to_absolute(self):
-        d = make_relative(self.d, self.base_url)
+        d = make_absolute(self.d, self.base_url)
         print d.outer_html()
-
-
-def main():
-    filename = "data/aftonbladet.se.html"
-    download_css(filename)
 
 
 if __name__ == '__main__':
     unittest.main()
-    #main()
