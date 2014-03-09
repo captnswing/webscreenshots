@@ -114,18 +114,13 @@ class TestAbsolute(unittest.TestCase):
     def test_add_base_tag(self):
         # basic test html
         test_html = """<html><head></head><body></body></html>"""
-        test_html_with_base = """<html><head><base href="http://test123"></head><body></body></html>"""
         # parse test html
         without_base = pq(test_html, parser='html')
-        with_base = pq(test_html_with_base, parser='html')
         # confirm input conditions
         self.assertIsNone(without_base('base').attr['href'])
-        self.assertEquals(with_base('base').attr['href'], "http://test123")
         # add / update base tage
-        d_with_base = add_base_tag(with_base, self.base_url)
         d_without_base = add_base_tag(without_base, self.base_url)
         # check that base tag exists in head and that it has correct href attribute
-        self.assertEquals(d_with_base('base').attr['href'], self.base_url)
         self.assertEquals(d_without_base('base').attr['href'], self.base_url)
         #print self.d.outer_html()
 
