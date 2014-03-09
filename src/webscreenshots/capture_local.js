@@ -3,6 +3,11 @@ var casper = require('casper').create({
     logLevel: "info",
     waitTimeout: 40000,
     timeout: 40000,
+    pageSettings: {
+        loadPlugins: true,
+        loadImages: true,
+        javascriptEnabled: true
+    },
     viewportSize: {width: 1280, height: 800}
 });
 
@@ -43,7 +48,7 @@ casper.each(htmlfiles, function (casper, htmlfile) {
         this.evaluate(function () {
             document.body.style.backgroundColor = '#fff';
         });
-        this.capture('/tmp/test.png');
+        this.capture(htmlfile+'.png');
     });
 });
 

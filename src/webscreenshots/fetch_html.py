@@ -3,7 +3,6 @@
 from main.models import WebSite
 import hashlib
 import multiprocessing
-import codecs
 from pyquery import PyQuery as pq
 import requests
 from urlparse import urlparse
