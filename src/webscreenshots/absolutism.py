@@ -6,10 +6,8 @@ from pyquery import PyQuery as pq
 
 
 def add_base_tag(d, base_url):
-    # add (or update) base tag!
-    if d('base'):
-        d('base').attr['href'] = base_url
-    else:
+    # add base tag if it doesn't exist
+    if not d('base'):
         d('head').append('<base href="{}"'.format(base_url))
     return d
 
@@ -138,16 +136,11 @@ class TestHtmlConversion(unittest.TestCase):
         self.base_url = "http://sverigesradio.se/blekinge"
         self.testhtml = open('main/fixtures/simpletest.html', 'r').read()
         self.d = pq(self.testhtml, parser='html')
-        self.testcss = open('main/fixtures/test.css', 'r').read()
 
     def test_parse_html(self):
         testhtml = open('main/fixtures/simpletest.html', 'r').read()
         d = pq(testhtml, parser='html')
         #print d.outerHtml()
-
-    def test_css_urls(self):
-        pass
-        #print self.testcss
 
     def test_relative_to_absolute(self):
         d = make_absolute(self.d, self.base_url)
