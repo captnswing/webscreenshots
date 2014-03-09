@@ -9,12 +9,6 @@ import requests
 from urlparse import urlparse
 
 
-def download_css(filename):
-    d = pq(open(filename).read())
-    for fixl in d('link[href^="/"]'):
-        print pq(fixl).attr['href']
-
-
 def add_base_tag(d, base_url):
     # add (or update) base tag!
     if d('base'):
@@ -23,22 +17,39 @@ def add_base_tag(d, base_url):
         d('head').append('<base href="{}"'.format(base_url))
     return d
 
-def make_absolute(d, base_url):
 
-    # finds all script tags that have a src attribute whose value starts with '/'
-    for fixs in d('script[src^="/"]'):
+def make_absolute_script(d, base_url):
+    for fix_script in d('script[src^="/"]'):
         # prepend base_url to the src value
-        absolutepath = base_url + pq(fixs).attr['src']
-        pq(fixs).attr['src'] = absolutepath
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_script).attr['src'].lstrip('/')
+        pq(fix_script).attr['src'] = absolutepath
+    return d
 
+
+def make_absolute_img(d, base_url):
+    for fix_img in d('img[src^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_img).attr['src'].lstrip('/')
+        pq(fix_img).attr['src'] = absolutepath
+    return d
+
+
+def make_absolute_link(d, base_url):
+    for fix_link in d('link[href^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_link).attr['href'].lstrip('/')
+        pq(fix_link).attr['href'] = absolutepath
+    return d
+
+
+def make_absolute_a(d, base_url):
     # from http://pythonhosted.org/pyquery/tips.html
-    d.make_links_absolute(base_url=base_url)
-
-    # finds all link tags that have a href attribute whose value starts with '/'
-    # for fixl in d('link[href^="/"]'):
-    #     absolutepath = base_url + pq(fixl).attr['href']
-    #     pq(fixl).attr['href'] = absolutepath
-    #     print absolutepath
+    # doesn't seem to work
+    # d.make_links_absolute(base_url=base_url)
+    for fix_a in d('a[href^="/"]'):
+        # prepend base_url to the src value
+        absolutepath = base_url.rstrip('/') + '/' + pq(fix_a).attr['href'].lstrip('/')
+        pq(fix_a).attr['href'] = absolutepath
     return d
 
 
@@ -50,7 +61,32 @@ def write_html(d, html_filename):
     html.close()
 
 
-def save_html(website):
+def download_css(filename):
+    d = pq(open(filename).read())
+    for fixl in d('link[href^="/"]'):
+        print pq(fixl).attr['href']
+
+
+def make_relative(d, base_url):
+    d = add_base_tag(d, base_url)
+    d = make_absolute_script(d, base_url)
+    d = make_absolute_link(d, base_url)
+    d = make_absolute_a(d, base_url)
+    d = make_absolute_img(d, base_url)
+    return d
+
+
+def get_html(url):
+    try:
+        d = pq(url, parser='html')
+    except ValueError:
+        r = requests.get(url)
+        cleanhtml = r.text.replace("""<?xml version="1.0" encoding="UTF-8"?>""", "")
+        d = pq(cleanhtml, parser='html')
+    return d
+
+
+def workon(website):
     """thread worker function"""
 
     # base variables
@@ -60,14 +96,12 @@ def save_html(website):
     print 'get:   {}'.format(website.url)
 
     # fetch html
-    try:
-        d = pq(website.url, parser='html')
-    except ValueError:
-        r = requests.get(website.url)
-        cleanhtml = r.text.replace("""<?xml version="1.0" encoding="UTF-8"?>""", "")
-        d = pq(cleanhtml, parser='html')
+    d = get_html(website.url)
 
-    d = make_absolute(d, base_url)
+    # make relative
+    d = make_relative(d, base_url)
+
+    # write html to file
     html_filename = '{}.html'.format(canonical_url.replace('/', '_'))
     write_html(d, html_filename)
     return
@@ -76,9 +110,9 @@ def save_html(website):
 def main():
     jobs = []
     for ws in WebSite.objects.all():
-        # if not ws.title == "Aftonbladet":
-        #     continue
-        p = multiprocessing.Process(target=save_html, args=(ws,))
+        if not ws.title == "Aftonbladet":
+            continue
+        p = multiprocessing.Process(target=workon, args=(ws,))
         jobs.append(p)
         p.start()
 
