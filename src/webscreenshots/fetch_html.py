@@ -7,6 +7,7 @@ import codecs
 from pyquery import PyQuery as pq
 import requests
 from urlparse import urlparse
+from lxml.html import tostring as html2str
 
 
 def add_base_tag(d, base_url):
@@ -53,20 +54,6 @@ def make_absolute_a(d, base_url):
     return d
 
 
-def write_html(d, html_filename):
-    """write html to file"""
-    html = codecs.open('data/{}'.format(html_filename), 'wb', 'utf-8')
-    print 'write: {}'.format(html_filename)
-    html.write(d.outer_html())
-    html.close()
-
-
-def download_css(filename):
-    d = pq(open(filename).read())
-    for fixl in d('link[href^="/"]'):
-        print pq(fixl).attr['href']
-
-
 def make_relative(d, base_url):
     d = add_base_tag(d, base_url)
     d = make_absolute_script(d, base_url)
@@ -76,14 +63,28 @@ def make_relative(d, base_url):
     return d
 
 
+def download_css(filename):
+    d = pq(open(filename).read())
+    for fixl in d('link[href^="/"]'):
+        print pq(fixl).attr['href']
+
+
 def get_html(url):
-    try:
-        d = pq(url, parser='html')
-    except ValueError:
-        r = requests.get(url)
-        cleanhtml = r.text.replace("""<?xml version="1.0" encoding="UTF-8"?>""", "")
-        d = pq(cleanhtml, parser='html')
+    """get html and parse it into DOM object"""
+    print 'get: {}'.format(url)
+    r = requests.get(url)
+    cleanhtml = r.text.replace("""<?xml version="1.0" encoding="UTF-8"?>""", "")
+    d = pq(cleanhtml, parser='html')
     return d
+
+
+def write_html(d, html_filename):
+    """write html to file"""
+    html = open('data/{}'.format(html_filename), 'wb')
+    # from http://stackoverflow.com/a/13444679/41404
+    html.write(html2str(d.root))
+    print 'wrote: {}'.format(html_filename)
+    html.close()
 
 
 def workon(website):
@@ -93,7 +94,6 @@ def workon(website):
     canonical_url = website.url.replace('http://', '').replace('www.', '')
     hashed_url = hashlib.md5(canonical_url).hexdigest()
     base_url = "://".join(urlparse(website.url)[:2])
-    print 'get:   {}'.format(website.url)
 
     # fetch html
     d = get_html(website.url)
@@ -110,8 +110,8 @@ def workon(website):
 def main():
     jobs = []
     for ws in WebSite.objects.all():
-        if not ws.title == "Aftonbladet":
-            continue
+        # if not ws.title == "SR P4 Blekinge":
+        #     continue
         p = multiprocessing.Process(target=workon, args=(ws,))
         jobs.append(p)
         p.start()
