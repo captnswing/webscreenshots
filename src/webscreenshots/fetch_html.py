@@ -8,7 +8,7 @@ from pyquery import PyQuery as pq
 import requests
 from lxml.html import tostring as html2str
 from main.models import WebSite
-from webscreenshots.absolutism import make_absolute
+from webscreenshots.absolutism import make_all_absolute
 
 
 def get_html(url):
@@ -40,7 +40,7 @@ def workon(website):
     d = get_html(website.url)
 
     # make absolute
-    d = make_absolute(d, base_url)
+    d = make_all_absolute(d, base_url)
 
     # write html to file
     html_filename = '{}.html'.format(canonical_url.replace('/', '_'))

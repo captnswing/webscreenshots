@@ -3,6 +3,7 @@
 import unittest
 from urlparse import urlsplit
 from pyquery import PyQuery as pq
+import sys
 
 
 def add_base_tag(d, base_url):
@@ -12,42 +13,28 @@ def add_base_tag(d, base_url):
     return d
 
 
-def make_absolute_script(d, base_url):
-    for fix_script in d('script[src^="/"]'):
-        # prepend base_url to the src value
-        absolutepath = base_url.rstrip('/') + '/' + pq(fix_script).attr['src'].lstrip('/')
-        pq(fix_script).attr['src'] = absolutepath
-    return d
+def generate_absolute(tag_name, attribute_name):
+    """
+    returns a function that makes the relatives links in the <attribute_name> relative
+    for the specified <tag_name>
+    """
+    def make_absolute(d, base_url):
+        selector = '{}[{}^="/"]'.format(tag_name, attribute_name)
+        for fix_tag in d(selector):
+            # prepend base_url to the src value
+            absolutepath = base_url.rstrip('/') + '/' + pq(fix_tag).attr[attribute_name].lstrip('/')
+            pq(fix_tag).attr[attribute_name] = absolutepath
+        return d
+    return make_absolute
 
 
-def make_absolute_img(d, base_url):
-    for fix_img in d('img[src^="/"]'):
-        # prepend base_url to the src value
-        absolutepath = base_url.rstrip('/') + '/' + pq(fix_img).attr['src'].lstrip('/')
-        pq(fix_img).attr['src'] = absolutepath
-    return d
+make_absolute_script = generate_absolute('script', 'src')
+make_absolute_link = generate_absolute('link', 'href')
+make_absolute_a = generate_absolute('a', 'href')
+make_absolute_img = generate_absolute('img', 'src')
 
 
-def make_absolute_link(d, base_url):
-    for fix_link in d('link[href^="/"]'):
-        # prepend base_url to the src value
-        absolutepath = base_url.rstrip('/') + '/' + pq(fix_link).attr['href'].lstrip('/')
-        pq(fix_link).attr['href'] = absolutepath
-    return d
-
-
-def make_absolute_a(d, base_url):
-    # from http://pythonhosted.org/pyquery/tips.html
-    # doesn't seem to work
-    # d.make_links_absolute(base_url=base_url)
-    for fix_a in d('a[href^="/"]'):
-        # prepend base_url to the src value
-        absolutepath = base_url.rstrip('/') + '/' + pq(fix_a).attr['href'].lstrip('/')
-        pq(fix_a).attr['href'] = absolutepath
-    return d
-
-
-def make_absolute(d, base_url):
+def make_all_absolute(d, base_url):
     d = add_base_tag(d, base_url)
     d = make_absolute_script(d, base_url)
     d = make_absolute_link(d, base_url)
@@ -63,53 +50,42 @@ class TestAbsolute(unittest.TestCase):
         self.testhtml = open('main/fixtures/simpletest.html', 'r').read()
         self.d = pq(self.testhtml, parser='html')
 
-    def test_make_absolute_a(self):
-        before_hrefs = [ pq(h).attr['href'] for h in self.d('a[href]') ]
-        # confirm input conditions, all relative links in test html
-        self.assertListEqual(['/', ]*len(before_hrefs), [ u[0] for u in before_hrefs ])
-        # make link hrefs absolute
-        d = make_absolute_a(self.d, self.base_url)
-        after_hrefs = [ pq(h).attr['href'] for h in d('a[href]') ]
-        # confirm absolute links in test html
-        b_scheme = '{}://'.format(urlsplit(self.base_url).scheme)
-        self.assertListEqual([b_scheme,]*len(before_hrefs), [ u[0:len(b_scheme)] for u in after_hrefs ])
-        # print self.d.outer_html()
+    def generate_absolute_test(self, tag_name, attribute_name):
+        """
+        returns a function that makes the relatives links in the <attribute_name> relative
+        for the specified <tag_name>
+        """
+        def test_make_absolute(self):
+            selector = '{}[{}]'.format(tag_name, attribute_name)
+            before_hrefs = [ pq(h).attr[attribute_name] for h in self.d(selector) ]
+            # confirm input conditions, all relative links in test html
+            self.assertListEqual(['/', ]*len(before_hrefs), [ u[0] for u in before_hrefs ])
+            # make <attribute_name> values absolute for <tag_name>
+            func_name = 'make_absolute_{}'.format(tag_name)
+            this_module = sys.modules[__name__]
+            d = getattr(this_module, func_name)(self.d, self.base_url)
+            after_hrefs = [ pq(h).attr[attribute_name] for h in d(selector) ]
+            # confirm absolute links in test html
+            b_scheme = '{}://'.format(urlsplit(self.base_url).scheme)
+            self.assertListEqual([b_scheme,]*len(before_hrefs), [ u[0:len(b_scheme)] for u in after_hrefs ])
+            #print self.d.outer_html()
+        return test_make_absolute
 
-    def test_make_absolute_img(self):
-        before_src = [ pq(h).attr['src'] for h in self.d('img[src]') ]
-        # confirm input conditions, all relative src in test html images
-        self.assertListEqual(['/', ]*len(before_src), [ u[0] for u in before_src ])
-        # make img src absolute
-        d = make_absolute_img(self.d, self.base_url)
-        after_src = [ pq(h).attr['src'] for h in d('img[src]') ]
-        # confirm absolute src for images in test html
-        b_scheme = '{}://'.format(urlsplit(self.base_url).scheme)
-        self.assertListEqual([b_scheme,]*len(before_src), [ u[0:len(b_scheme)] for u in after_src ])
-        # print self.d.outer_html()
+    def test_a(self):
+        test_make_absolute_a = self.generate_absolute_test('a', 'href')
+        test_make_absolute_a(self)
 
-    def test_make_absolute_link(self):
-        before_hrefs = [ pq(h).attr['href'] for h in self.d('link[href]') ]
-        # confirm input conditions, all relative src in test html images
-        self.assertListEqual(['/', ]*len(before_hrefs), [ u[0] for u in before_hrefs ])
-        # make img src absolute
-        d = make_absolute_link(self.d, self.base_url)
-        after_hrefs = [ pq(h).attr['href'] for h in d('link[href]') ]
-        # confirm absolute src for images in test html
-        b_scheme = '{}://'.format(urlsplit(self.base_url).scheme)
-        self.assertListEqual([b_scheme,]*len(after_hrefs), [ u[0:len(b_scheme)] for u in after_hrefs ])
-        # print self.d.outer_html()
+    def test_script(self):
+        test_make_absolute_script = self.generate_absolute_test('script', 'src')
+        test_make_absolute_script(self)
 
-    def test_make_absolute_script(self):
-        before_src = [ pq(h).attr['src'] for h in self.d('script[src]') ]
-        # confirm input conditions, all relative src in test html images
-        self.assertListEqual(['/', ]*len(before_src), [ u[0] for u in before_src ])
-        # make img src absolute
-        d = make_absolute_script(self.d, self.base_url)
-        after_src = [ pq(h).attr['src'] for h in d('script[src]') ]
-        # confirm absolute src for images in test html
-        b_scheme = '{}://'.format(urlsplit(self.base_url).scheme)
-        self.assertListEqual([b_scheme,]*len(before_src), [ u[0:len(b_scheme)] for u in after_src ])
-        #print self.d.outer_html()
+    def test_link(self):
+        test_make_absolute_link = self.generate_absolute_test('link', 'href')
+        test_make_absolute_link(self)
+
+    def test_img(self):
+        test_make_absolute_img = self.generate_absolute_test('img', 'src')
+        test_make_absolute_img(self)
 
     def test_add_base_tag(self):
         # basic test html
@@ -138,7 +114,7 @@ class TestHtmlConversion(unittest.TestCase):
         #print d.outerHtml()
 
     def test_relative_to_absolute(self):
-        d = make_absolute(self.d, self.base_url)
+        d = make_all_absolute(self.d, self.base_url)
         print d.outer_html()
 
 
