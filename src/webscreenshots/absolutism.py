@@ -6,13 +6,6 @@ from pyquery import PyQuery as pq
 import sys
 
 
-def add_base_tag(d, base_url):
-    # add base tag if it doesn't exist
-    if not d('base'):
-        d('head').append('<base href="{}"'.format(base_url))
-    return d
-
-
 def generate_absolute(tag_name, attribute_name):
     """
     returns a function that makes the relatives links in the <attribute_name> relative
@@ -43,6 +36,13 @@ def make_all_absolute(d, base_url):
     return d
 
 
+def add_base_tag(d, base_url):
+    # add base tag if it doesn't exist
+    if not d('base'):
+        d('head').append('<base href="{}"'.format(base_url))
+    return d
+
+
 class TestAbsolute(unittest.TestCase):
 
     def setUp(self):
@@ -52,8 +52,7 @@ class TestAbsolute(unittest.TestCase):
 
     def generate_absolute_test(self, tag_name, attribute_name):
         """
-        returns a function that makes the relatives links in the <attribute_name> relative
-        for the specified <tag_name>
+        returns a test function that tests the make_absolute_<tag_name> function
         """
         def test_make_absolute(self):
             selector = '{}[{}]'.format(tag_name, attribute_name)
@@ -68,37 +67,40 @@ class TestAbsolute(unittest.TestCase):
             # confirm absolute links in test html
             b_scheme = '{}://'.format(urlsplit(self.base_url).scheme)
             self.assertListEqual([b_scheme,]*len(before_hrefs), [ u[0:len(b_scheme)] for u in after_hrefs ])
-            #print self.d.outer_html()
         return test_make_absolute
 
     def test_a(self):
+        """testing make_absolute_a"""
         test_make_absolute_a = self.generate_absolute_test('a', 'href')
         test_make_absolute_a(self)
 
     def test_script(self):
+        """testing make_absolute_script"""
         test_make_absolute_script = self.generate_absolute_test('script', 'src')
         test_make_absolute_script(self)
 
     def test_link(self):
+        """test make_absolute_link"""
         test_make_absolute_link = self.generate_absolute_test('link', 'href')
         test_make_absolute_link(self)
 
     def test_img(self):
+        """test make_absolute_img"""
         test_make_absolute_img = self.generate_absolute_test('img', 'src')
         test_make_absolute_img(self)
 
     def test_add_base_tag(self):
-        # basic test html
+        """test add_base_tag"""
+        # basic html as test data
         test_html = """<html><head></head><body></body></html>"""
         # parse test html
         without_base = pq(test_html, parser='html')
         # confirm input conditions
         self.assertIsNone(without_base('base').attr['href'])
-        # add / update base tage
+        # add base tage
         d_without_base = add_base_tag(without_base, self.base_url)
         # check that base tag exists in head and that it has correct href attribute
         self.assertEquals(d_without_base('base').attr['href'], self.base_url)
-        #print self.d.outer_html()
 
 
 class TestHtmlConversion(unittest.TestCase):
@@ -107,11 +109,6 @@ class TestHtmlConversion(unittest.TestCase):
         self.base_url = "http://sverigesradio.se/blekinge"
         self.testhtml = open('main/fixtures/simpletest.html', 'r').read()
         self.d = pq(self.testhtml, parser='html')
-
-    def test_parse_html(self):
-        testhtml = open('main/fixtures/simpletest.html', 'r').read()
-        d = pq(testhtml, parser='html')
-        #print d.outerHtml()
 
     def test_relative_to_absolute(self):
         d = make_all_absolute(self.d, self.base_url)
