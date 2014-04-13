@@ -1,0 +1,17 @@
+- name: run apt-get update
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: update all packages to the latest version
+  apt: upgrade=dist
+
+- name: install curl and screen
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - curl
+    - screen
+
+- name: install saneshell.sh
+  copy: src=saneshell.sh dest=/etc/profile.d/saneshell.sh
+
+- name: install .screenrc
+  copy: src=screenrc dest=/home/vagrant/.screenrc
