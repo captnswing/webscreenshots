@@ -19,8 +19,8 @@
 
 ##### alternatives:
 
-* [phantom.js](http://phantomjs.org/)
 * [casper.js](http://casperjs.org/)
+* [phantom.js](http://phantomjs.org/)
 * [ghost.py](http://jeanphix.me/Ghost.py/)
 * [phantompy](https://github.com/niwibe/phantompy)
 * [python-webkit2png](https://github.com/AdamN/python-webkit2png)

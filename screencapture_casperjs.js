@@ -6,7 +6,7 @@ var casper = require('casper').create({
 var url = casper.cli.args[0];
 var filename = casper.cli.args[1];
 
-casper.userAgent(' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:20.0) Gecko/20100101 Firefox/20.0');
+casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:20.0) Gecko/20100101 Firefox/20.0');
 
 casper.on('http.status.301', function (resource) {
     this.log('Hey, this one is 301: ' + resource.url, 'warning');
