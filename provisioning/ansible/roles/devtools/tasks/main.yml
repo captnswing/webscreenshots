@@ -1,0 +1,5 @@
+- name: install virtualenvwrapper etc
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - virtualenvwrapper
+    - git-all
