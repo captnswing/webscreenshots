@@ -1,6 +1,47 @@
-- name: add ws user
-  user: name=ws password=ws comment=webscreenshots home={{ ws_home }} shell=/bin/bash
+- name: create {{ ws_home }} directory
+  shell: sudo mkdir -p {{ ws_home }}; sudo chown -R ws:ws {{ ws_home }}
+         creates={{ ws_home }}
 
-- name: mkdir {{ ws_home }}
-  file: path={{ ws_home }} state=directory recurse=yes owner=ws group=ws
+- name: create virtualenv in {{ ws_home }}
+  shell: virtualenv {{ ws_home }}
+         creates={{ ws_home }}/bin/activate
+
+- name: install supervisor
+  pip: name=supervisor
+       virtualenv={{ ws_home }}
+
+- name: install celery
+  pip: name=celery
+       virtualenv={{ ws_home }}
+
+- name: create subdirectories in {{ ws_home }}
+  file: path={{ item }}
+        state=directory
+        recurse=yes
+        owner=ws
+        group=ws
+  with_items:
+    - '{{ ws_home }}'
+    - '{{ ws_home }}/etc/supervisor/conf.d'
+    - '{{ ws_home }}/var/log'
+    - '{{ ws_home }}/var/run'
+
+- name: installing supervisor init script
+  template: src=supervisord_init.j2
+            dest={{ ws_home }}/etc/supervisor/supervisord_init.sh
+            mode=755
+  notify:
+    - reload supervisord
+
+- name: installing supervisor configuration
+  template: src=supervisord.conf.j2
+            dest={{ ws_home }}/etc/supervisor/supervisord.conf
+            mode=644
+  notify:
+    - reload supervisord
+
+- name: installing celeryd configuration for supervisor
+  template: src=celeryd.conf.j2
+            dest={{ ws_home }}/etc/supervisor/conf.d/celeryd.conf
+            mode=644
 

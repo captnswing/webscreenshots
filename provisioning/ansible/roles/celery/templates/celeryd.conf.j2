@@ -1,0 +1,17 @@
+; check out https://github.com/celery/celery/tree/master/extra/supervisord
+[program:celeryd_default]
+environment=DJANGO_SETTINGS_MODULE='',PYTHONPATH='.:$PYTHONPATH'
+directory={{ ws_home }}/src/webscreenshots
+command={{ ws_home }}/bin/celery worker
+    -c 10
+    -E
+    -A webscreenshots.celeryapp
+    -l info
+    -n default
+autorestart=true
+stdout_logfile={{ ws_home }}/var/log/%(program_name)s.log
+redirect_stderr=true
+startsecs=5
+stopwaitsecs=60
+stopsignal=TERM
+priority=20

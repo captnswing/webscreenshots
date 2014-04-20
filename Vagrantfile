@@ -20,8 +20,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "provisioning/ansible/site.yml"
     ansible.inventory_path = "provisioning/ansible/hosts"
-    #ansible.verbose = "vvvv"
-    #ansible.verbose = "v"
+    #ansible.verbose = "vvv"
     ansible.limit = 'all'
     #ansible.host_key_checking = false
   end

@@ -1,5 +1,13 @@
-- name: install virtualenvwrapper etc
+- name: run apt-get update
+  apt: update_cache=yes cache_valid_time=86400
+
+#- name: update all packages to the latest version
+#  apt: upgrade=dist
+
+- name: install tools
   apt: pkg={{ item }} state=latest
   with_items:
     - virtualenvwrapper
     - git-all
+    - curl
+    - screen

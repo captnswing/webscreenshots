@@ -1,0 +1,18 @@
+- name: install saneshell.sh
+  copy: src=saneshell.sh dest=/etc/profile.d/saneshell.sh
+
+- name: install screenrc
+  copy: src=screenrc dest=/etc/screenrc
+
+- lineinfile: create=yes mode=0440 dest=/etc/sudoers.d/ws state=present line='%ws ALL=NOPASSWD:ALL'
+
+- name: add ws user
+  user: name=ws
+        groups=ws,sudo,adm
+        password=ws
+        comment=webscreenshots
+        home=/home/ws
+        shell=/bin/bash
+
+- name: Add RSA key to the remote host
+  authorized_key: user=ws key="{{ lookup('file', '~/.ssh/id_dsa.pub') }}"
