@@ -13,7 +13,9 @@ celery.conf.update(
     CELERY_TIMEZONE='Europe/Stockholm',
     CELERY_IMPORTS='webscreenshots.celerytasks',
     CELERY_DISABLE_RATE_LIMITS=True,
-    CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml'],
+    CELERY_ACCEPT_CONTENT = ['json'],
+    CELERY_TASK_SERIALIZER = 'json',
+    CELERY_RESULT_SERIALIZER = 'json',
     CELERY_TASK_RESULT_EXPIRES=3600,
     BROKER_TRANSPORT_OPTIONS={'visibility_timeout': 3600},
     # http://stackoverflow.com/a/10756040/41404
