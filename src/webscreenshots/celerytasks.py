@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import subprocess
 import time
@@ -7,7 +8,7 @@ from celery.utils.log import get_task_logger
 from boto import connect_s3
 from boto.s3.key import Key
 from django.conf import settings
-from main.utils import roundTime
+from webscreenshots.main.utils import roundTime
 from webscreenshots.celeryapp import celery
 from webscreenshots.main.models import WebSite
 

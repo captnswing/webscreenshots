@@ -7,7 +7,7 @@ from urlparse import urlparse
 from pyquery import PyQuery as pq
 import requests
 from lxml.html import tostring as html2str
-from main.models import WebSite
+from webscreenshots.main.models import WebSite
 from webscreenshots.absolutism import make_all_absolute
 
 

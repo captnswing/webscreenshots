@@ -113,8 +113,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'main',
-    'statistics',
+    'webscreenshots.main',
+    'webscreenshots.statistics',
     'south',
 )
 

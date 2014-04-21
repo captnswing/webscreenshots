@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-from celeryapp import celery
+from webscreenshots.celeryapp import celery
 import collections
 import datetime
 
