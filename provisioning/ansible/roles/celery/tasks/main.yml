@@ -19,7 +19,7 @@
          creates={{ ws_home }}/bin/activate
 
 - name: install webscreenshots
-  shell: cd /vagrant; {{ ws_home }}/bin/python setup.py develop
+  shell: cd /vagrant; {{ ws_home }}/bin/pip install -e .
          creates={{ ws_home }}/lib/python2.7/site-packages/webscreenshots.egg-link
 
 - name: create subdirectories in {{ ws_home }}
@@ -32,6 +32,7 @@
     - '{{ ws_home }}'
     - '{{ ws_home }}/etc/supervisor/conf.d'
     - '{{ ws_home }}/var/log'
+    - '{{ ws_home }}/var/lib'
     - '{{ ws_home }}/var/run'
 
 - name: installing supervisor init script
@@ -49,6 +50,8 @@
 - name: installing celeryd configuration for supervisor
   template: src={{ item.src }} dest={{ item.dest }} mode=644
   with_items:
-    - { src: 'celeryd.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celeryd.ini' }
+    - { src: 'flower.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/flower.ini' }
+    - { src: 'celerybeat.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celerybeat.ini' }
+    - { src: 'celeryworker.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celeryworker.ini' }
     - { src: 'redis.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/redis.ini' }
   notify: reload supervisor jobs
