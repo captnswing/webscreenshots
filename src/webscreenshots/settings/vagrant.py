@@ -2,7 +2,7 @@
 from .base import *
 from fnmatch import fnmatch
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages_dev'
 CELERYD_LOGPATH = root('../../celerylogs')

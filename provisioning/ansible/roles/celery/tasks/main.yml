@@ -1,3 +1,13 @@
+- name: install dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libxml2-dev
+    - libxslt1-dev
+    - cython
+    - postgresql-server-dev-all
+    - python-dev
+    - redis-server
+
 - name: create {{ ws_home }} directory
   shell: sudo mkdir -p {{ ws_home }}; sudo chown -R ws:ws {{ ws_home }}
          creates={{ ws_home }}
@@ -26,22 +36,21 @@
     - '{{ ws_home }}/var/log'
     - '{{ ws_home }}/var/run'
 
+- name: installing celeryd configuration for supervisor
+  template: src={{ item.src }} dest={{ item.dest }} mode=644
+  with_items:
+    - { src: 'celeryd.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celeryd.ini' }
+    - { src: 'redis.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/redis.ini' }
+#  notify: reload supervisor jobs
+
 - name: installing supervisor init script
   template: src=supervisord_init.j2
             dest={{ ws_home }}/etc/supervisor/supervisord_init.sh
             mode=755
-  notify:
-    - reload supervisord
+  notify: reload supervisord
 
 - name: installing supervisor configuration
   template: src=supervisord.conf.j2
             dest={{ ws_home }}/etc/supervisor/supervisord.conf
             mode=644
-  notify:
-    - reload supervisord
-
-- name: installing celeryd configuration for supervisor
-  template: src=celeryd.conf.j2
-            dest={{ ws_home }}/etc/supervisor/conf.d/celeryd.conf
-            mode=644
-
+  notify: reload supervisord

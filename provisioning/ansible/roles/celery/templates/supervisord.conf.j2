@@ -21,7 +21,6 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 [supervisorctl]
 serverurl=unix:///tmp/supervisor.sock
 ;serverurl=http://localhost:9001
-;prompt=<%= node['hostname'] %>
 history_file={{ ws_home }}/.supervisorctl_history
 
 [include]

@@ -8,7 +8,7 @@
 
 - name: add ws user
   user: name=ws
-        groups=ws,sudo,adm
+        groups=adm,sudo
         password=ws
         comment=webscreenshots
         home=/home/ws

@@ -9,7 +9,7 @@
 
 - hosts: develop-vm
   remote_user: ws
-  sudo_user: ws
+  sudo_user: root
   sudo: yes
 
   roles:

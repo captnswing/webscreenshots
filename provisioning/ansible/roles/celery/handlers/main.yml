@@ -1,2 +1,5 @@
 - name: reload supervisord
   shell: "{{ ws_home }}/etc/supervisor/supervisord_init.sh restart"
+
+#- name: reload supervisor jobs
+#  shell: "echo hi"
