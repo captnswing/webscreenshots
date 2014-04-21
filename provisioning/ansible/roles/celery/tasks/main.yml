@@ -7,6 +7,8 @@
     - postgresql-server-dev-all
     - python-dev
     - redis-server
+    - libjpeg-dev
+    - libfreetype6-dev
 
 - name: create {{ ws_home }} directory
   shell: sudo mkdir -p {{ ws_home }}; sudo chown -R ws:ws {{ ws_home }}
