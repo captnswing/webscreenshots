@@ -18,13 +18,9 @@
   shell: virtualenv {{ ws_home }}
          creates={{ ws_home }}/bin/activate
 
-- name: install supervisor
-  pip: name=supervisor
-       virtualenv={{ ws_home }}
-
-- name: install celery
-  pip: name=celery
-       virtualenv={{ ws_home }}
+- name: install webscreenshots
+  shell: cd /vagrant; {{ ws_home }}/bin/python setup.py develop
+         creates={{ ws_home }}/lib/python2.7/site-packages/webscreenshots.egg-link
 
 - name: create subdirectories in {{ ws_home }}
   file: path={{ item }}
@@ -38,13 +34,6 @@
     - '{{ ws_home }}/var/log'
     - '{{ ws_home }}/var/run'
 
-- name: installing celeryd configuration for supervisor
-  template: src={{ item.src }} dest={{ item.dest }} mode=644
-  with_items:
-    - { src: 'celeryd.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celeryd.ini' }
-    - { src: 'redis.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/redis.ini' }
-#  notify: reload supervisor jobs
-
 - name: installing supervisor init script
   template: src=supervisord_init.j2
             dest={{ ws_home }}/etc/supervisor/supervisord_init.sh
@@ -56,3 +45,10 @@
             dest={{ ws_home }}/etc/supervisor/supervisord.conf
             mode=644
   notify: reload supervisord
+
+- name: installing celeryd configuration for supervisor
+  template: src={{ item.src }} dest={{ item.dest }} mode=644
+  with_items:
+    - { src: 'celeryd.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celeryd.ini' }
+    - { src: 'redis.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/redis.ini' }
+  notify: reload supervisor jobs
