@@ -4,7 +4,8 @@
     - libxml2-dev
     - libxslt1-dev
     - cython
-    - postgresql-server-dev-all
+    - postgresql
+    - postgresql-contrib
     - python-dev
     - redis-server
     - libjpeg-dev
