@@ -1,0 +1,17 @@
+- hosts: develop-vm
+  remote_user: vagrant
+  sudo: yes
+
+  roles:
+    - devuser
+    - devtools
+
+
+- hosts: develop-vm
+  remote_user: ws
+  sudo_user: root
+  sudo: yes
+
+  roles:
+    - celery
+

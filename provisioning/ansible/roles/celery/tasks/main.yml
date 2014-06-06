@@ -1,0 +1,62 @@
+- name: install dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libxml2-dev
+    - libxslt1-dev
+    - libjpeg-dev
+    - libfreetype6-dev
+    - cython
+    - python-dev
+    - redis-server
+    - postgresql
+    - postgresql-contrib
+    - postgresql-server-dev-all
+
+- name: create {{ ws_home }} directory
+  shell: sudo mkdir -p {{ ws_home }}; sudo chown -R ws:ws {{ ws_home }}
+         creates={{ ws_home }}
+
+- name: create virtualenv in {{ ws_home }}
+  shell: virtualenv {{ ws_home }}
+         creates={{ ws_home }}/bin/activate
+
+- name: update pip
+  shell: pip install -U pip
+
+- name: install webscreenshots
+  shell: cd /vagrant; {{ ws_home }}/bin/python setup.py develop
+         creates={{ ws_home }}/lib/python2.7/site-packages/webscreenshots.egg-link
+
+- name: create subdirectories in {{ ws_home }}
+  file: path={{ item }}
+        state=directory
+        recurse=yes
+        owner=ws
+        group=ws
+  with_items:
+    - '{{ ws_home }}'
+    - '{{ ws_home }}/etc/supervisor/conf.d'
+    - '{{ ws_home }}/var/log'
+    - '{{ ws_home }}/var/lib'
+    - '{{ ws_home }}/var/run'
+
+- name: installing supervisor init script
+  template: src=supervisord_init.j2
+            dest={{ ws_home }}/etc/supervisor/supervisord_init.sh
+            mode=755
+  notify: reload supervisord
+
+- name: installing supervisor configuration
+  template: src=supervisord.conf.j2
+            dest={{ ws_home }}/etc/supervisor/supervisord.conf
+            mode=644
+  notify: reload supervisord
+
+- name: installing celeryd configuration for supervisor
+  template: src={{ item.src }} dest={{ item.dest }} mode=644
+  with_items:
+    - { src: 'flower.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/flower.ini' }
+    - { src: 'celerybeat.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celerybeat.ini' }
+    - { src: 'celeryworker.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/celeryworker.ini' }
+    - { src: 'redis.ini.j2', dest: '{{ ws_home }}/etc/supervisor/conf.d/redis.ini' }
+  notify: reload supervisor jobs

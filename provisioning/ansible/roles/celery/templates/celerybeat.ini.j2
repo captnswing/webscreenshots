@@ -1,0 +1,17 @@
+; check out https://github.com/celery/celery/tree/master/extra/supervisord
+[program:celery_beat]
+environment=DJANGO_SETTINGS_MODULE='webscreenshots.settings.vagrant',PATH='{{ ws_home }}/bin:$PATH'
+directory={{ ws_home }}
+command={{ ws_home }}/bin/celery beat
+    -A webscreenshots.celeryapp
+    --pidfile={{ ws_home }}/var/run/%(program_name)s.pid
+    --schedule={{ ws_home }}/var/lib/celerybeat-schedule.db
+    -l info
+stdout_logfile={{ ws_home }}/var/log/%(program_name)s.log
+redirect_stderr=true
+autorestart=true
+autostart=false
+startsecs=5
+stopwaitsecs=10
+stopsignal=TERM
+priority=30

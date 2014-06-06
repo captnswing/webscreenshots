@@ -1,0 +1,6 @@
+[program:redis]
+command=/usr/bin/redis-server
+autorestart=true
+stdout_logfile={{ ws_home }}/var/log/%(program_name)s.log
+redirect_stderr=true
+priority=10

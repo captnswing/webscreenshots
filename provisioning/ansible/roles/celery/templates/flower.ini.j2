@@ -1,0 +1,7 @@
+[program:celery_flower]
+directory={{ ws_home }}
+command={{ ws_home }}/bin/celery flower --broker=redis://localhost:6379/0
+stdout_logfile={{ ws_home }}/var/log/%(program_name)s.log
+autorestart=true
+redirect_stderr=true
+priority=40
