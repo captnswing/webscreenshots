@@ -2,7 +2,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "spotify-debian-squeeze-64-v2"
+  config.vm.box = "server-ubuntu-trusty-64"
   config.vm.hostname = "webscreenshots.vagrant"
   config.vm.network :private_network, ip: "192.168.33.199"
   config.vm.synced_folder ".", "/vagrant", type: "nfs"

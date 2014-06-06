@@ -3,13 +3,14 @@
   with_items:
     - libxml2-dev
     - libxslt1-dev
-    - cython
-    - postgresql
-    - postgresql-contrib
-    - python-dev
-    - redis-server
     - libjpeg-dev
     - libfreetype6-dev
+    - cython
+    - python-dev
+    - redis-server
+    - postgresql
+    - postgresql-contrib
+    - postgresql-server-dev-all
 
 - name: create {{ ws_home }} directory
   shell: sudo mkdir -p {{ ws_home }}; sudo chown -R ws:ws {{ ws_home }}
@@ -19,8 +20,11 @@
   shell: virtualenv {{ ws_home }}
          creates={{ ws_home }}/bin/activate
 
+- name: update pip
+  shell: pip install -U pip
+
 - name: install webscreenshots
-  shell: cd /vagrant; {{ ws_home }}/bin/pip install -e .
+  shell: cd /vagrant; {{ ws_home }}/bin/python setup.py develop
          creates={{ ws_home }}/lib/python2.7/site-packages/webscreenshots.egg-link
 
 - name: create subdirectories in {{ ws_home }}

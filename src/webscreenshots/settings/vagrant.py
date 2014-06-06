@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # settings/vagrant.py
 from .base import *
 from fnmatch import fnmatch
