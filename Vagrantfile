@@ -1,21 +1,19 @@
 # -*- mode: ruby -*-
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "server-ubuntu-precise-64"
+
+  config.vm.box = "spotify-debian-squeeze-64-v2"
   config.vm.hostname = "webscreenshots.vagrant"
   config.vm.network :private_network, ip: "192.168.33.199"
+  config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
-  config.vm.provider :virtualbox do |vb|
-    vb.name = "webscreenshots.vagrant"
-    vb.customize ["modifyvm", :id, "--memory", 1024]
-    vb.customize ["modifyvm", :id, "--cpus", 2]
-    #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+  config.vm.provider :virtualbox do |vbox|
+    vbox.customize ["modifyvm", :id, "--name", "webscreenshots"]
+    vbox.customize ["modifyvm", :id, "--memory", 1024]
+    vbox.customize ["modifyvm", :id, "--cpus", 2]
+    vbox.customize ["modifyvm", :id, "--ioapic", "on"]
+    vbox.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
   end
-
-  # make postgres server accessible from host environment
-  #config.vm.network :forwarded_port, guest: 5432, host: 5432
-  # supervisor gui
-  config.vm.network :forwarded_port, guest: 9001, host: 9001
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "provisioning/ansible/site.yml"
@@ -24,5 +22,7 @@ Vagrant.configure("2") do |config|
     ansible.limit = 'all'
     #ansible.host_key_checking = false
   end
+
+  config.vm.provision "shell", inline: "curl -sO https://gist.githubusercontent.com/captnswing/ad2f130045382d37621f/raw/f5a70795f62254f04a776b0ab3310a763faecd22/.bashrc"
 
 end
