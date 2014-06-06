@@ -61,3 +61,14 @@ use django forms?
 
 * [pageonex.com](http://pageonex.com/)
 * [newsdiffs](https://github.com/ecprice/newsdiffs)
+
+### queue thoughts
+
+* http://python-rq.org
+* https://github.com/pricingassistant/rq-dashboard
+* http://tavendo.com/blog/post/is-crossbar-the-future-of-python-web-apps/
+* http://www.reddit.com/r/Python/comments/27d0km/is_crossbario_the_future_of_python_web_apps/
+* http://blog.crocodoc.com/post/48703468992/process-managers-the-good-the-bad-and-the-ugly
+* https://news.ycombinator.com/item?id=5596750
+* http://kentonv.github.io/capnproto/
+
