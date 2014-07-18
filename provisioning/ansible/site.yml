@@ -14,4 +14,4 @@
 
   roles:
     - celery
-
+    - webscreenshots

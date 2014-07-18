@@ -3,7 +3,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "server-ubuntu-trusty-64"
-  config.vm.hostname = "webscreenshots.vagrant"
+  config.vm.hostname = "webscreenshots.example.com"
   config.vm.network :private_network, ip: "192.168.33.199"
   config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
     #ansible.host_key_checking = false
   end
 
-  config.vm.provision "shell", inline: "curl -sO https://gist.githubusercontent.com/captnswing/ad2f130045382d37621f/raw/f5a70795f62254f04a776b0ab3310a763faecd22/.bashrc"
+  config.vm.provision "shell",
+    inline: "wget -q https://gist.githubusercontent.com/captnswing/ad2f130045382d37621f/raw/f5a70795f62254f04a776b0ab3310a763faecd22/.bashrc -O .bashrc"
 
 end

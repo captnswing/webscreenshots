@@ -16,8 +16,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'webscreenshots',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'webscreenshots',
+        'PASSWORD': 'webscreenshots',
         'HOST': 'localhost',
         'PORT': '',
     }
