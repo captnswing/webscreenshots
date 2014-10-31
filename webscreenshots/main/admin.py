@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import WebSite
+from webscreenshots.main.models import WebSite
 
 class WebSiteOptions(admin.ModelAdmin):
     ordering = ['category', 'title']

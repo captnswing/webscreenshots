@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-from webscreenshots.celeryapp import celery
+import datetime
+
 from boto import connect_s3
 from django.conf import settings
-import datetime
-from webscreenshots.main.utils import calculate_expexted_times
+
+from webscreenshots.utils import calculate_expexted_times
 
 
 def daterange(start_date, end_date):

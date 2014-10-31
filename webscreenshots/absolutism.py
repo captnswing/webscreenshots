@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import unittest
-from urlparse import urlsplit
 from pyquery import PyQuery as pq
-import sys
 
 
 TEST_HTML = """\

@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 import json
 import datetime
+
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -8,9 +9,10 @@ from boto import connect_s3
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.template import Context, loader
-from models import WebSite
-from utils import calculate_expexted_times, roundTime, get_slice_from_list
 from PIL import Image, ImageDraw, ImageFont
+
+from webscreenshots.main.models import WebSite
+from webscreenshots.utils import calculate_expexted_times, roundTime, get_slice_from_list
 
 
 def get_adjacent_times(datetime):

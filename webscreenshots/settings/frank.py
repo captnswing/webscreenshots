@@ -1,5 +1,5 @@
 # settings/frank.py
-from .base import *
+from .webscreenshots.settings.base import *
 from fnmatch import fnmatch
 
 DEBUG = True

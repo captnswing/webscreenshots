@@ -1,5 +1,5 @@
 # settings/test.py
-from .base import *
+from .webscreenshots.settings.base import *
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 S3_BUCKET_NAME = "svti-webscreenshots-test"

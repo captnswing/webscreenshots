@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from webscreenshots.celeryapp import celery
 import collections
 import datetime
+import unittest
 
 
 def calculate_expexted_times():
@@ -44,3 +45,7 @@ def get_slice_from_list(mylist, idx, siblings=2):
         return mylist[-(siblings * 2 + 1):]
     else:
         return mylist[s_start:s_stop]
+
+
+if __name__ == '__main__':
+    unittest.main()

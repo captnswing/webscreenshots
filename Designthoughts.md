@@ -3,7 +3,7 @@
 ##### requirements:
 
 * headless
-* runs on virtualized linux (Vagrant, VMWare ESX, EC2)
+* runs on virtualized linux (Vagrant, VMWare ESX, EC2, GCE)
 * supports html5 & css3 & javascript & flash
 * makes nice screenshots (fonts)
 * optionally: supports http proxy
@@ -64,6 +64,9 @@ use django forms?
 
 ### queue thoughts
 
+* CELERYD_POOL = 'gevent': http://celery.readthedocs.org/en/latest/userguide/workers.html
+* http://aws.amazon.com/documentation/swf/
+* http://aws.amazon.com/documentation/sqs/
 * http://python-rq.org
 * https://github.com/pricingassistant/rq-dashboard
 * http://tavendo.com/blog/post/is-crossbar-the-future-of-python-web-apps/
@@ -72,3 +75,7 @@ use django forms?
 * https://news.ycombinator.com/item?id=5596750
 * http://kentonv.github.io/capnproto/
 
+### asyc requests
+
+* https://github.com/kennethreitz/grequests
+* http://docs.python-requests.org/en/latest/user/advanced/#blocking-or-non-blocking

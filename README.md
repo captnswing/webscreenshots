@@ -63,14 +63,8 @@ in the project root, and watch chef-solo magic in progress. Once the chef-solo r
 
 AMI id from
 
-* http://cloud-images.ubuntu.com/releases/precise/release/
-  (eu-west-1, 64-bit, ebs = ami-da1810ae)
-* http://cloud-images.ubuntu.com/releases/precise/release-20121218/
-  (eu-west-1, 64-bit, instance = ami-3a0f034e)
-
-http://docs.opscode.com/plugin_knife_ec2.html
-
---ebs-no-delete-on-term
+* http://cloud-images.ubuntu.com/releases/trusty/release/
+  (eu-west-1, 64-bit, ebs = ami-cb4986bc)
 
 #### with knife-solo
 

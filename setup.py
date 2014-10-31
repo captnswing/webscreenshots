@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from ez_setup import use_setuptools
 use_setuptools()
 from setuptools import setup, find_packages
@@ -18,8 +18,6 @@ setup(
     packages=find_packages('src'),
     # include all non-python files under source control, e.g. media/ and templates/ directories
     include_package_data=True,
-    # make setuptools work with mercurial, see http://pypi.python.org/pypi/setuptools_hg
-    setup_requires=["distribute", "setuptools_hg"],
     install_requires=[
         "boto",
         "celery-with-redis",
@@ -28,7 +26,8 @@ setup(
         "flower",
         "uwsgi",
         "ipython",
-        "pillow", # PIL
+        "nose",
+        "pillow",  # PIL
         "psycopg2",
         "python-dateutil < 2",
         "pytz",

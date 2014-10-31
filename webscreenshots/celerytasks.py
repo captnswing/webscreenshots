@@ -3,12 +3,14 @@ import datetime
 import subprocess
 import time
 import os
+
 from PIL import Image, ImageFile
 from celery.utils.log import get_task_logger
 from boto import connect_s3
 from boto.s3.key import Key
 from django.conf import settings
-from webscreenshots.main.utils import roundTime
+
+from webscreenshots.utils import roundTime
 from webscreenshots.celeryapp import celery
 from webscreenshots.main.models import WebSite
 
