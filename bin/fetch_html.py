@@ -24,7 +24,7 @@ def get_html(url):
     """get html and parse it into DOM object"""
     print 'get: {}'.format(url)
     r = requests.get(url)
-    cleanhtml = re.sub(r"""<\?xml version=".*" encoding=".*".*\?>""", "", r.text)
+    cleanhtml = re.sub(r"""<\?xml version="1.0" encoding="UTF-8".*\?>""", "", r.text)
     d = pq(cleanhtml, parser='html')
     return d
 
