@@ -11,12 +11,8 @@ RUN curl -LO http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-ms
     && apt-get install -y xfonts-utils wget cabextract \
     && apt-get install -f -y \
     && dpkg -i ttf-mscorefonts-installer_3.6_all.deb \
-    && rm ttf-mscorefonts-installer_3.6_all.deb
+    && rm ttf-mscorefonts-installer_3.6_all.deb \
     && updatedb
-
-RUN curl -LO https://dl.dropbox.com/u/435971/posts/2012-12-27/localfonts.conf \
-    && mv localfonts.conf /etc/fonts/local.conf \
-    && fc-cache -f -v
 
 RUN curl -LO https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 \
     && bzcat phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar xf - \
@@ -31,6 +27,9 @@ RUN curl -L https://github.com/n1k0/casperjs/zipball/1.1-beta3 -o casperjs-1.1-b
     && ln -s /opt/casperjs-1.1-beta3 /opt/casperjs \
     && ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs \
     && rm casperjs-1.1-beta3.zip
+
+ADD provisioning/localfonts.conf /etc/fonts/local.conf
+RUN fc-cache -f -v
 
 RUN mkdir /code
 WORKDIR /code
