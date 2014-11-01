@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import re
 import requests
 import hashlib
 import django
@@ -23,7 +24,7 @@ def get_html(url):
     """get html and parse it into DOM object"""
     print 'get: {}'.format(url)
     r = requests.get(url)
-    cleanhtml = r.text.replace("""<?xml version="1.0" encoding="UTF-8"?>""", "")
+    cleanhtml = re.sub(r"""<\?xml version=".*" encoding=".*".*\?>""", "", r.text)
     d = pq(cleanhtml, parser='html')
     return d
 
