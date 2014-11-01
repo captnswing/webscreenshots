@@ -32,10 +32,13 @@ RUN fc-cache -f -v
 
 RUN mkdir /code
 WORKDIR /code
+ADD requirements.txt /code/
+RUN pip install -r requirements.txt
+ADD . /code/
+EXPOSE 8000
 
 #RUN casperjs screencapture_casperjs.js http://svt.se svt.jpg
 #RUN ls -l /usr/share/fonts/truetype/msttcorefonts/
 #RUN fc-match "Helvetica Neue"
 #RUN fc-match Georgia
-
-CMD ["/bin/bash"]
+#CMD ["/bin/bash"]

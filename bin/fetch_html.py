@@ -1,12 +1,16 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+import os
+import sys
+import requests
 import hashlib
+import django
 import multiprocessing
 from urlparse import urlparse
-
 from pyquery import PyQuery as pq
-import requests
 from lxml.html import tostring as html2str
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webscreenshots.settings.frank")
+django.setup()
 from webscreenshots.main.models import WebSite
 from webscreenshots.absolutism import make_all_absolute
 
