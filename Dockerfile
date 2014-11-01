@@ -5,14 +5,13 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 
 RUN sed -i "/^# deb .* multiverse$/ s/^# //" /etc/apt/sources.list \
     && apt-get -y update \
-    && apt-get install -y unzip libfreetype6 fontconfig mlocate
+    && apt-get install -y unzip libfreetype6 fontconfig
 
 RUN curl -LO http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb \
     && apt-get install -y xfonts-utils wget cabextract \
     && apt-get install -f -y \
     && dpkg -i ttf-mscorefonts-installer_3.6_all.deb \
-    && rm ttf-mscorefonts-installer_3.6_all.deb \
-    && updatedb
+    && rm ttf-mscorefonts-installer_3.6_all.deb
 
 RUN curl -LO https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 \
     && bzcat phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar xf - \
