@@ -6,7 +6,7 @@ var casper = require('casper').create({
 var url = casper.cli.args[0];
 var filename = casper.cli.args[1];
 
-casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36');
+casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:33.0) Gecko/20100101 Firefox/33.0');
 
 casper.on('http.status.301', function (resource) {
     this.log('Hey, this one is 301: ' + resource.url, 'warning');
@@ -21,11 +21,14 @@ casper.on('http.status.500', function (resource) {
 });
 
 casper.start(url, function () {
-    this.viewport(1280, 800);
+    this.viewport(1440, 900);
     this.evaluate(function () {
         document.body.style.backgroundColor = '#fff';
     });
-    this.capture(filename);
+    this.capture(filename, undefined, {
+        format: 'jpg',
+        quality: 95
+    });
 });
 
 casper.run();
