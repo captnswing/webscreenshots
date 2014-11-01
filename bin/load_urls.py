@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
+
 os.environ["DJANGO_SETTINGS_MODULE"] = 'webscreenshots.settings.frank'
 from webscreenshots.main.models import WebSite
 import csv

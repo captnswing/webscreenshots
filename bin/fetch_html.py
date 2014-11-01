@@ -9,6 +9,10 @@ import multiprocessing
 from urlparse import urlparse
 from pyquery import PyQuery as pq
 from lxml.html import tostring as html2str
+
+base = os.path.dirname(os.path.dirname(__file__))
+base_parent = os.path.dirname(base)
+sys.path.append(base_parent)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webscreenshots.settings.frank")
 django.setup()
 from webscreenshots.main.models import WebSite
@@ -56,7 +60,7 @@ def main():
     jobs = []
     for ws in WebSite.objects.all():
         # if not ws.title == "SR P4 Blekinge":
-        #     continue
+        # continue
         p = multiprocessing.Process(target=workon, args=(ws,))
         jobs.append(p)
         p.start()
