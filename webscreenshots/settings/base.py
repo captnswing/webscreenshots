@@ -96,10 +96,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
-
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'wsgi.application'
+ROOT_URLCONF = 'webscreenshots.urls'
 
 TEMPLATE_DIRS = (
     root('templates'),
@@ -115,11 +112,12 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'webscreenshots.main',
     'webscreenshots.statistics',
-    'south',
 )
 
 WEBSCREENSHOTS_IMAGES_PATH = '/wsimages'
 CELERYD_LOGPATH = '/opt/webscreenshots/var/log/'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 S3_BUCKET_NAME = "svti-webscreenshots"
 AWS_ACCESS_KEY = "AKIAJGUNM2DBSJAZ777Q"

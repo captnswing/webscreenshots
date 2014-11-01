@@ -5,13 +5,13 @@ from django.conf import settings
 
 admin.autodiscover()
 
-handler500 = 'main.views.server_error'
+handler500 = 'webscreenshots.main.views.server_error'
 
 urlpatterns = patterns('',
-    #url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/(?P<pubtime>\d{2}.\d{2})/$', 'main.views.permalink', name="home-datetime"),
-    url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/$', 'main.views.home', name="home-date"),
+    #url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/(?P<pubtime>\d{2}.\d{2})/$', 'webscreenshots.main.views.permalink', name="home-datetime"),
+    url(r'^(?P<pubdate>\d{4}-\d{2}-\d{2})/$', 'webscreenshots.main.views.home', name="home-date"),
     url(r'^about/', TemplateView.as_view(template_name="about.html")),
-    url(r'^$', 'main.views.home', name='home'),
+    url(r'^$', 'webscreenshots.main.views.home', name='home'),
 )
 
 urlpatterns += patterns('',
