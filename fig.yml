@@ -1,0 +1,12 @@
+db:
+  image: postgres
+web:
+  build: .
+#  command: python manage.py runserver 0.0.0.0:8000
+  command: /bin/bash
+  volumes:
+    - /Users/hoffsummer/Development/webscreenshots:/code
+  ports:
+    - "8000:8000"
+  links:
+    - db
