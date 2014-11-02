@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import re
 import requests
 import hashlib
 import django
@@ -11,9 +10,9 @@ from urlparse import urlparse
 from pyquery import PyQuery as pq
 from lxml.html import tostring as html2str
 
-base = os.path.dirname(os.path.dirname(__file__))
-base_parent = os.path.dirname(base)
-sys.path.append(base_parent)
+here = os.path.abspath(os.path.dirname(__file__))
+parent = os.path.abspath(os.path.join(here, ".."))
+sys.path.append(parent)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webscreenshots.settings.frank")
 django.setup()
 from webscreenshots.main.models import WebSite
@@ -24,8 +23,7 @@ def get_html(url):
     """get html and parse it into DOM object"""
     print 'get: {}'.format(url)
     r = requests.get(url)
-    cleanhtml = re.sub(r"""<\?xml version="1.0" encoding="UTF-8".*\?>""", "", r.text)
-    d = pq(cleanhtml, parser='html')
+    d = pq(r.content, parser='html')
     return d
 
 
