@@ -5,7 +5,8 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 
 RUN sed -i "/^# deb .* multiverse$/ s/^# //" /etc/apt/sources.list \
     && apt-get -y update \
-    && apt-get install -y unzip libfreetype6 fontconfig
+    && apt-get install -y unzip libfreetype6-dev fontconfig libwebp-dev \
+    && apt-get autoremove -y
 
 RUN curl -LO http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb \
     && apt-get install -y xfonts-utils wget cabextract \
@@ -15,8 +16,8 @@ RUN curl -LO http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-ms
 
 RUN curl -LO https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 \
     && bzcat phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar xf - \
-    && mv phantomjs-1.9.8-linux-x86_64 /opt \
-    && ln -s /opt/phantomjs-1.9.8-linux-x86_64 /opt/phantomjs \
+    && mv phantomjs-1.9.8-linux-x86_64 /opt/phantomjs-1.9.8 \
+    && ln -s /opt/phantomjs-1.9.8 /opt/phantomjs \
     && ln -s /opt/phantomjs/bin/phantomjs /usr/local/bin/phantomjs \
     && rm phantomjs-1.9.8-linux-x86_64.tar.bz2
 
