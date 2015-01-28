@@ -53,7 +53,7 @@ not really relevant for this project
 use django forms?
 
 * http://ivaynberg.github.io/select2/select2-latest.html
-* https://github.com/applegrew/django-select2
+* http://github.com/applegrew/django-select2
 * http://www.samsung.com/se/support/main/supportMain.do?supportIaCode=10003#
 * http://codereview.stackexchange.com/questions/824/looking-for-improvements-on-my-jquery-ui-tagging-widget
 
@@ -65,6 +65,7 @@ use django forms?
 ### queue thoughts
 
 * CELERYD_POOL = 'gevent': http://celery.readthedocs.org/en/latest/userguide/workers.html
+* http://aws.amazon.com/lambda/
 * http://aws.amazon.com/documentation/swf/
 * http://aws.amazon.com/documentation/sqs/
 * http://python-rq.org
@@ -75,7 +76,7 @@ use django forms?
 * https://news.ycombinator.com/item?id=5596750
 * http://kentonv.github.io/capnproto/
 
-### asyc requests
+### async requests
 
 * https://github.com/kennethreitz/grequests
 * http://docs.python-requests.org/en/latest/user/advanced/#blocking-or-non-blocking
