@@ -28,14 +28,13 @@ RUN curl -L https://github.com/n1k0/casperjs/zipball/1.1-beta3 -o casperjs-1.1-b
     && ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs \
     && rm casperjs-1.1-beta3.zip
 
-ADD provisioning/localfonts.conf /etc/fonts/local.conf
+ADD localfonts.conf /etc/fonts/local.conf
 RUN fc-cache -f -v
 
 RUN mkdir /code
 WORKDIR /code
-ADD requirements.txt /code/
-RUN pip install -r requirements.txt
 ADD . /code/
+RUN pip install -r requirements.txt
 EXPOSE 8000
 
 #RUN casperjs screencapture_casperjs.js http://svt.se svt.jpg
