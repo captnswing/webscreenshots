@@ -1,8 +1,0 @@
-- name: restart supervisord
-  shell: "{{ ws_home }}/etc/supervisor/supervisord_init.sh restart"
-
-- name: reload supervisord config
-  shell: "{{ ws_home }}/bin/supervisorctl reread;{{ ws_home }}/bin/supervisorctl update"
-
-- name: restart supervisord program
-  shell: "{{ ws_home }}/bin/supervisorctl restart {{ program }}"
