@@ -1,12 +1,26 @@
-db:
-  image: postgres
 web:
   build: .
+  environment:
+    - PYTHONPATH=.
+    - DJANGO_SETTINGS_MODULE=webscreenshots.settings.fig
   command: python manage.py runserver 0.0.0.0:8000
-#  command: /bin/bash
   volumes:
-    - /Users/hoffsummer/Development/webscreenshots:/code
+    - .:/code/
   ports:
-    - "8000:8000"
+    - "8000"
   links:
     - db
+#dbdata:
+#  image: postgres:latest
+#  volumes:
+#    - /var/lib/postgresql
+#  command: true
+db:
+  image: postgres:latest
+#  volumes_from:
+#    - dbdata
+  ports:
+    - "5432"
+  environment:
+    - USER=postgres
+    - DB=postgres
