@@ -31,15 +31,6 @@
 * [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/)
 * [htmlshots](https://github.com/w3p/htmlshots)
 
-##### webservices:
-
-not really relevant for this project
-
-* [node-urlshot](http://node-urlshot.herokuapp.com), example with [svt.se](http://node-urlshot.herokuapp.com/?url=http://svt.se/&viewport=1280x900&format=jpg)
-* [thumbalizr](http://www.thumbalizr.com/)
-* [thumbalizr alternatives](http://www.moreofit.com/similar-to/www.thumbalizr.com/Top_10_Sites_Like_Thumbalizr/)
-* loads of others
-
 ### S3 Bucket setup
 
 * world readable
@@ -78,5 +69,5 @@ use django forms?
 
 ### async requests
 
-* https://github.com/kennethreitz/grequests
 * http://docs.python-requests.org/en/latest/user/advanced/#blocking-or-non-blocking
+* https://github.com/kennethreitz/grequests
