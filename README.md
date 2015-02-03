@@ -33,4 +33,3 @@ After all is done, you should be able to see the started containers
     webscreenshots_web_1   python manage.py runserver ...   Up      0.0.0.0:49186->8000/tcp    
 
 Now, you can simply surf into [localhost:49186](http://localhost:49186) (or `open http://$(boot2docker ip 2>/dev/null):49186`). to see the working application.
-
