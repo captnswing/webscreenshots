@@ -1,11 +1,11 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import json
 import datetime
-
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from boto import connect_s3
+from boto.exception import S3ResponseError
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.template import Context, loader
@@ -15,14 +15,14 @@ from webscreenshots.main.models import WebSite
 from webscreenshots.utils import calculate_expexted_times, roundTime, get_slice_from_list
 
 
-def get_adjacent_times(datetime):
+def get_adjacent_times(dt):
     et = calculate_expexted_times()
-    kl = datetime.strftime("%H.%M")
+    kl = dt.strftime("%H.%M")
     if kl not in et:
-        rounded_to_5min = roundTime(datetime, roundTo=5*60)
+        rounded_to_5min = roundTime(dt, roundTo=5 * 60)
         kl = rounded_to_5min.strftime("%H.%M")
     if kl not in et:
-        rounded_to_60min = roundTime(datetime, roundTo=60*60)
+        rounded_to_60min = roundTime(dt, roundTo=60 * 60)
         kl = rounded_to_60min.strftime("%H.%M")
     idx = et.index(kl)
     return get_slice_from_list(et, idx, 5)
@@ -30,7 +30,10 @@ def get_adjacent_times(datetime):
 
 def get_sites_for_day(selected_day):
     conn = connect_s3(settings.AWS_ACCESS_KEY, settings.AWS_SECRET_KEY)
-    bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
+    try:
+        bucket = conn.get_bucket(settings.S3_BUCKET_NAME)
+    except S3ResponseError:
+        raise Exception("bucket '{}' not accessible for the configured AWS_ACCESS_KEY".format(settings.S3_BUCKET_NAME))
     selected_day = selected_day.strftime("%Y/%m/%d")
     keys = bucket.get_all_keys(prefix=selected_day + "/", delimiter="/")
     sites = [key.name.lstrip(selected_day).rstrip("/") for key in keys]
@@ -80,7 +83,7 @@ def home(request, pubdate=None, pubtime=None):
         d = today
     else:
         try:
-            d = datetime.datetime.strptime(pubdate+pubtime, "%Y-%m-%d/%H.%M")
+            d = datetime.datetime.strptime(pubdate + pubtime, "%Y-%m-%d/%H.%M")
         except ValueError:
             d = datetime.datetime.strptime(pubdate, "%Y-%m-%d")
         # if specified date is todays'
