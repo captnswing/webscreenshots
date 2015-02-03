@@ -21,10 +21,10 @@ except KeyError:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+        'NAME': os.environ.get('DB_1_ENV_DB', 'postgres'),
+        'USER': os.environ.get('DB_1_ENV_USER', 'postgres'),
+        'HOST': os.environ.get('DB_1_PORT_5432_TCP_ADDR', 'localhost'),
+        'PORT': os.environ.get('DB_1_PORT_5432_TCP_PORT', '5432'),
     },
 }
 
