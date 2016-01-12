@@ -1,5 +1,14 @@
 ### evaluation of screenshot tools
 
+**************
+**************
+http://stackoverflow.com/a/15699761
+https://dzone.com/articles/python-testing-phantomjs
+http://toddhayton.com/2015/02/03/scraping-with-python-selenium-and-phantomjs/
+**************
+**************
+
+
 ##### requirements:
 
 * headless
@@ -53,8 +62,23 @@ use django forms?
 * [pageonex.com](http://pageonex.com/)
 * [newsdiffs](https://github.com/ecprice/newsdiffs)
 
+### celery
+
+* http://www.syncano.com/configuring-running-django-celery-docker-containers-pt-1/
+* https://denibertovic.com/posts/celery-best-practices/
+* http://wiredcraft.com/posts/2015/02/04/3-gotchas-for-celery.html
+* https://registry.hub.docker.com/search?q=rabbitmq
+
+### better apis
+
+* https://github.com/breenmachine/httpscreenshot
+* http://gilliam.github.io/
+* http://www.django-rest-framework.org/tutorial/1-serialization/
+* http://tastypieapi.org/
+
 ### queue thoughts
 
+* http://huey.readthedocs.org/en/latest/getting-started.html
 * CELERYD_POOL = 'gevent': http://celery.readthedocs.org/en/latest/userguide/workers.html
 * http://aws.amazon.com/lambda/
 * http://aws.amazon.com/documentation/swf/
@@ -71,3 +95,11 @@ use django forms?
 
 * http://docs.python-requests.org/en/latest/user/advanced/#blocking-or-non-blocking
 * https://github.com/kennethreitz/grequests
+
+###
+
+* http://www.informit.com/articles/article.aspx?p=2320938
+* http://www.toptal.com/python/beginners-guide-to-concurrency-and-parallelism-in-python
+* https://diff.io/
+* https://github.com/google/fonts/
+* 
