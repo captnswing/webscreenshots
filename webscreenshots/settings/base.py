@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Django settings for webscreenshots project.
 from os.path import join, abspath, dirname
 root = lambda *x: join(abspath(dirname(__file__)), '..', *x)

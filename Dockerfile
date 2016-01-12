@@ -1,5 +1,6 @@
-FROM python:2.7 # debian jessie
-
+FROM python:2.7
+MAINTAINER Frank Hoffsümmer "frank.hoffsummer@gmail.com"
+ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN sed -i 's|main$|main contrib|g' /etc/apt/sources.list \

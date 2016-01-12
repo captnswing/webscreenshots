@@ -4,12 +4,12 @@ web:
     - AWS_ACCESS_KEY
     - AWS_SECRET_KEY
     - PYTHONPATH=.
-    - DJANGO_SETTINGS_MODULE=webscreenshots.settings.fig
-  command: python manage.py runserver 0.0.0.0:8000
+    - DJANGO_SETTINGS_MODULE=webscreenshots.settings.docker
+  command: bash -c "python ./webscreenshots/manage.py migrate && ./webscreenshots/manage.py runserver 0.0.0.0:5000"
   volumes:
     - .:/code/
   ports:
-    - "8000"
+    - "5000"
   links:
     - db
 #dbdata:
@@ -26,3 +26,7 @@ db:
   environment:
     - USER=postgres
     - DB=postgres
+redis:
+  image: redis
+rabbitmq:
+  image: rabbitmq
