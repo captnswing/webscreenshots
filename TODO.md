@@ -7,6 +7,9 @@ https://dzone.com/articles/python-testing-phantomjs
 http://toddhayton.com/2015/02/03/scraping-with-python-selenium-and-phantomjs/
 **************
 **************
+https://www.caktusgroup.com/blog/2014/06/23/scheduling-tasks-celery/
+https://github.com/aosabook/500lines/tree/master/crawler
+https://news.ycombinator.com/item?id=11887230
 
 
 ##### requirements:
@@ -47,6 +50,10 @@ http://toddhayton.com/2015/02/03/scraping-with-python-selenium-and-phantomjs/
 * 1825 days expiration for files, files will be deleted afterwards
 * cloudfront enabled
 * nginx as proxy
+* http://charlesleifer.com/blog/nginx-a-caching-thumbnailing-reverse-proxying-image-server-/
+* https://news.ycombinator.com/item?id=11128569
+* http://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html
+* https://github.com/mentum/lambdaws#using-large-external-libraries
 
 ### idea: nicer select boxes
 
