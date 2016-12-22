@@ -1,33 +1,43 @@
-FROM python:2.7
+FROM ubuntu:14.04
 MAINTAINER Frank Hoffsümmer "frank.hoffsummer@gmail.com"
-ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN sed -i 's|main$|main contrib|g' /etc/apt/sources.list \
-    && apt-get -y update \
-    && apt-get -y install libfreetype6-dev libfontconfig1-dev libicu-dev libfreetype6-dev libpng12-dev \
-                          libwebp-dev libjpeg-dev ttf-mscorefonts-installer unzip \
-    && apt-get -y autoremove
+# ---------
+# MULTIVERSE
+# ---------
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends software-properties-common curl unzip
+RUN apt-add-repository multiverse
+RUN apt-get update
 
-RUN curl -LO https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 \
-    && bzcat phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar xf - \
-    && mv phantomjs-1.9.8-linux-x86_64 /opt/phantomjs-1.9.8 \
-    && ln -s /opt/phantomjs-1.9.8 /opt/phantomjs \
-    && ln -s /opt/phantomjs/bin/phantomjs /usr/local/bin/phantomjs \
-    && rm phantomjs-1.9.8-linux-x86_64.tar.bz2
-
-RUN curl -L https://github.com/n1k0/casperjs/zipball/1.1-beta3 -o casperjs-1.1-beta3.zip \
-    && unzip casperjs-1.1-beta3.zip \
-    && mv n1k0-casperjs-* /opt/casperjs-1.1-beta3 \
-    && ln -s /opt/casperjs-1.1-beta3 /opt/casperjs \
-    && ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs \
-    && rm casperjs-1.1-beta3.zip
-
+# ---------
+# MS CORE FONTS
+# ---------
+# https://en.wikipedia.org/wiki/Core_fonts_for_the_Web
+# from http://askubuntu.com/a/25614
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+RUN apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer
 ADD localfonts.conf /etc/fonts/local.conf
 RUN fc-cache -f -v
 
-RUN mkdir /code
-WORKDIR /code
-ADD . /code/
+WORKDIR /opt
 
-RUN pip install -r requirements.txt
+# ---------
+# PHANTOMJS
+# ---------
+ENV PHANTOMJS_VERSION "phantomjs-2.1.1-linux-x86_64"
+RUN curl -OLs https://bitbucket.org/ariya/phantomjs/downloads/${PHANTOMJS_VERSION}.tar.bz2 &&\
+    bzcat ${PHANTOMJS_VERSION}.tar.bz2 | tar xf - &&\
+    ln -s ${PHANTOMJS_VERSION} phantomjs &&\
+    rm ${PHANTOMJS_VERSION}.tar.bz2
+
+# ---------
+# CASPERJS
+# ---------
+ENV CASPERJS_VERSION "casperjs-1.1.3"
+RUN curl -Ls https://codeload.github.com/casperjs/casperjs/zip/1.1.3 -o ${CASPERJS_VERSION}.zip &&\
+    unzip ${CASPERJS_VERSION}.zip &&\
+    ln -s ${CASPERJS_VERSION} casperjs &&\
+    rm ${CASPERJS_VERSION}.zip
+
+ENTRYPOINT ["/opt/phantomjs/bin/phantomjs"]
