@@ -69,8 +69,9 @@ use django forms?
 * [pageonex.com](http://pageonex.com/)
 * [newsdiffs](https://github.com/ecprice/newsdiffs)
 
-### celery
+### celery or dask
 
+* http://matthewrocklin.com/blog/work/2016/09/13/dask-and-celery
 * http://www.syncano.com/configuring-running-django-celery-docker-containers-pt-1/
 * https://denibertovic.com/posts/celery-best-practices/
 * http://wiredcraft.com/posts/2015/02/04/3-gotchas-for-celery.html
